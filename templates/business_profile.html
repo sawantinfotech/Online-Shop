@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}Business Profile - Mobile Shop{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body text-center">
+                {% if business.logo_url %}
+                    <img src="{{ url_for('static', filename='uploads/' + business.logo_url) }}" 
+                         alt="{{ business.business_name }}" class="rounded-circle mb-3" width="120" height="120">
+                {% else %}
+                    <div class="bg-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" 
+                         style="width: 120px; height: 120px;">
+                        <i class="fas fa-store fa-3x text-white"></i>
+                    </div>
+                {% endif %}
+                
+                <h4 class="card-title">{{ business.business_name }}</h4>
+                <p class="text-muted">{{ business.business_type.title() if business.business_type else 'Business' }}</p>
+                
+                <div class="d-flex justify-content-center mb-3">
+                    <span class="badge bg-{{ 'success' if business.verification_status == 'verified' else 'warning' if business.verification_status == 'pending' else 'danger' }} fs-6">
+                        {{ business.verification_status.title() }}
+                    </span>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('settings') }}" class="btn btn-primary">
+                        <i class="fas fa-edit me-2"></i>Edit Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Payment Methods -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-credit-card me-2"></i>Payment Methods
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fab fa-google-pay me-2"></i>Google Pay
+                        </div>
+                        <span class="badge bg-{{ 'success' if business.gpay_enabled else 'secondary' }}">
+                            {{ 'Enabled' if business.gpay_enabled else 'Disabled' }}
+                        </span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-mobile-alt me-2"></i>Paytm
+                        </div>
+                        <span class="badge bg-{{ 'success' if business.paytm_enabled else 'secondary' }}">
+                            {{ 'Enabled' if business.paytm_enabled else 'Disabled' }}
+                        </span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-wallet me-2"></i>Brainlo
+                        </div>
+                        <span class="badge bg-{{ 'success' if business.brainlo_enabled else 'secondary' }}">
+                            {{ 'Enabled' if business.brainlo_enabled else 'Disabled' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Business Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Business Name</label>
+                            <p class="form-control-plaintext">{{ business.business_name }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Business Type</label>
+                            <p class="form-control-plaintext">{{ business.business_type.title() if business.business_type else 'Not specified' }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Contact Number</label>
+                            <p class="form-control-plaintext">
+                                <i class="fas fa-phone me-2"></i>{{ business.contact_number }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Email</label>
+                            <p class="form-control-plaintext">
+                                <i class="fas fa-envelope me-2"></i>{{ business.email }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label text-muted">Address</label>
+                    <p class="form-control-plaintext">
+                        <i class="fas fa-map-marker-alt me-2"></i>{{ business.address }}
+                    </p>
+                </div>
+                
+                {% if business.license_number %}
+                <div class="mb-3">
+                    <label class="form-label text-muted">License Number</label>
+                    <p class="form-control-plaintext">{{ business.license_number }}</p>
+                </div>
+                {% endif %}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Registered Date</label>
+                            <p class="form-control-plaintext">{{ business.created_at.strftime('%B %d, %Y') }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Last Updated</label>
+                            <p class="form-control-plaintext">{{ business.updated_at.strftime('%B %d, %Y') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Documents -->
+        {% if business.get_documents() %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-folder me-2"></i>Uploaded Documents
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for doc in business.get_documents() %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-file-alt fa-2x text-primary mb-2"></i>
+                                <h6 class="card-title">Document {{ loop.index }}</h6>
+                                <a href="{{ url_for('static', filename='uploads/' + doc) }}" 
+                                   class="btn btn-sm btn-outline-primary" target="_blank">
+                                    <i class="fas fa-eye me-1"></i>View
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Business Statistics -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>Business Statistics
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="stat-box">
+                            <h3 class="text-primary">{{ business.products|length }}</h3>
+                            <p class="text-muted">Products</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-box">
+                            <h3 class="text-success">{{ business.customers|length }}</h3>
+                            <p class="text-muted">Customers</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-box">
+                            <h3 class="text-info">{{ business.orders|length }}</h3>
+                            <p class="text-muted">Orders</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-box">
+                            <h3 class="text-warning">
+                                {% set active_products = business.products|selectattr('is_active')|list %}
+                                {{ active_products|length }}
+                            </h3>
+                            <p class="text-muted">Active Products</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
