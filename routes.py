@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect, url_for, flash, session, jsonify, send_file
 from werkzeug.utils import secure_filename
 from app import app, db
+from admin import admin_bp
 from models import Business, Product, Customer, Order, OrderItem, Payment, Delivery, Category, SMSTemplate
 from forms import BusinessRegistrationForm, ProductForm, CustomerForm, OrderForm, PaymentSettingsForm, LoginForm, SMSTemplateForm
 import os
@@ -490,3 +491,6 @@ def email_settings():
     """Display email configuration status"""
     settings = get_email_settings()
     return render_template('email_settings.html', settings=settings)
+
+# Register admin blueprint
+app.register_blueprint(admin_bp)
