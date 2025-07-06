@@ -11,6 +11,10 @@ from datetime import datetime
 from utils import allowed_file, save_uploaded_file, calculate_delivery_charges, generate_invoice_pdf
 from payment_gateways import process_payment
 from sms_service import send_sms
+from email_service import (
+    send_email, test_email_connection, send_test_email, get_email_settings,
+    send_order_confirmation_email, send_payment_confirmation_email
+)
 import logging
 
 # Session management
@@ -448,3 +452,41 @@ def create_default_categories():
             db.session.add(category)
         
         db.session.commit()
+
+# Email testing routes
+@app.route('/test-email', methods=['GET', 'POST'])
+@login_required
+def test_email():
+    """Test email functionality"""
+    if request.method == 'POST':
+        test_email_address = request.form.get('test_email')
+        
+        if not test_email_address:
+            flash('Please provide an email address for testing', 'error')
+            return redirect(url_for('test_email'))
+        
+        # Test email connection
+        connection_status = test_email_connection()
+        
+        if connection_status:
+            # Send test email
+            email_sent = send_test_email(test_email_address)
+            if email_sent:
+                flash(f'Test email sent successfully to {test_email_address}', 'success')
+            else:
+                flash('Failed to send test email. Check email configuration.', 'error')
+        else:
+            flash('Email connection failed. Please check your email settings.', 'error')
+        
+        return redirect(url_for('test_email'))
+    
+    # Get email settings
+    email_settings = get_email_settings()
+    return render_template('test_email.html', email_settings=email_settings)
+
+@app.route('/email-settings')
+@login_required
+def email_settings():
+    """Display email configuration status"""
+    settings = get_email_settings()
+    return render_template('email_settings.html', settings=settings)
