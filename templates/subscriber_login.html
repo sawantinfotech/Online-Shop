@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Shop Hub - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+        }
+        .login-left {
+            padding: 40px;
+            background: white;
+        }
+        .login-right {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            min-height: 500px;
+        }
+        .logo {
+            color: #FF6B35;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        .form-control {
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .form-control:focus {
+            border-color: #FF6B35;
+            box-shadow: none;
+        }
+        .btn-primary {
+            background: #FF6B35;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: bold;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .btn-primary:hover {
+            background: #e55a2e;
+        }
+        .social-btn {
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+            background: white;
+            color: #666;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .social-btn:hover {
+            background: #f8f9fa;
+            color: #333;
+            text-decoration: none;
+        }
+        .social-btn i {
+            margin-right: 10px;
+        }
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            color: #999;
+        }
+        .form-tabs {
+            margin-bottom: 30px;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            color: #999;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-right: 20px;
+        }
+        .tab-btn.active {
+            color: #FF6B35;
+            border-bottom-color: #FF6B35;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .explore-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .explore-btn:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            text-decoration: none;
+        }
+        .plus-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-container row g-0">
+            <div class="col-md-6 login-left">
+                <div class="logo">
+                    <i class="fas fa-mobile-alt"></i> Mobile Shop Hub
+                </div>
+                
+                <div class="form-tabs">
+                    <button class="tab-btn active" onclick="switchTab('login')">Log in to your account</button>
+                    <button class="tab-btn" onclick="switchTab('signup')">Sign up</button>
+                </div>
+
+                <!-- Login Form -->
+                <div id="login-tab" class="tab-content active">
+                    <form method="POST" action="{{ url_for('subscriber_auth') }}">
+                        <input type="hidden" name="action" value="login">
+                        <input type="email" class="form-control" name="email" placeholder="EMAIL OR USERNAME" required>
+                        <input type="password" class="form-control" name="password" placeholder="PASSWORD" required>
+                        <button type="submit" class="btn btn-primary">LOG IN</button>
+                    </form>
+                    <div class="text-center">
+                        <a href="#" class="text-decoration-none" style="color: #FF6B35;">Forgot password?</a>
+                    </div>
+                </div>
+
+                <!-- Signup Form -->
+                <div id="signup-tab" class="tab-content">
+                    <form method="POST" action="{{ url_for('subscriber_auth') }}">
+                        <input type="hidden" name="action" value="signup">
+                        <input type="text" class="form-control" name="full_name" placeholder="FULL NAME" required>
+                        <input type="email" class="form-control" name="email" placeholder="EMAIL" required>
+                        <input type="text" class="form-control" name="mobile" placeholder="MOBILE NUMBER" required>
+                        <input type="password" class="form-control" name="password" placeholder="PASSWORD" required>
+                        <button type="submit" class="btn btn-primary">SIGN UP</button>
+                    </form>
+                </div>
+
+                <div class="divider">OR</div>
+
+                <!-- Social Login Options -->
+                <a href="#" class="social-btn">
+                    <i class="fab fa-google"></i> Continue with Google
+                </a>
+                <a href="#" class="social-btn">
+                    <i class="fab fa-facebook-f"></i> Continue with Facebook
+                </a>
+                <a href="#" class="social-btn">
+                    <i class="fab fa-github"></i> Continue with GitHub
+                </a>
+                <a href="#" class="social-btn">
+                    <i class="fab fa-apple"></i> Continue with Apple
+                </a>
+                <a href="#" class="social-btn">
+                    <i class="fab fa-twitter"></i> Continue with X
+                </a>
+                <a href="#" class="social-btn">
+                    <i class="fas fa-shield-alt"></i> Use SSO login
+                </a>
+                <a href="#" class="social-btn">
+                    <i class="fas fa-om"></i> Continue with Buddhistan
+                </a>
+
+                <div class="text-center mt-4">
+                    <small>New to Mobile Shop Hub? <a href="#" onclick="switchTab('signup')" style="color: #FF6B35;">Sign up</a></small>
+                </div>
+            </div>
+
+            <div class="col-md-6 login-right">
+                <div class="plus-icon">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <h2>Idea to app, fast</h2>
+                <p class="mb-4">Build, deploy, and scale your mobile shop business with ease</p>
+                <a href="#" class="explore-btn">
+                    <i class="fas fa-th-large"></i> Explore Categories
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function switchTab(tab) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tab + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

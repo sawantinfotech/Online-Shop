@@ -181,13 +181,15 @@ class User(db.Model):
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
+    username = db.Column(db.String(80), unique=True, nullable=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(256))
     full_name = db.Column(db.String(200))
+    mobile = db.Column(db.String(15))
     profile_photo = db.Column(db.String(500))
     phone_number = db.Column(db.String(15))
     address = db.Column(db.Text)
+    user_type = db.Column(db.String(20), default='subscriber')  # subscriber, business, admin
     is_online = db.Column(db.Boolean, default=False)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     role = db.Column(db.String(20), default='user')  # user, manager, admin, super_admin
@@ -195,6 +197,8 @@ class User(db.Model):
     credit_points = db.Column(db.Integer, default=0)
     subscription_plan = db.Column(db.String(50), default='free')
     custom_homepage = db.Column(db.Boolean, default=False)
+    verification_status = db.Column(db.String(20), default='pending')
+    verification_token = db.Column(db.String(100), unique=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
@@ -287,10 +291,12 @@ class PricingPlan(db.Model):
     __tablename__ = 'pricing_plans'
     
     id = db.Column(db.Integer, primary_key=True)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
     price = db.Column(db.Float, nullable=False)
     billing_cycle = db.Column(db.String(20))  # monthly, yearly
+    duration = db.Column(db.String(50), default='monthly')  # monthly, yearly, lifetime
     features = db.Column(db.Text)  # JSON array of features
     max_products = db.Column(db.Integer, default=-1)  # -1 for unlimited
     max_orders = db.Column(db.Integer, default=-1)
@@ -298,21 +304,44 @@ class PricingPlan(db.Model):
     custom_homepage = db.Column(db.Boolean, default=False)
     advanced_analytics = db.Column(db.Boolean, default=False)
     priority_support = db.Column(db.Boolean, default=False)
+    is_featured = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    category = db.relationship('Category', backref='pricing_plans')
+    
+    def get_features(self):
+        return json.loads(self.features) if self.features else []
+    
+    def set_features(self, features_list):
+        self.features = json.dumps(features_list)
 
 class UserSubscription(db.Model):
     __tablename__ = 'user_subscriptions'
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=True)
     plan_id = db.Column(db.Integer, db.ForeignKey('pricing_plans.id'), nullable=False)
+    additional_info = db.Column(db.Text)
+    amount = db.Column(db.Float, nullable=False, default=0.0)
     start_date = db.Column(db.DateTime, default=datetime.utcnow)
     end_date = db.Column(db.DateTime)
-    status = db.Column(db.String(20), default='active')  # active, expired, cancelled
+    status = db.Column(db.String(20), default='pending')  # pending, active, expired, cancelled
+    payment_status = db.Column(db.String(20), default='pending')  # pending, completed, failed
     payment_method = db.Column(db.String(50))
     transaction_id = db.Column(db.String(100))
+    started_at = db.Column(db.DateTime)
+    expires_at = db.Column(db.DateTime)
+    approved_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    user = db.relationship('User', backref='subscriptions')
+    category = db.relationship('Category', backref='subscriptions')
+    plan = db.relationship('PricingPlan', backref='subscriptions')
 
 class BusinessManager(db.Model):
     __tablename__ = 'business_managers'
@@ -660,6 +689,8 @@ class SEOSetting(db.Model):
     
     def set_permissions_list(self, permissions):
         self.permissions_required = json.dumps(permissions)
+
+
 
 # Matrimony App Models
 class MatrimonyProfile(db.Model):
