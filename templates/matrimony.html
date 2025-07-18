@@ -1,0 +1,343 @@
+{% extends "base.html" %}
+
+{% block title %}Matrimony - Find Your Perfect Match{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Hero Section -->
+        <div class="col-12 bg-gradient-primary text-white py-5">
+            <div class="container text-center">
+                <h1 class="display-4 mb-3">Find Your Perfect Match</h1>
+                <p class="lead mb-4">Join thousands of verified profiles and find your life partner</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{{ url_for('matrimony_register') }}" class="btn btn-light btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>Create Profile
+                    </a>
+                    <a href="{{ url_for('matrimony_profiles') }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-search me-2"></i>Browse Profiles
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-md-4 text-center mb-4">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-shield-alt fa-3x text-primary"></i>
+                </div>
+                <h5>100% Verified Profiles</h5>
+                <p class="text-muted">All profiles are manually verified for authenticity</p>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-heart fa-3x text-danger"></i>
+                </div>
+                <h5>Smart Matching</h5>
+                <p class="text-muted">Advanced algorithm matches you with compatible partners</p>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-lock fa-3x text-success"></i>
+                </div>
+                <h5>Privacy Protected</h5>
+                <p class="text-muted">Your personal information is safe and secure</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Profiles Carousel -->
+    <div class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Featured Profiles</h2>
+            <div id="profileCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% set profiles_chunked = profiles|batch(3) %}
+                    {% for chunk in profiles_chunked %}
+                    <div class="carousel-item {{ 'active' if loop.first }}">
+                        <div class="row">
+                            {% for profile in chunk %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 profile-card">
+                                    <div class="position-relative">
+                                        {% set images = profile.get_profile_images() %}
+                                        {% if images %}
+                                            {% for image in images[:5] %}
+                                            <img src="{{ url_for('static', filename='uploads/' + image) }}" 
+                                                 class="card-img-top profile-image {{ 'blur-photo' if profile.membership_badge == 'basic' and profile.photo_blurred else '' }}" 
+                                                 style="height: 300px; object-fit: cover; {{ 'display: none;' if not loop.first }}"
+                                                 alt="Profile Photo {{ loop.index }}">
+                                            {% endfor %}
+                                            
+                                            <!-- Photo Navigation -->
+                                            {% if images|length > 1 %}
+                                            <div class="photo-nav">
+                                                <button type="button" class="btn btn-sm btn-light rounded-circle photo-prev">
+                                                    <i class="fas fa-chevron-left"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-light rounded-circle photo-next">
+                                                    <i class="fas fa-chevron-right"></i>
+                                                </button>
+                                            </div>
+                                            <div class="photo-indicators">
+                                                {% for image in images[:5] %}
+                                                <span class="indicator {{ 'active' if loop.first }}"></span>
+                                                {% endfor %}
+                                            </div>
+                                            {% endif %}
+                                        {% else %}
+                                            <img src="https://images.unsplash.com/photo-1494790108755-2616b30d8c87?w=300&h=300&fit=crop&crop=face" 
+                                                 class="card-img-top" style="height: 300px; object-fit: cover;" alt="Profile">
+                                        {% endif %}
+                                        
+                                        <!-- Membership Badge -->
+                                        <div class="membership-badge">
+                                            <span class="badge bg-{{ 'warning' if profile.membership_badge == 'gold' else 'primary' if profile.membership_badge == 'platinum' else 'secondary' }}">
+                                                {{ profile.membership_badge.title() }}
+                                            </span>
+                                        </div>
+                                        
+                                        <!-- Online Status -->
+                                        <div class="online-status">
+                                            <span class="badge bg-success">Online</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-body">
+                                        <h6 class="card-title">{{ profile.full_name }}, {{ profile.age }}</h6>
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-map-marker-alt me-1"></i>{{ profile.city }}, {{ profile.state }}
+                                        </p>
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-graduation-cap me-1"></i>{{ profile.education or 'Education not specified' }}
+                                        </p>
+                                        <p class="text-muted small mb-3">
+                                            <i class="fas fa-briefcase me-1"></i>{{ profile.occupation or 'Occupation not specified' }}
+                                        </p>
+                                        
+                                        <!-- Action Buttons -->
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ url_for('matrimony_profile', profile_id=profile.id) }}" 
+                                               class="btn btn-primary btn-sm flex-fill">
+                                                <i class="fas fa-eye me-1"></i>View
+                                            </a>
+                                            <a href="{{ url_for('matrimony_interact', profile_id=profile.id, action='follow') }}" 
+                                               class="btn btn-outline-danger btn-sm follow-btn">
+                                                <i class="fas fa-heart me-1"></i>Follow
+                                            </a>
+                                            <div class="dropdown">
+                                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" 
+                                                        data-bs-toggle="dropdown">
+                                                    <i class="fas fa-share-alt"></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="{{ url_for('matrimony_share', profile_id=profile.id, platform='facebook') }}">
+                                                        <i class="fab fa-facebook me-2"></i>Facebook
+                                                    </a></li>
+                                                    <li><a class="dropdown-item" href="{{ url_for('matrimony_share', profile_id=profile.id, platform='whatsapp') }}">
+                                                        <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                                                    </a></li>
+                                                    <li><a class="dropdown-item" href="{{ url_for('matrimony_share', profile_id=profile.id, platform='buddhistan') }}">
+                                                        <i class="fas fa-lotus me-2"></i>Buddhistan
+                                                    </a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <button class="carousel-control-prev" type="button" data-bs-target="#profileCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#profileCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for photo navigation -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Photo navigation functionality
+        document.querySelectorAll('.profile-card').forEach(card => {
+            const images = card.querySelectorAll('.profile-image');
+            const prevBtn = card.querySelector('.photo-prev');
+            const nextBtn = card.querySelector('.photo-next');
+            const indicators = card.querySelectorAll('.indicator');
+            let currentIndex = 0;
+            
+            if (images.length <= 1) return;
+            
+            function showImage(index) {
+                images.forEach((img, i) => {
+                    img.style.display = i === index ? 'block' : 'none';
+                });
+                indicators.forEach((ind, i) => {
+                    ind.classList.toggle('active', i === index);
+                });
+            }
+            
+            if (prevBtn) {
+                prevBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentIndex = (currentIndex - 1 + images.length) % images.length;
+                    showImage(currentIndex);
+                });
+            }
+            
+            if (nextBtn) {
+                nextBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentIndex = (currentIndex + 1) % images.length;
+                    showImage(currentIndex);
+                });
+            }
+            
+            // Auto-cycle photos every 5 seconds
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % images.length;
+                showImage(currentIndex);
+            }, 5000);
+        });
+    });
+    </script>
+
+    <!-- Membership Plans -->
+    <div class="container my-5">
+        <h2 class="text-center mb-5">Membership Plans</h2>
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-secondary text-white text-center">
+                        <h5>Basic</h5>
+                        <h3>Free</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Create Profile</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Browse Profiles</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Send Interests</li>
+                            <li><i class="fas fa-times text-danger me-2"></i>Contact Details</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ url_for('matrimony_register') }}" class="btn btn-secondary">Get Started</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 border-silver">
+                    <div class="card-header bg-silver text-dark text-center">
+                        <h5>Silver</h5>
+                        <h3>₹999/month</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>All Basic Features</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Contact Details</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Chat Feature</li>
+                            <li><i class="fas fa-times text-danger me-2"></i>Priority Support</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ url_for('matrimony_register') }}" class="btn btn-outline-dark">Choose Silver</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 border-warning">
+                    <div class="card-header bg-gold text-dark text-center">
+                        <h5>Gold</h5>
+                        <h3>₹1999/month</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>All Silver Features</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Priority Support</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Profile Boost</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Advanced Search</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ url_for('matrimony_register') }}" class="btn btn-warning">Choose Gold</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 border-info">
+                    <div class="card-header bg-platinum text-dark text-center">
+                        <h5>Platinum</h5>
+                        <h3>₹2999/month</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>All Gold Features</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Dedicated Manager</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Profile Verification</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Premium Badge</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ url_for('matrimony_register') }}" class="btn btn-info">Choose Platinum</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="bg-primary text-white py-5">
+        <div class="container text-center">
+            <h2 class="mb-3">Ready to Find Your Perfect Match?</h2>
+            <p class="lead mb-4">Join thousands of happy couples who found love through our platform</p>
+            <a href="{{ url_for('matrimony_register') }}" class="btn btn-light btn-lg">
+                <i class="fas fa-heart me-2"></i>Start Your Journey
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-gradient-primary {
+    background: linear-gradient(45deg, #007bff, #6610f2);
+}
+
+.bg-silver {
+    background-color: #c0c0c0;
+}
+
+.bg-gold {
+    background-color: #ffd700;
+}
+
+.bg-platinum {
+    background-color: #e5e4e2;
+}
+
+.border-silver {
+    border-color: #c0c0c0 !important;
+}
+
+.feature-icon {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+</style>
+{% endblock %}

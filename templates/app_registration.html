@@ -1,0 +1,413 @@
+{% extends "base.html" %}
+
+{% block title %}Submit Your App - Mobile Shop Hub{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">
+                        <i class="fas fa-upload me-2"></i>Submit Your App
+                    </h2>
+                    <p class="mb-0 mt-2">Join our app marketplace and reach thousands of users!</p>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Progress Steps -->
+                    <div class="progress-steps mb-4">
+                        <div class="d-flex justify-content-between">
+                            <div class="step active">
+                                <div class="step-number">1</div>
+                                <div class="step-title">App Details</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-title">Developer Info</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-title">Files & Media</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-title">Review</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="POST" enctype="multipart/form-data" id="appSubmissionForm">
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Step 1: App Details -->
+                        <div class="step-content active" id="step1">
+                            <h4 class="mb-3">
+                                <i class="fas fa-mobile-alt me-2"></i>App Information
+                            </h4>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.app_name.label(class="form-label") }}
+                                    {{ form.app_name(class="form-control") }}
+                                    {% if form.app_name.errors %}
+                                        <div class="text-danger">{{ form.app_name.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form.app_category.label(class="form-label") }}
+                                    {{ form.app_category(class="form-select") }}
+                                    {% if form.app_category.errors %}
+                                        <div class="text-danger">{{ form.app_category.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.app_description.label(class="form-label") }}
+                                {{ form.app_description(class="form-control", rows="4") }}
+                                <div class="form-text">Describe your app's main features and benefits (50-1000 characters)</div>
+                                {% if form.app_description.errors %}
+                                    <div class="text-danger">{{ form.app_description.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    {{ form.app_version.label(class="form-label") }}
+                                    {{ form.app_version(class="form-control", placeholder="e.g., 1.0.0") }}
+                                    {% if form.app_version.errors %}
+                                        <div class="text-danger">{{ form.app_version.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    {{ form.target_audience.label(class="form-label") }}
+                                    {{ form.target_audience(class="form-control", placeholder="e.g., Business professionals") }}
+                                    {% if form.target_audience.errors %}
+                                        <div class="text-danger">{{ form.target_audience.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    {{ form.app_size.label(class="form-label") }}
+                                    {{ form.app_size(class="form-control", placeholder="e.g., 25 MB") }}
+                                    {% if form.app_size.errors %}
+                                        <div class="text-danger">{{ form.app_size.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.app_website.label(class="form-label") }}
+                                    {{ form.app_website(class="form-control", placeholder="https://your-app-website.com") }}
+                                    {% if form.app_website.errors %}
+                                        <div class="text-danger">{{ form.app_website.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form.minimum_os_version.label(class="form-label") }}
+                                    {{ form.minimum_os_version(class="form-control", placeholder="e.g., Android 8.0+") }}
+                                    {% if form.minimum_os_version.errors %}
+                                        <div class="text-danger">{{ form.minimum_os_version.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Developer Information -->
+                        <div class="step-content" id="step2">
+                            <h4 class="mb-3">
+                                <i class="fas fa-user-tie me-2"></i>Developer Information
+                            </h4>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.developer_name.label(class="form-label") }}
+                                    {{ form.developer_name(class="form-control") }}
+                                    {% if form.developer_name.errors %}
+                                        <div class="text-danger">{{ form.developer_name.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form.developer_email.label(class="form-label") }}
+                                    {{ form.developer_email(class="form-control") }}
+                                    {% if form.developer_email.errors %}
+                                        <div class="text-danger">{{ form.developer_email.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    {{ form.developer_phone.label(class="form-label") }}
+                                    {{ form.developer_phone(class="form-control") }}
+                                    {% if form.developer_phone.errors %}
+                                        <div class="text-danger">{{ form.developer_phone.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    {{ form.developer_company.label(class="form-label") }}
+                                    {{ form.developer_company(class="form-control") }}
+                                    {% if form.developer_company.errors %}
+                                        <div class="text-danger">{{ form.developer_company.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    {{ form.developer_website.label(class="form-label") }}
+                                    {{ form.developer_website(class="form-control") }}
+                                    {% if form.developer_website.errors %}
+                                        <div class="text-danger">{{ form.developer_website.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Files & Media -->
+                        <div class="step-content" id="step3">
+                            <h4 class="mb-3">
+                                <i class="fas fa-file-upload me-2"></i>App Files & Media
+                            </h4>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.app_logo.label(class="form-label") }}
+                                    {{ form.app_logo(class="form-control") }}
+                                    <div class="form-text">Upload your app's logo (PNG, JPG, GIF)</div>
+                                    {% if form.app_logo.errors %}
+                                        <div class="text-danger">{{ form.app_logo.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form.app_screenshots.label(class="form-label") }}
+                                    {{ form.app_screenshots(class="form-control") }}
+                                    <div class="form-text">Upload app screenshots (up to 5 images)</div>
+                                    {% if form.app_screenshots.errors %}
+                                        <div class="text-danger">{{ form.app_screenshots.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.app_apk_file.label(class="form-label") }}
+                                    {{ form.app_apk_file(class="form-control") }}
+                                    <div class="form-text">Upload APK file (optional)</div>
+                                    {% if form.app_apk_file.errors %}
+                                        <div class="text-danger">{{ form.app_apk_file.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form.app_documentation.label(class="form-label") }}
+                                    {{ form.app_documentation(class="form-control") }}
+                                    <div class="form-text">Upload documentation (PDF, DOC)</div>
+                                    {% if form.app_documentation.errors %}
+                                        <div class="text-danger">{{ form.app_documentation.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.app_features.label(class="form-label") }}
+                                {{ form.app_features(class="form-control", rows="4") }}
+                                <div class="form-text">List key features, one per line</div>
+                                {% if form.app_features.errors %}
+                                    <div class="text-danger">{{ form.app_features.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.permissions_required.label(class="form-label") }}
+                                {{ form.permissions_required(class="form-control", rows="3") }}
+                                <div class="form-text">List required permissions, one per line (e.g., Camera, Location, Storage)</div>
+                                {% if form.permissions_required.errors %}
+                                    <div class="text-danger">{{ form.permissions_required.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Pricing & Legal -->
+                        <div class="step-content" id="step4">
+                            <h4 class="mb-3">
+                                <i class="fas fa-dollar-sign me-2"></i>Pricing & Legal
+                            </h4>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.app_price.label(class="form-label") }}
+                                    {{ form.app_price(class="form-select") }}
+                                    {% if form.app_price.errors %}
+                                        <div class="text-danger">{{ form.app_price.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form.monetization_model.label(class="form-label") }}
+                                    {{ form.monetization_model(class="form-select") }}
+                                    {% if form.monetization_model.errors %}
+                                        <div class="text-danger">{{ form.monetization_model.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.privacy_policy_url.label(class="form-label") }}
+                                    {{ form.privacy_policy_url(class="form-control") }}
+                                    {% if form.privacy_policy_url.errors %}
+                                        <div class="text-danger">{{ form.privacy_policy_url.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form.terms_of_service_url.label(class="form-label") }}
+                                    {{ form.terms_of_service_url(class="form-control") }}
+                                    {% if form.terms_of_service_url.errors %}
+                                        <div class="text-danger">{{ form.terms_of_service_url.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    {{ form.terms_accepted(class="form-check-input") }}
+                                    {{ form.terms_accepted.label(class="form-check-label") }}
+                                </div>
+                                {% if form.terms_accepted.errors %}
+                                    <div class="text-danger">{{ form.terms_accepted.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <h6><i class="fas fa-info-circle me-2"></i>Review Process</h6>
+                                <ul class="mb-0">
+                                    <li>Your app will be reviewed within 3-5 business days</li>
+                                    <li>We'll contact you via email with the review results</li>
+                                    <li>Apps must comply with our content guidelines</li>
+                                    <li>Once approved, your app will be live in our marketplace</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-secondary" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
+                                <i class="fas fa-arrow-left me-2"></i>Previous
+                            </button>
+                            <button type="button" class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">
+                                Next <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                            <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">
+                                <i class="fas fa-paper-plane me-2"></i>Submit App
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.progress-steps {
+    margin-bottom: 2rem;
+}
+
+.step {
+    text-align: center;
+    position: relative;
+    flex: 1;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.5rem;
+    font-weight: bold;
+}
+
+.step.active .step-number {
+    background: #007bff;
+    color: white;
+}
+
+.step-title {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.step.active .step-title {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.step-content {
+    display: none;
+}
+
+.step-content.active {
+    display: block;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+}
+</style>
+
+<script>
+let currentStep = 1;
+const totalSteps = 4;
+
+function changeStep(direction) {
+    // Hide current step
+    document.getElementById('step' + currentStep).classList.remove('active');
+    document.querySelector(`.step:nth-child(${currentStep})`).classList.remove('active');
+    
+    // Update current step
+    currentStep += direction;
+    
+    // Show new step
+    document.getElementById('step' + currentStep).classList.add('active');
+    document.querySelector(`.step:nth-child(${currentStep})`).classList.add('active');
+    
+    // Update button visibility
+    updateButtons();
+}
+
+function updateButtons() {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // Previous button
+    prevBtn.style.display = currentStep === 1 ? 'none' : 'inline-block';
+    
+    // Next/Submit buttons
+    if (currentStep === totalSteps) {
+        nextBtn.style.display = 'none';
+        submitBtn.style.display = 'inline-block';
+    } else {
+        nextBtn.style.display = 'inline-block';
+        submitBtn.style.display = 'none';
+    }
+}
+
+// Initialize
+updateButtons();
+</script>
+{% endblock %}

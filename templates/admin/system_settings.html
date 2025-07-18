@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}System Settings - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>System Settings</h2>
+                <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Email System Status -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-envelope me-2"></i>Email System
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span>Email Service</span>
+                        <span class="badge bg-{{ 'success' if email_status.configured else 'danger' }}">
+                            {{ 'Configured' if email_status.configured else 'Not Configured' }}
+                        </span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span>SMTP Connection</span>
+                        <span class="badge bg-{{ 'success' if email_status.connection else 'warning' }}">
+                            {{ 'Connected' if email_status.connection else 'Disconnected' }}
+                        </span>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <a href="{{ url_for('test_email') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-paper-plane me-2"></i>Test Email
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SMS System Status -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-sms me-2"></i>SMS System
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span>Twilio Service</span>
+                        <span class="badge bg-{{ 'success' if sms_status.configured else 'danger' }}">
+                            {{ 'Configured' if sms_status.configured else 'Not Configured' }}
+                        </span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span>SMS Templates</span>
+                        <span class="badge bg-info">{{ sms_status.template_count }} Templates</span>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button class="btn btn-outline-primary" disabled>
+                            <i class="fas fa-paper-plane me-2"></i>Test SMS
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Database Information -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-database me-2"></i>Database Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h4 class="text-primary">{{ db_stats.businesses }}</h4>
+                                <p class="mb-0">Total Businesses</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h4 class="text-success">{{ db_stats.products }}</h4>
+                                <p class="mb-0">Total Products</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h4 class="text-info">{{ db_stats.customers }}</h4>
+                                <p class="mb-0">Total Customers</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h4 class="text-warning">{{ db_stats.orders }}</h4>
+                                <p class="mb-0">Total Orders</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Configuration -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cogs me-2"></i>System Configuration
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Upload Settings</h6>
+                            <p>Max file size: 16MB</p>
+                            <p>Allowed formats: JPG, PNG, PDF, GIF</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Payment Gateways</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked disabled>
+                                <label class="form-check-label">Google Pay</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked disabled>
+                                <label class="form-check-label">Paytm</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked disabled>
+                                <label class="form-check-label">Brainlo</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

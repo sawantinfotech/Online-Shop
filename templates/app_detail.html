@@ -1,0 +1,404 @@
+{% extends "base.html" %}
+
+{% block title %}{{ app.name }} - App Details{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Section 1: Logo with App Name -->
+    <div class="row bg-gradient-primary text-white py-5">
+        <div class="col-12 text-center">
+            <div class="app-logo-large mb-3">
+                {{ app.logo_url|safe }}
+            </div>
+            <h1 class="display-4 mb-2">{{ app.name }}</h1>
+            <p class="lead mb-3">{{ app.short_description }}</p>
+            <div class="app-stats d-flex justify-content-center gap-4 flex-wrap">
+                <div class="stat-item">
+                    <i class="fas fa-star text-warning"></i>
+                    <span class="ms-1">{{ app.rating }} ({{ app.reviews_count }} reviews)</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-download text-light"></i>
+                    <span class="ms-1">{{ app.downloads }} downloads</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-tag text-light"></i>
+                    <span class="ms-1">{{ app.category }}</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-code-branch text-light"></i>
+                    <span class="ms-1">v{{ app.version }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Tab Menu + Introduction -->
+    <div class="row py-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" id="appTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+                                <i class="fas fa-info-circle me-2"></i>Overview
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="features-tab" data-bs-toggle="tab" data-bs-target="#features" type="button" role="tab">
+                                <i class="fas fa-star me-2"></i>Features
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="screenshots-tab" data-bs-toggle="tab" data-bs-target="#screenshots" type="button" role="tab">
+                                <i class="fas fa-images me-2"></i>Screenshots
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="support-tab" data-bs-toggle="tab" data-bs-target="#support" type="button" role="tab">
+                                <i class="fas fa-headset me-2"></i>Support
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="appTabsContent">
+                        <!-- Overview Tab -->
+                        <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h4>About {{ app.name }}</h4>
+                                    <p class="text-muted mb-4">{{ app.long_description }}</p>
+                                    
+                                    <h5>Key Highlights</h5>
+                                    <ul class="list-unstyled">
+                                        {% for feature in app.get_features()[:3] %}
+                                        <li class="mb-2">
+                                            <i class="fas fa-check-circle text-success me-2"></i>{{ feature }}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <h6 class="card-title">App Information</h6>
+                                            <div class="mb-2">
+                                                <strong>Category:</strong> {{ app.category }}
+                                            </div>
+                                            <div class="mb-2">
+                                                <strong>Version:</strong> {{ app.version }}
+                                            </div>
+                                            <div class="mb-2">
+                                                <strong>Downloads:</strong> {{ app.downloads }}
+                                            </div>
+                                            <div class="mb-2">
+                                                <strong>Rating:</strong> {{ app.rating }}/5.0
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Features Tab -->
+                        <div class="tab-pane fade" id="features" role="tabpanel">
+                            <h4>Features & Capabilities</h4>
+                            <div class="row">
+                                {% for feature in app.get_features() %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-start">
+                                        <i class="fas fa-cog text-primary me-3 mt-1"></i>
+                                        <div>
+                                            <h6 class="mb-1">{{ feature }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Screenshots Tab -->
+                        <div class="tab-pane fade" id="screenshots" role="tabpanel">
+                            <h4>App Screenshots</h4>
+                            <div class="row">
+                                {% for screenshot in app.get_screenshots() %}
+                                <div class="col-md-6 mb-4">
+                                    <div class="card">
+                                        <img src="{{ screenshot }}" class="card-img-top" alt="App Screenshot" style="height: 200px; object-fit: cover;">
+                                        <div class="card-body">
+                                            <p class="card-text">Screenshot {{ loop.index }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Support Tab -->
+                        <div class="tab-pane fade" id="support" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4>Support & Contact</h4>
+                                    <div class="contact-info">
+                                        <div class="mb-3">
+                                            <i class="fas fa-envelope text-primary me-2"></i>
+                                            <strong>Email:</strong> 
+                                            <a href="mailto:{{ app.support_email }}">{{ app.support_email }}</a>
+                                        </div>
+                                        <div class="mb-3">
+                                            <i class="fas fa-phone text-primary me-2"></i>
+                                            <strong>Phone:</strong> 
+                                            <a href="tel:{{ app.support_phone }}">{{ app.support_phone }}</a>
+                                        </div>
+                                        <div class="mb-3">
+                                            <i class="fas fa-globe text-primary me-2"></i>
+                                            <strong>Website:</strong> 
+                                            <a href="{{ app.support_website }}" target="_blank">{{ app.support_website }}</a>
+                                        </div>
+                                        <div class="mb-3">
+                                            <i class="fas fa-book text-primary me-2"></i>
+                                            <strong>Documentation:</strong> 
+                                            <a href="{{ app.documentation_url }}" target="_blank">View Documentation</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4>Quick Contact</h4>
+                                    <form class="contact-form">
+                                        <div class="mb-3">
+                                            <label for="contactName" class="form-label">Your Name</label>
+                                            <input type="text" class="form-control" id="contactName" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="contactEmail" class="form-label">Your Email</label>
+                                            <input type="email" class="form-control" id="contactEmail" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="contactMessage" class="form-label">Message</label>
+                                            <textarea class="form-control" id="contactMessage" rows="4" required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-paper-plane me-2"></i>Send Message
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4: Author Profile -->
+    <div class="row py-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-circle me-2"></i>About the Developer
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2 text-center">
+                            <div class="author-avatar mb-3">
+                                {{ app.author_avatar|safe }}
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <h5>{{ app.author_name }}</h5>
+                            <p class="text-muted mb-2">{{ app.author_bio }}</p>
+                            <div class="author-links">
+                                <a href="mailto:{{ app.author_email }}" class="btn btn-outline-primary btn-sm me-2">
+                                    <i class="fas fa-envelope me-1"></i>Email
+                                </a>
+                                <a href="{{ app.author_website }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-globe me-1"></i>Website
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 6: Social Links -->
+    <div class="row py-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-share-alt me-2"></i>Connect & Follow
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p class="text-muted mb-4">Stay connected with {{ app.name }} and get the latest updates</p>
+                            <div class="social-links d-flex flex-wrap gap-3">
+                                {% for platform, url in app.get_social_links().items() %}
+                                <a href="{{ url }}" target="_blank" class="btn btn-outline-primary social-btn">
+                                    {% if platform == 'website' %}
+                                    <i class="fas fa-globe me-2"></i>Website
+                                    {% elif platform == 'twitter' %}
+                                    <i class="fab fa-twitter me-2"></i>Twitter
+                                    {% elif platform == 'facebook' %}
+                                    <i class="fab fa-facebook me-2"></i>Facebook
+                                    {% elif platform == 'linkedin' %}
+                                    <i class="fab fa-linkedin me-2"></i>LinkedIn
+                                    {% elif platform == 'instagram' %}
+                                    <i class="fab fa-instagram me-2"></i>Instagram
+                                    {% elif platform == 'youtube' %}
+                                    <i class="fab fa-youtube me-2"></i>YouTube
+                                    {% elif platform == 'telegram' %}
+                                    <i class="fab fa-telegram me-2"></i>Telegram
+                                    {% elif platform == 'reddit' %}
+                                    <i class="fab fa-reddit me-2"></i>Reddit
+                                    {% else %}
+                                    <i class="fas fa-link me-2"></i>{{ platform|title }}
+                                    {% endif %}
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title">Share This App</h6>
+                                    <div class="share-buttons d-flex gap-2">
+                                        <button class="btn btn-outline-primary btn-sm" onclick="shareApp('facebook')">
+                                            <i class="fab fa-facebook"></i>
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm" onclick="shareApp('twitter')">
+                                            <i class="fab fa-twitter"></i>
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm" onclick="shareApp('linkedin')">
+                                            <i class="fab fa-linkedin"></i>
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm" onclick="copyLink()">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Apps Button -->
+    <div class="row py-4">
+        <div class="col-12 text-center">
+            <a href="{{ url_for('apps') }}" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-arrow-left me-2"></i>Back to Apps
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.app-logo-large svg {
+    width: 120px;
+    height: 120px;
+    border-radius: 20px;
+}
+
+.app-stats .stat-item {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    margin: 0.25rem;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.author-avatar svg {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.social-btn {
+    min-width: 120px;
+}
+
+.contact-form {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.screenshot-gallery img {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.screenshot-gallery img:hover {
+    transform: scale(1.05);
+}
+
+.share-buttons button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function shareApp(platform) {
+    const url = window.location.href;
+    const title = "{{ app.name }} - {{ app.short_description }}";
+    
+    let shareUrl = '';
+    switch(platform) {
+        case 'facebook':
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+            break;
+        case 'twitter':
+            shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+            break;
+        case 'linkedin':
+            shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+            break;
+    }
+    
+    if (shareUrl) {
+        window.open(shareUrl, '_blank', 'width=600,height=400');
+    }
+}
+
+function copyLink() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('Link copied to clipboard!');
+    });
+}
+
+// Contact form submission
+document.querySelector('.contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('contactName').value;
+    const email = document.getElementById('contactEmail').value;
+    const message = document.getElementById('contactMessage').value;
+    
+    // Create mailto link
+    const subject = encodeURIComponent(`{{ app.name }} - Contact from ${name}`);
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+    const mailtoLink = `mailto:{{ app.support_email }}?subject=${subject}&body=${body}`;
+    
+    window.location.href = mailtoLink;
+});
+</script>
+{% endblock %}

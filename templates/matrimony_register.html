@@ -1,0 +1,469 @@
+{% extends "base.html" %}
+
+{% block title %}Matrimony Registration - Create Your Profile{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2><i class="fas fa-heart me-2"></i>Create Your Matrimony Profile</h2>
+                    <p class="mb-0">Find your perfect life partner</p>
+                </div>
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" enctype="multipart/form-data" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Basic Information -->
+                        <div class="section-header">
+                            <h4 class="text-primary"><i class="fas fa-user me-2"></i>Basic Information</h4>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.full_name.label(class="form-label") }}
+                                {{ form.full_name(class="form-control") }}
+                                {% if form.full_name.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.full_name.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                {{ form.age.label(class="form-label") }}
+                                {{ form.age(class="form-control") }}
+                                {% if form.age.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.age.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                {{ form.gender.label(class="form-label") }}
+                                {{ form.gender(class="form-select") }}
+                                {% if form.gender.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.gender.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.marital_status.label(class="form-label") }}
+                                {{ form.marital_status(class="form-select") }}
+                                {% if form.marital_status.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.marital_status.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.email.label(class="form-label") }}
+                                {{ form.email(class="form-control") }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.email.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.phone.label(class="form-label") }}
+                            {{ form.phone(class="form-control") }}
+                            {% if form.phone.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.phone.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Physical Details -->
+                        <div class="section-header">
+                            <h4 class="text-primary"><i class="fas fa-male me-2"></i>Physical Details</h4>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                {{ form.height.label(class="form-label") }}
+                                {{ form.height(class="form-control") }}
+                                {% if form.height.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.height.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                {{ form.weight.label(class="form-label") }}
+                                {{ form.weight(class="form-control") }}
+                                {% if form.weight.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.weight.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                {{ form.body_type.label(class="form-label") }}
+                                {{ form.body_type(class="form-select") }}
+                                {% if form.body_type.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.body_type.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                {{ form.complexion.label(class="form-label") }}
+                                {{ form.complexion(class="form-select") }}
+                                {% if form.complexion.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.complexion.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="section-header">
+                            <h4 class="text-primary"><i class="fas fa-map-marker-alt me-2"></i>Location</h4>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                {{ form.city.label(class="form-label") }}
+                                {{ form.city(class="form-control") }}
+                                {% if form.city.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.city.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form.state.label(class="form-label") }}
+                                {{ form.state(class="form-control") }}
+                                {% if form.state.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.state.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form.country.label(class="form-label") }}
+                                {{ form.country(class="form-control") }}
+                                {% if form.country.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.country.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Education & Career -->
+                        <div class="section-header">
+                            <h4 class="text-primary"><i class="fas fa-graduation-cap me-2"></i>Education & Career</h4>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.education.label(class="form-label") }}
+                                {{ form.education(class="form-control") }}
+                                {% if form.education.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.education.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.occupation.label(class="form-label") }}
+                                {{ form.occupation(class="form-control") }}
+                                {% if form.occupation.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.occupation.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.annual_income.label(class="form-label") }}
+                                {{ form.annual_income(class="form-select") }}
+                                {% if form.annual_income.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.annual_income.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.company_name.label(class="form-label") }}
+                                {{ form.company_name(class="form-control") }}
+                                {% if form.company_name.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.company_name.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- About You -->
+                        <div class="section-header">
+                            <h4 class="text-primary"><i class="fas fa-info-circle me-2"></i>About You</h4>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.about_yourself.label(class="form-label") }}
+                            {{ form.about_yourself(class="form-control", rows="4") }}
+                            {% if form.about_yourself.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.about_yourself.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.hobbies.label(class="form-label") }}
+                            {{ form.hobbies(class="form-control") }}
+                            {% if form.hobbies.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.hobbies.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Partner Preferences -->
+                        <div class="section-header">
+                            <h4 class="text-primary"><i class="fas fa-search me-2"></i>Partner Preferences</h4>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.preferred_age_min.label(class="form-label") }}
+                                {{ form.preferred_age_min(class="form-control") }}
+                                {% if form.preferred_age_min.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.preferred_age_min.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.preferred_age_max.label(class="form-label") }}
+                                {{ form.preferred_age_max(class="form-control") }}
+                                {% if form.preferred_age_max.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.preferred_age_max.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.preferred_education.label(class="form-label") }}
+                                {{ form.preferred_education(class="form-control") }}
+                                {% if form.preferred_education.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.preferred_education.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.preferred_occupation.label(class="form-label") }}
+                                {{ form.preferred_occupation(class="form-control") }}
+                                {% if form.preferred_occupation.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.preferred_occupation.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.preferred_income.label(class="form-label") }}
+                            {{ form.preferred_income(class="form-select") }}
+                            {% if form.preferred_income.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.preferred_income.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Profile Images -->
+                        <div class="section-header">
+                            <h4 class="text-primary"><i class="fas fa-images me-2"></i>Profile Images</h4>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.profile_images.label(class="form-label") }}
+                            {{ form.profile_images(class="form-control", accept="image/*") }}
+                            <small class="form-text text-muted">Upload up to 5 images. Supported formats: JPG, PNG, GIF</small>
+                            {% if form.profile_images.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.profile_images.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Membership -->
+                        <div class="section-header">
+                            <h4 class="text-primary"><i class="fas fa-crown me-2"></i>Membership Plan</h4>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.membership_type.label(class="form-label") }}
+                            {{ form.membership_type(class="form-select") }}
+                            {% if form.membership_type.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.membership_type.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Terms -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.terms_accepted(class="form-check-input") }}
+                                {{ form.terms_accepted.label(class="form-check-label") }}
+                            </div>
+                            {% if form.terms_accepted.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.terms_accepted.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-heart me-2"></i>Create Profile
+                            </button>
+                            <a href="{{ url_for('matrimony') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Matrimony
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.section-header {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.section-header h4 {
+    margin-bottom: 0;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 30px;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, #0056b3, #004085);
+    transform: translateY(-2px);
+}
+
+.text-danger small {
+    font-size: 0.875rem;
+}
+</style>
+{% endblock %}

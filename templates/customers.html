@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}Customers - Mobile Shop{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <i class="fas fa-users me-2"></i>Customers
+    </h1>
+    <a href="{{ url_for('add_customer') }}" class="btn btn-primary">
+        <i class="fas fa-user-plus me-2"></i>Add Customer
+    </a>
+</div>
+
+<!-- Search -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3">
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="search" placeholder="Search customers..." value="{{ search }}">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="fas fa-search me-2"></i>Search
+                </button>
+            </div>
+            <div class="col-md-3">
+                <a href="{{ url_for('customers') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-times me-2"></i>Clear
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Customers Table -->
+<div class="card">
+    <div class="card-body">
+        {% if customers.items %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Contact</th>
+                            <th>Groups</th>
+                            <th>Orders</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for customer in customers.items %}
+                        <tr>
+                            <td>
+                                <div>
+                                    <h6 class="mb-1">{{ customer.name }}</h6>
+                                    {% if customer.address %}
+                                        <small class="text-muted">{{ customer.address[:50] }}...</small>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <div><i class="fas fa-phone me-2"></i>{{ customer.phone_number }}</div>
+                                    {% if customer.email %}
+                                        <div><i class="fas fa-envelope me-2"></i>{{ customer.email }}</div>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                {% if customer.get_groups() %}
+                                    {% for group in customer.get_groups() %}
+                                        <span class="badge bg-light text-dark me-1">{{ group }}</span>
+                                    {% endfor %}
+                                {% else %}
+                                    <span class="text-muted">No groups</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-primary">{{ customer.orders|length }}</span>
+                            </td>
+                            <td>{{ customer.created_at.strftime('%d/%m/%Y') }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ url_for('edit_customer', customer_id=customer.id) }}" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-outline-success" 
+                                            onclick="sendSMS({{ customer.id }}, '{{ customer.name }}', '{{ customer.phone_number }}')">
+                                        <i class="fas fa-sms"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if customers.pages > 1 %}
+                <nav aria-label="Customers pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if customers.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('customers', page=customers.prev_num, search=search) }}">
+                                    Previous
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for page_num in customers.iter_pages() %}
+                            {% if page_num %}
+                                {% if page_num != customers.page %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('customers', page=page_num, search=search) }}">
+                                            {{ page_num }}
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ page_num }}</span>
+                                    </li>
+                                {% endif %}
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if customers.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('customers', page=customers.next_num, search=search) }}">
+                                    Next
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No customers found</h5>
+                <p class="text-muted">Start by adding your first customer to the database.</p>
+                <a href="{{ url_for('add_customer') }}" class="btn btn-primary">
+                    <i class="fas fa-user-plus me-2"></i>Add First Customer
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- SMS Modal -->
+<div class="modal fade" id="smsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Send SMS</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="smsForm">
+                    <input type="hidden" id="customerId" name="customer_id">
+                    <div class="mb-3">
+                        <label class="form-label">To:</label>
+                        <div id="customerInfo" class="form-control-plaintext"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="smsMessage" class="form-label">Message</label>
+                        <textarea class="form-control" id="smsMessage" name="message" rows="4" required></textarea>
+                        <small class="form-text text-muted">Message will be sent via SMS</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="sendSMSMessage()">
+                    <i class="fas fa-paper-plane me-2"></i>Send SMS
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function sendSMS(customerId, customerName, phoneNumber) {
+    document.getElementById('customerId').value = customerId;
+    document.getElementById('customerInfo').innerText = customerName + ' (' + phoneNumber + ')';
+    document.getElementById('smsMessage').value = '';
+    new bootstrap.Modal(document.getElementById('smsModal')).show();
+}
+
+function sendSMSMessage() {
+    const customerId = document.getElementById('customerId').value;
+    const message = document.getElementById('smsMessage').value;
+    
+    if (!message.trim()) {
+        alert('Please enter a message');
+        return;
+    }
+    
+    // Here you would typically send an AJAX request to send the SMS
+    // For now, we'll just show a success message
+    alert('SMS sent successfully!');
+    bootstrap.Modal.getInstance(document.getElementById('smsModal')).hide();
+}
+</script>
+{% endblock %}

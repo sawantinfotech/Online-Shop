@@ -1,0 +1,356 @@
+{% extends "base.html" %}
+
+{% block title %}Matrimony Registration - Step {{ step }} of 4{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2><i class="fas fa-heart me-2"></i>Create Your Profile</h2>
+                        <span class="badge bg-light text-primary">Step {{ step }} of 4</span>
+                    </div>
+                    
+                    <!-- Progress Bar -->
+                    <div class="progress mt-3" style="height: 8px;">
+                        <div class="progress-bar bg-warning" role="progressbar" 
+                             style="width: {{ (step / 4) * 100 }}%" 
+                             aria-valuenow="{{ step }}" aria-valuemin="0" aria-valuemax="4"></div>
+                    </div>
+                    
+                    <!-- Step Indicators -->
+                    <div class="d-flex justify-content-between mt-3">
+                        <small class="text-light {{ 'fw-bold' if step >= 1 else '' }}">
+                            <i class="fas fa-user {{ 'text-warning' if step >= 1 else '' }}"></i> Basic Info
+                        </small>
+                        <small class="text-light {{ 'fw-bold' if step >= 2 else '' }}">
+                            <i class="fas fa-heart {{ 'text-warning' if step >= 2 else '' }}"></i> Personal
+                        </small>
+                        <small class="text-light {{ 'fw-bold' if step >= 3 else '' }}">
+                            <i class="fas fa-briefcase {{ 'text-warning' if step >= 3 else '' }}"></i> Career
+                        </small>
+                        <small class="text-light {{ 'fw-bold' if step >= 4 else '' }}">
+                            <i class="fas fa-camera {{ 'text-warning' if step >= 4 else '' }}"></i> Photos
+                        </small>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" enctype="multipart/form-data" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        {% if step == 1 %}
+                        <!-- Step 1: Basic Information -->
+                        <div class="section-header mb-4">
+                            <h4 class="text-primary mb-3">
+                                <i class="fas fa-user me-2"></i>Basic Information
+                            </h4>
+                            <p class="text-muted">Tell us about yourself</p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.full_name.label(class="form-label") }}
+                                {{ form.full_name(class="form-control form-control-lg") }}
+                                {% if form.full_name.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.full_name.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                {{ form.age.label(class="form-label") }}
+                                {{ form.age(class="form-control form-control-lg") }}
+                                {% if form.age.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.age.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                {{ form.gender.label(class="form-label") }}
+                                {{ form.gender(class="form-select form-control-lg") }}
+                                {% if form.gender.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.gender.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.marital_status.label(class="form-label") }}
+                                {{ form.marital_status(class="form-select form-control-lg") }}
+                                {% if form.marital_status.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.marital_status.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Relationship Type</label>
+                                <select name="relationship_type" class="form-select form-control-lg" required>
+                                    <option value="">Select relationship type</option>
+                                    <option value="marriage">Marriage</option>
+                                    <option value="open">Open Relationship</option>
+                                    <option value="livein">Live-in Relationship</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.email.label(class="form-label") }}
+                                {{ form.email(class="form-control form-control-lg") }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.email.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.phone.label(class="form-label") }}
+                                {{ form.phone(class="form-control form-control-lg") }}
+                                {% if form.phone.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.phone.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        {% elif step == 2 %}
+                        <!-- Step 2: Personal Details -->
+                        <div class="section-header mb-4">
+                            <h4 class="text-primary mb-3">
+                                <i class="fas fa-heart me-2"></i>Personal Details
+                            </h4>
+                            <p class="text-muted">Share your personal information</p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                {{ form.height.label(class="form-label") }}
+                                {{ form.height(class="form-control") }}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                {{ form.weight.label(class="form-label") }}
+                                {{ form.weight(class="form-control") }}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                {{ form.body_type.label(class="form-label") }}
+                                {{ form.body_type(class="form-select") }}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                {{ form.complexion.label(class="form-label") }}
+                                {{ form.complexion(class="form-select") }}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                {{ form.city.label(class="form-label") }}
+                                {{ form.city(class="form-control") }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form.state.label(class="form-label") }}
+                                {{ form.state(class="form-control") }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form.country.label(class="form-label") }}
+                                {{ form.country(class="form-control") }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">About Yourself</label>
+                            <textarea name="about_yourself" class="form-control" rows="4" 
+                                      placeholder="Tell us about yourself, your interests, and what makes you unique..."></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Hobbies & Interests</label>
+                            <textarea name="hobbies" class="form-control" rows="3" 
+                                      placeholder="List your hobbies and interests..."></textarea>
+                        </div>
+                        
+                        {% elif step == 3 %}
+                        <!-- Step 3: Career & Education -->
+                        <div class="section-header mb-4">
+                            <h4 class="text-primary mb-3">
+                                <i class="fas fa-briefcase me-2"></i>Career & Education
+                            </h4>
+                            <p class="text-muted">Tell us about your professional life</p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.education.label(class="form-label") }}
+                                {{ form.education(class="form-control") }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.occupation.label(class="form-label") }}
+                                {{ form.occupation(class="form-control") }}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.annual_income.label(class="form-label") }}
+                                {{ form.annual_income(class="form-select") }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.company_name.label(class="form-label") }}
+                                {{ form.company_name(class="form-control") }}
+                            </div>
+                        </div>
+                        
+                        <h5 class="text-primary mt-4 mb-3">Partner Preferences</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Preferred Age (Min)</label>
+                                <input type="number" name="preferred_age_min" class="form-control" min="18" max="80">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Preferred Age (Max)</label>
+                                <input type="number" name="preferred_age_max" class="form-control" min="18" max="80">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Preferred Education</label>
+                                <select name="preferred_education" class="form-select">
+                                    <option value="">Any Education</option>
+                                    <option value="high_school">High School</option>
+                                    <option value="bachelor">Bachelor's Degree</option>
+                                    <option value="master">Master's Degree</option>
+                                    <option value="phd">PhD</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Membership Type</label>
+                            <select name="membership_type" class="form-select form-control-lg" required>
+                                <option value="basic">Basic (Free)</option>
+                                <option value="silver">Silver ($9.99/month)</option>
+                                <option value="gold">Gold ($19.99/month)</option>
+                                <option value="platinum">Platinum ($29.99/month)</option>
+                            </select>
+                        </div>
+                        
+                        {% elif step == 4 %}
+                        <!-- Step 4: Photos -->
+                        <div class="section-header mb-4">
+                            <h4 class="text-primary mb-3">
+                                <i class="fas fa-camera me-2"></i>Profile Photos
+                            </h4>
+                            <p class="text-muted">Add up to 5 photos to make your profile attractive</p>
+                        </div>
+                        
+                        <div class="photo-upload-area p-4 border-2 border-dashed border-primary rounded text-center mb-4">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                            <h5>Upload Your Photos</h5>
+                            <p class="text-muted">Drag and drop photos here or click to browse</p>
+                            <input type="file" name="profile_images" multiple accept="image/*" 
+                                   class="form-control" id="photoUpload" style="display: none;">
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('photoUpload').click()">
+                                <i class="fas fa-plus me-2"></i>Add Photos
+                            </button>
+                        </div>
+                        
+                        <div id="photoPreview" class="row"></div>
+                        
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-info-circle me-2"></i>Photo Guidelines:</h6>
+                            <ul class="mb-0">
+                                <li>Upload clear, recent photos</li>
+                                <li>Basic members: Photos will be blurred 80% after 10 days</li>
+                                <li>Premium members: Full photo access</li>
+                                <li>Maximum 5 photos allowed</li>
+                            </ul>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Navigation Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            {% if step > 1 %}
+                                <button type="submit" name="action" value="previous" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-arrow-left me-2"></i>Previous
+                                </button>
+                            {% else %}
+                                <div></div>
+                            {% endif %}
+                            
+                            {% if step < 4 %}
+                                <button type="submit" name="action" value="next" class="btn btn-primary btn-lg">
+                                    Next <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            {% else %}
+                                <button type="submit" name="action" value="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-check me-2"></i>Create Profile
+                                </button>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Photo upload preview
+document.getElementById('photoUpload').addEventListener('change', function(e) {
+    const files = e.target.files;
+    const preview = document.getElementById('photoPreview');
+    preview.innerHTML = '';
+    
+    for (let i = 0; i < Math.min(files.length, 5); i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            const div = document.createElement('div');
+            div.className = 'col-md-4 mb-3';
+            div.innerHTML = `
+                <div class="card">
+                    <img src="${e.target.result}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    <div class="card-body p-2 text-center">
+                        <small class="text-muted">Photo ${i + 1}</small>
+                    </div>
+                </div>
+            `;
+            preview.appendChild(div);
+        };
+        
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+{% endblock %}

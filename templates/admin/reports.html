@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}System Reports - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>System Reports</h2>
+                <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Sales Chart -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>Daily Sales (Last 30 Days)
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="salesChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Top Businesses -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-trophy me-2"></i>Top Performing Businesses
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for business in top_businesses %}
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h6 class="mb-1">{{ business.business_name }}</h6>
+                            <small class="text-muted">{{ business.order_count }} orders</small>
+                        </div>
+                        <strong class="text-success">₹{{ "%.2f"|format(business.revenue) }}</strong>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Statistics -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-alt me-2"></i>Sales Summary Report
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Total Sales</th>
+                                    <th>Orders Count</th>
+                                    <th>Average Order Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sale in daily_sales %}
+                                <tr>
+                                    <td>{{ sale.date.strftime('%Y-%m-%d') }}</td>
+                                    <td>₹{{ "%.2f"|format(sale.total) }}</td>
+                                    <td>{{ sale.count }}</td>
+                                    <td>₹{{ "%.2f"|format(sale.total / sale.count) if sale.count > 0 else "0.00" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Sales Chart
+const ctx = document.getElementById('salesChart').getContext('2d');
+const salesChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [
+            {% for sale in daily_sales %}
+            '{{ sale.date.strftime('%m/%d') }}',
+            {% endfor %}
+        ],
+        datasets: [{
+            label: 'Daily Sales (₹)',
+            data: [
+                {% for sale in daily_sales %}
+                {{ sale.total }},
+                {% endfor %}
+            ],
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

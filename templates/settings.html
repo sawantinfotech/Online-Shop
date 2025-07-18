@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Mobile Shop{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <i class="fas fa-cog me-2"></i>Settings
+    </h1>
+</div>
+
+<div class="row">
+    <!-- Payment Gateway Settings -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-credit-card me-2"></i>Payment Gateway Settings
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            {{ form.gpay_enabled(class="form-check-input") }}
+                            <label class="form-check-label" for="{{ form.gpay_enabled.id }}">
+                                <i class="fab fa-google-pay me-2"></i>Enable Google Pay
+                            </label>
+                        </div>
+                        <small class="form-text text-muted">Allow customers to pay using Google Pay</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            {{ form.paytm_enabled(class="form-check-input") }}
+                            <label class="form-check-label" for="{{ form.paytm_enabled.id }}">
+                                <i class="fas fa-mobile-alt me-2"></i>Enable Paytm
+                            </label>
+                        </div>
+                        <small class="form-text text-muted">Allow customers to pay using Paytm</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            {{ form.brainlo_enabled(class="form-check-input") }}
+                            <label class="form-check-label" for="{{ form.brainlo_enabled.id }}">
+                                <i class="fas fa-wallet me-2"></i>Enable Brainlo
+                            </label>
+                        </div>
+                        <small class="form-text text-muted">Allow customers to pay using Brainlo</small>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Save Payment Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Business Information -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-building me-2"></i>Business Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label text-muted">Business Name</label>
+                    <p class="form-control-plaintext">{{ business.business_name }}</p>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label text-muted">Contact Number</label>
+                    <p class="form-control-plaintext">{{ business.contact_number }}</p>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label text-muted">Email</label>
+                    <p class="form-control-plaintext">{{ business.email }}</p>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label text-muted">Business Type</label>
+                    <p class="form-control-plaintext">{{ business.business_type.title() if business.business_type else 'Not specified' }}</p>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label text-muted">Verification Status</label>
+                    <p class="form-control-plaintext">
+                        <span class="badge bg-{{ 'success' if business.verification_status == 'verified' else 'warning' if business.verification_status == 'pending' else 'danger' }} fs-6">
+                            {{ business.verification_status.title() }}
+                        </span>
+                    </p>
+                </div>
+                
+                <div class="d-grid">
+                    <a href="{{ url_for('profile') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-user-edit me-2"></i>Edit Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- SMS Settings -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-sms me-2"></i>SMS Settings
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">SMS Service Status</label>
+                    <p class="form-control-plaintext">
+                        <span class="badge bg-success fs-6">Active</span>
+                    </p>
+                    <small class="form-text text-muted">SMS notifications are enabled for order updates</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Available Templates</label>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Order Confirmation</span>
+                            <span class="badge bg-success">Active</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Payment Confirmation</span>
+                            <span class="badge bg-success">Active</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Order Status Updates</span>
+                            <span class="badge bg-success">Active</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Delivery Updates</span>
+                            <span class="badge bg-success">Active</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-grid">
+                    <button class="btn btn-outline-primary" disabled>
+                        <i class="fas fa-edit me-2"></i>Manage Templates
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delivery Settings -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-truck me-2"></i>Delivery Settings
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Base Delivery Charge</label>
+                    <p class="form-control-plaintext">₹50.00</p>
+                    <small class="form-text text-muted">Minimum delivery charge for all orders</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Weight-based Pricing</label>
+                    <p class="form-control-plaintext">₹10.00 per kg</p>
+                    <small class="form-text text-muted">Additional charge based on product weight</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Delivery Types</label>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Standard Delivery</span>
+                            <span class="badge bg-success">Active</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Express Delivery</span>
+                            <span class="badge bg-success">Active (+₹50)</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Scheduled Delivery</span>
+                            <span class="badge bg-success">Active (+₹25)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-grid">
+                    <button class="btn btn-outline-primary" disabled>
+                        <i class="fas fa-edit me-2"></i>Edit Delivery Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- System Information -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>System Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Application Version</label>
+                    <p class="form-control-plaintext">Mobile Shop v1.0.0</p>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Database Status</label>
+                    <p class="form-control-plaintext">
+                        <span class="badge bg-success fs-6">Connected</span>
+                    </p>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">File Upload Status</label>
+                    <p class="form-control-plaintext">
+                        <span class="badge bg-success fs-6">Working</span>
+                    </p>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Account Created</label>
+                    <p class="form-control-plaintext">{{ business.created_at.strftime('%B %d, %Y') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Support & Help -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-question-circle me-2"></i>Support & Help
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h6>Need Help?</h6>
+                    <p class="text-muted">Get assistance with your mobile shop management system.</p>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-info" disabled>
+                        <i class="fas fa-book me-2"></i>User Guide
+                    </button>
+                    <button class="btn btn-outline-info" disabled>
+                        <i class="fas fa-video me-2"></i>Video Tutorials
+                    </button>
+                    <button class="btn btn-outline-info" disabled>
+                        <i class="fas fa-envelope me-2"></i>Contact Support
+                    </button>
+                </div>
+                
+                <div class="mt-3">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>
+                        For technical support, contact your system administrator.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Message -->
+{% if request.method == 'POST' %}
+<div class="alert alert-success alert-dismissible fade show mt-4" role="alert">
+    <i class="fas fa-check-circle me-2"></i>
+    Settings have been updated successfully!
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endif %}
+{% endblock %}

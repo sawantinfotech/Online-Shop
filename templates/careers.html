@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Careers - Join Our Team</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 0;
+        }
+        
+        .feature-card {
+            transition: transform 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .vehicle-type {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .vehicle-type:hover {
+            border-color: #007bff;
+            transform: scale(1.05);
+        }
+        
+        .vehicle-type.selected {
+            border-color: #007bff;
+            background-color: #e7f3ff;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #007bff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .delivery-stats {
+            background: #f8f9fa;
+            padding: 60px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fas fa-mobile-alt me-2"></i>Mobile Shop Hub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/careers">Careers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#delivery-tracking">Track Order</a></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Business Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/delivery/login">Delivery Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">Join Our Delivery Team</h1>
+                    <p class="lead mb-4">Earn money on your schedule. Deliver happiness to customers across the city with flexible working hours and competitive pay.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#register" class="btn btn-light btn-lg">Join Now</a>
+                        <a href="#how-it-works" class="btn btn-outline-light btn-lg">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop" 
+                         class="img-fluid rounded shadow" alt="Delivery Person">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Benefits Section -->
+    <div class="container my-5">
+        <h2 class="text-center mb-5">Why Choose Us?</h2>
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="card feature-card h-100 text-center">
+                    <div class="card-body">
+                        <i class="fas fa-rupee-sign fa-3x text-primary mb-3"></i>
+                        <h5>Earn ₹15,000 - ₹30,000/Month</h5>
+                        <p class="card-text">Competitive pay rates with performance bonuses and incentives for top performers.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="card feature-card h-100 text-center">
+                    <div class="card-body">
+                        <i class="fas fa-clock fa-3x text-primary mb-3"></i>
+                        <h5>Flexible Schedule</h5>
+                        <p class="card-text">Choose your own working hours. Work part-time or full-time based on your availability.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="card feature-card h-100 text-center">
+                    <div class="card-body">
+                        <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                        <h5>Insurance Coverage</h5>
+                        <p class="card-text">Complete insurance coverage for you and your vehicle during delivery hours.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vehicle Requirements -->
+    <div class="container my-5">
+        <h2 class="text-center mb-5">Vehicle Requirements</h2>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card vehicle-type text-center p-4" data-vehicle="cycle">
+                    <i class="fas fa-bicycle fa-3x text-primary mb-3"></i>
+                    <h5>Bicycle</h5>
+                    <p class="mb-3">Perfect for short distance deliveries in local areas</p>
+                    <ul class="list-unstyled text-start">
+                        <li><i class="fas fa-check text-success me-2"></i>Valid ID proof</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Local area knowledge</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Age 18-50 years</li>
+                    </ul>
+                    <span class="badge bg-success">Eco-Friendly</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card vehicle-type text-center p-4" data-vehicle="bike">
+                    <i class="fas fa-motorcycle fa-3x text-primary mb-3"></i>
+                    <h5>Motorcycle</h5>
+                    <p class="mb-3">Ideal for city-wide deliveries with speed and efficiency</p>
+                    <ul class="list-unstyled text-start">
+                        <li><i class="fas fa-check text-success me-2"></i>Valid driving license</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Vehicle registration</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Insurance papers</li>
+                    </ul>
+                    <span class="badge bg-primary">Most Popular</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card vehicle-type text-center p-4" data-vehicle="car">
+                    <i class="fas fa-car fa-3x text-primary mb-3"></i>
+                    <h5>Car</h5>
+                    <p class="mb-3">Best for bulk deliveries and premium services</p>
+                    <ul class="list-unstyled text-start">
+                        <li><i class="fas fa-check text-success me-2"></i>Valid driving license</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Vehicle registration</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Commercial permit</li>
+                    </ul>
+                    <span class="badge bg-warning">High Earning</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card vehicle-type text-center p-4" data-vehicle="tempo">
+                    <i class="fas fa-truck fa-3x text-primary mb-3"></i>
+                    <h5>Tempo</h5>
+                    <p class="mb-3">Heavy duty deliveries and bulk orders</p>
+                    <ul class="list-unstyled text-start">
+                        <li><i class="fas fa-check text-success me-2"></i>Heavy vehicle license</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Commercial registration</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Goods transport permit</li>
+                    </ul>
+                    <span class="badge bg-danger">Premium</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="container my-5" id="how-it-works">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row">
+            <div class="col-lg-3 mb-4">
+                <div class="text-center">
+                    <div class="step-number mb-3">1</div>
+                    <h5>Register Online</h5>
+                    <p>Fill out the registration form with your details and vehicle information</p>
+                </div>
+            </div>
+            <div class="col-lg-3 mb-4">
+                <div class="text-center">
+                    <div class="step-number mb-3">2</div>
+                    <h5>Document Verification</h5>
+                    <p>Upload required documents for verification by our team</p>
+                </div>
+            </div>
+            <div class="col-lg-3 mb-4">
+                <div class="text-center">
+                    <div class="step-number mb-3">3</div>
+                    <h5>Training & Onboarding</h5>
+                    <p>Complete our training program and get your delivery kit</p>
+                </div>
+            </div>
+            <div class="col-lg-3 mb-4">
+                <div class="text-center">
+                    <div class="step-number mb-3">4</div>
+                    <h5>Start Delivering</h5>
+                    <p>Begin accepting delivery orders and earning money</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Form -->
+    <div class="container my-5" id="register">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>Delivery Partner Registration</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="/delivery/register" method="POST" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Full Name *</label>
+                                    <input type="text" class="form-control" name="full_name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Phone Number *</label>
+                                    <input type="tel" class="form-control" name="phone_number" required>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Email Address *</label>
+                                    <input type="email" class="form-control" name="email" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Password *</label>
+                                    <input type="password" class="form-control" name="password" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Address *</label>
+                                <textarea class="form-control" name="address" rows="2" required></textarea>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">City *</label>
+                                    <input type="text" class="form-control" name="city" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Pincode *</label>
+                                    <input type="text" class="form-control" name="pincode" required>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Driving License Number</label>
+                                    <input type="text" class="form-control" name="driving_license">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Aadhar Number *</label>
+                                    <input type="text" class="form-control" name="aadhar_number" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Emergency Contact Number *</label>
+                                <input type="tel" class="form-control" name="emergency_contact" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Delivery Zone *</label>
+                                <select class="form-select" name="delivery_zone" required>
+                                    <option value="">Select Zone</option>
+                                    <option value="local">Local (Within City)</option>
+                                    <option value="outdoor">Outdoor (Inter-City)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Profile Photo</label>
+                                <input type="file" class="form-control" name="profile_photo" accept="image/*">
+                            </div>
+                            
+                            <h5 class="mt-4 mb-3">Vehicle Information</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Vehicle Type *</label>
+                                    <select class="form-select" name="vehicle_type" required>
+                                        <option value="">Select Vehicle</option>
+                                        <option value="cycle">Bicycle</option>
+                                        <option value="bike">Motorcycle</option>
+                                        <option value="car">Car</option>
+                                        <option value="tempo">Tempo/Truck</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Vehicle Number *</label>
+                                    <input type="text" class="form-control" name="vehicle_number" required>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">License Plate</label>
+                                    <input type="text" class="form-control" name="license_plate">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Insurance Number</label>
+                                    <input type="text" class="form-control" name="insurance_number">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Vehicle Photo</label>
+                                <input type="file" class="form-control" name="vehicle_photo" accept="image/*">
+                            </div>
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" name="terms_accepted" required>
+                                <label class="form-check-label">
+                                    I agree to the <a href="#" target="_blank">Terms and Conditions</a> and <a href="#" target="_blank">Privacy Policy</a>
+                                </label>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-user-plus me-2"></i>Register as Delivery Partner
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="delivery-stats">
+        <div class="container">
+            <h2 class="text-center mb-5">Our Impact</h2>
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <div class="stat-number">5000+</div>
+                        <h5>Active Delivery Partners</h5>
+                        <p class="text-muted">Growing every day</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <div class="stat-number">1M+</div>
+                        <h5>Orders Delivered</h5>
+                        <p class="text-muted">Customer satisfaction</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <h5>Cities Covered</h5>
+                        <p class="text-muted">Expanding nationwide</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <div class="stat-number">4.8★</div>
+                        <h5>Partner Rating</h5>
+                        <p class="text-muted">Highly rated platform</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Contact Support</h5>
+                    <p><i class="fas fa-phone me-2"></i>+91 9876543210</p>
+                    <p><i class="fas fa-envelope me-2"></i>delivery@mobileshophub.com</p>
+                    <p><i class="fas fa-clock me-2"></i>24/7 Support Available</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="text-white-50">Home</a></li>
+                        <li><a href="/delivery/login" class="text-white-50">Delivery Login</a></li>
+                        <li><a href="#" class="text-white-50">Track Order</a></li>
+                        <li><a href="#" class="text-white-50">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Download App</h5>
+                    <p>Get our mobile app for easier delivery management</p>
+                    <div class="d-flex gap-2">
+                        <img src="https://via.placeholder.com/140x40/000000/FFFFFF?text=Google+Play" class="img-fluid" alt="Google Play">
+                        <img src="https://via.placeholder.com/140x40/000000/FFFFFF?text=App+Store" class="img-fluid" alt="App Store">
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2025 Mobile Shop Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Vehicle type selection
+        document.querySelectorAll('.vehicle-type').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.vehicle-type').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                const vehicleType = this.dataset.vehicle;
+                document.querySelector('select[name="vehicle_type"]').value = vehicleType;
+            });
+        });
+        
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const vehicleType = document.querySelector('select[name="vehicle_type"]').value;
+            if (!vehicleType) {
+                e.preventDefault();
+                alert('Please select a vehicle type');
+                return;
+            }
+        });
+    </script>
+</body>
+</html>

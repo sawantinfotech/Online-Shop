@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+
+{% block title %}Order #{{ order.id }} - Mobile Shop{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <i class="fas fa-shopping-cart me-2"></i>Order #{{ order.id }}
+    </h1>
+    <div class="d-flex gap-2">
+        <a href="{{ url_for('generate_invoice', order_id=order.id) }}" class="btn btn-success">
+            <i class="fas fa-file-pdf me-2"></i>Download Invoice
+        </a>
+        <button class="btn btn-primary" onclick="showStatusModal({{ order.id }}, '{{ order.order_status }}')">
+            <i class="fas fa-edit me-2"></i>Update Status
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Order Information -->
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Order Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Order Date</label>
+                            <p class="form-control-plaintext">{{ order.order_date.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Order Status</label>
+                            <p class="form-control-plaintext">
+                                <span class="badge bg-{{ 'success' if order.order_status == 'delivered' else 'primary' if order.order_status == 'shipped' else 'info' if order.order_status == 'processing' else 'warning' if order.order_status == 'pending' else 'danger' }} fs-6">
+                                    {{ order.order_status.title() }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Payment Status</label>
+                            <p class="form-control-plaintext">
+                                <span class="badge bg-{{ 'success' if order.payment_status == 'completed' else 'warning' if order.payment_status == 'pending' else 'danger' }} fs-6">
+                                    {{ order.payment_status.title() }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Payment Method</label>
+                            <p class="form-control-plaintext">{{ order.payment_method.title() if order.payment_method else 'Not specified' }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if order.delivery_date %}
+                <div class="mb-3">
+                    <label class="form-label text-muted">Delivery Date</label>
+                    <p class="form-control-plaintext">{{ order.delivery_date.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                </div>
+                {% endif %}
+                
+                <div class="mb-3">
+                    <label class="form-label text-muted">Delivery Address</label>
+                    <p class="form-control-plaintext">{{ order.delivery_address }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Order Items -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-boxes me-2"></i>Order Items
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.order_items %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            {% if item.product.get_images() %}
+                                                <img src="{{ url_for('static', filename='uploads/' + item.product.get_images()[0]) }}" 
+                                                     alt="{{ item.product.product_name }}" class="rounded" width="50" height="50">
+                                            {% else %}
+                                                <div class="bg-secondary rounded d-flex align-items-center justify-content-center" 
+                                                     style="width: 50px; height: 50px;">
+                                                    <i class="fas fa-image text-white"></i>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">{{ item.product.product_name }}</h6>
+                                            <small class="text-muted">{{ item.product.description[:50] }}...</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ item.quantity }}</td>
+                                <td>₹{{ "%.2f"|format(item.price) }}</td>
+                                <td>₹{{ "%.2f"|format(item.total) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                                <td><strong>₹{{ "%.2f"|format(order.total_amount) }}</strong></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Delivery Charges:</strong></td>
+                                <td><strong>₹{{ "%.2f"|format(order.delivery_charges) }}</strong></td>
+                            </tr>
+                            <tr class="table-primary">
+                                <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                <td><strong>₹{{ "%.2f"|format(order.total_amount + order.delivery_charges) }}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Customer & Payment Information -->
+    <div class="col-lg-4">
+        <!-- Customer Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-user me-2"></i>Customer Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h6 class="mb-1">{{ order.customer.name }}</h6>
+                    <p class="text-muted mb-1">
+                        <i class="fas fa-phone me-2"></i>{{ order.customer.phone_number }}
+                    </p>
+                    {% if order.customer.email %}
+                    <p class="text-muted mb-1">
+                        <i class="fas fa-envelope me-2"></i>{{ order.customer.email }}
+                    </p>
+                    {% endif %}
+                </div>
+                
+                {% if order.customer.address %}
+                <div class="mb-3">
+                    <label class="form-label text-muted">Customer Address</label>
+                    <p class="form-control-plaintext">{{ order.customer.address }}</p>
+                </div>
+                {% endif %}
+                
+                <div class="d-grid">
+                    <a href="{{ url_for('edit_customer', customer_id=order.customer.id) }}" class="btn btn-outline-primary">
+                        <i class="fas fa-user-edit me-2"></i>View Customer
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Payment Information -->
+        {% if order.payments %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-credit-card me-2"></i>Payment Information
+                </h5>
+            </div>
+            <div class="card-body">
+                {% for payment in order.payments %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Amount</span>
+                        <strong>₹{{ "%.2f"|format(payment.amount) }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Method</span>
+                        <span>{{ payment.payment_method.title() }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Transaction ID</span>
+                        <span class="text-muted">{{ payment.transaction_id }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Status</span>
+                        <span class="badge bg-{{ 'success' if payment.status == 'completed' else 'warning' if payment.status == 'pending' else 'danger' }}">
+                            {{ payment.status.title() }}
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Date</span>
+                        <span class="text-muted">{{ payment.created_at.strftime('%d/%m/%Y') }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Delivery Information -->
+        {% if order.deliveries %}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-truck me-2"></i>Delivery Information
+                </h5>
+            </div>
+            <div class="card-body">
+                {% for delivery in order.deliveries %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Type</span>
+                        <span>{{ delivery.delivery_type.title() }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Charges</span>
+                        <strong>₹{{ "%.2f"|format(delivery.charges) }}</strong>
+                    </div>
+                    {% if delivery.tracking_number %}
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Tracking #</span>
+                        <span class="text-muted">{{ delivery.tracking_number }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Status</span>
+                        <span class="badge bg-{{ 'success' if delivery.status == 'delivered' else 'info' if delivery.status == 'shipped' else 'warning' }}">
+                            {{ delivery.status.title() }}
+                        </span>
+                    </div>
+                    {% if delivery.estimated_time %}
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Estimated</span>
+                        <span class="text-muted">{{ delivery.estimated_time.strftime('%d/%m/%Y') }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Status Update Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Order Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="statusForm" method="POST">
+                    <input type="hidden" id="orderId" name="order_id">
+                    <div class="mb-3">
+                        <label for="orderStatus" class="form-label">Order Status</label>
+                        <select class="form-select" id="orderStatus" name="status" required>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="processing">Processing</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="updateOrderStatus()">
+                    <i class="fas fa-save me-2"></i>Update Status
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showStatusModal(orderId, currentStatus) {
+    document.getElementById('orderId').value = orderId;
+    document.getElementById('orderStatus').value = currentStatus;
+    document.getElementById('statusForm').action = `/orders/${orderId}/update_status`;
+    new bootstrap.Modal(document.getElementById('statusModal')).show();
+}
+
+function updateOrderStatus() {
+    document.getElementById('statusForm').submit();
+}
+</script>
+{% endblock %}

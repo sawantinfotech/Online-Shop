@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Apps Showcase - Mobile Shop Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Apps Hero Section -->
+    <div class="row bg-primary text-white py-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 mb-3">
+                <i class="fas fa-mobile-alt me-3"></i>Apps Showcase
+            </h1>
+            <p class="lead">Discover amazing mobile applications for your business needs</p>
+        </div>
+    </div>
+
+    <!-- Categories Filter -->
+    <div class="row py-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-filter me-2"></i>Filter by Category
+                    </h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{{ url_for('apps') }}" class="btn btn-outline-primary btn-sm {% if not selected_category %}active{% endif %}">
+                            All Apps
+                        </a>
+                        {% for category in categories %}
+                        <a href="{{ url_for('apps_by_category', category=category[0]) }}" 
+                           class="btn btn-outline-primary btn-sm {% if selected_category == category[0] %}active{% endif %}">
+                            {{ category[0] }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Apps Grid -->
+    <div class="row">
+        {% for app in apps %}
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 shadow-sm app-card">
+                <div class="card-body d-flex flex-column">
+                    <!-- App Logo and Header -->
+                    <div class="text-center mb-3">
+                        <div class="app-logo mb-2">
+                            {{ app.logo_url|safe }}
+                        </div>
+                        <h5 class="card-title mb-1">{{ app.name }}</h5>
+                        <small class="text-muted">{{ app.category }}</small>
+                    </div>
+                    
+                    <!-- App Stats -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="rating">
+                            <span class="text-warning">
+                                {% for i in range(5) %}
+                                    <i class="fas fa-star{% if i >= app.rating|round|int %}-o{% endif %}"></i>
+                                {% endfor %}
+                            </span>
+                            <small class="text-muted">{{ app.rating }}</small>
+                        </div>
+                        <div class="downloads">
+                            <small class="text-muted">
+                                <i class="fas fa-download me-1"></i>{{ app.downloads }}
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <!-- App Description -->
+                    <p class="card-text flex-grow-1">{{ app.short_description }}</p>
+                    
+                    <!-- App Footer -->
+                    <div class="mt-auto">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">v{{ app.version }}</small>
+                            <a href="{{ url_for('app_detail', slug=app.slug) }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-eye me-1"></i>View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- No Apps Message -->
+    {% if not apps %}
+    <div class="row">
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-mobile-alt fa-3x text-muted mb-3"></i>
+            <h3>No Apps Found</h3>
+            <p class="text-muted">No apps available in this category.</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.app-card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.app-card:hover {
+    transform: translateY(-5px);
+}
+
+.app-logo svg {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+}
+
+.rating .fa-star {
+    color: #ffc107;
+}
+
+.rating .fa-star-o {
+    color: #dee2e6;
+}
+
+.downloads {
+    font-size: 0.875rem;
+}
+
+.btn-outline-primary.active {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Format numbers with commas
+document.addEventListener('DOMContentLoaded', function() {
+    // Number formatting is handled by Jinja2 filter
+});
+</script>
+{% endblock %}

@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block title %}{{ profile.full_name }} - Matrimony Profile{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Profile Images -->
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <div class="profile-image-container mb-3">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face" 
+                             class="rounded-circle img-fluid" alt="Profile" style="width: 150px; height: 150px; object-fit: cover;">
+                    </div>
+                    <h4>{{ profile.full_name }}</h4>
+                    <p class="text-muted mb-2">{{ profile.age }} years, {{ profile.height or 'Height not specified' }}</p>
+                    <p class="text-muted mb-3">{{ profile.city }}, {{ profile.state }}</p>
+                    
+                    {% if profile.membership_badge %}
+                        <span class="badge bg-{{ 'secondary' if profile.membership_badge == 'basic' else 'light' if profile.membership_badge == 'silver' else 'warning' if profile.membership_badge == 'gold' else 'info' }} mb-3">
+                            {{ profile.membership_badge|title }} Member
+                        </span>
+                    {% endif %}
+                    
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="{{ url_for('matrimony_interact', profile_id=profile.id, action='like') }}" 
+                           class="btn btn-danger">
+                            <i class="fas fa-heart"></i> Interest
+                        </a>
+                        <a href="{{ url_for('matrimony_interact', profile_id=profile.id, action='dislike') }}" 
+                           class="btn btn-outline-secondary">
+                            <i class="fas fa-times"></i> Skip
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Profile Stats</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-eye me-2"></i>{{ profile.profile_views }} views</li>
+                        <li><i class="fas fa-heart me-2"></i>{{ profile.interested_count }} interests</li>
+                        <li><i class="fas fa-calendar me-2"></i>Joined {{ profile.created_at.strftime('%B %Y') }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <!-- About -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-info-circle me-2"></i>About {{ profile.full_name.split()[0] }}</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ profile.bio or 'No description provided.' }}</p>
+                    {% if profile.hobbies %}
+                        <p><strong>Hobbies & Interests:</strong> {{ profile.hobbies }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Basic Details -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-user me-2"></i>Basic Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Age:</strong> {{ profile.age }} years</p>
+                            <p><strong>Height:</strong> {{ profile.height or 'Not specified' }}</p>
+                            <p><strong>Weight:</strong> {{ profile.weight or 'Not specified' }}</p>
+                            <p><strong>Body Type:</strong> {{ profile.body_type|title if profile.body_type else 'Not specified' }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Marital Status:</strong> {{ profile.marital_status|title }}</p>
+                            <p><strong>Complexion:</strong> {{ profile.complexion|title if profile.complexion else 'Not specified' }}</p>
+                            <p><strong>Location:</strong> {{ profile.city }}, {{ profile.state }}</p>
+                            <p><strong>Phone:</strong> {{ profile.phone if profile.membership_badge != 'basic' else 'Premium members only' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Education & Career -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-graduation-cap me-2"></i>Education & Career</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Education:</strong> {{ profile.education }}</p>
+                            <p><strong>Occupation:</strong> {{ profile.occupation }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Company:</strong> {{ profile.company_name or 'Not specified' }}</p>
+                            <p><strong>Annual Income:</strong> {{ profile.annual_income or 'Not specified' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Partner Preferences -->
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-search me-2"></i>Partner Preferences</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Age:</strong> 
+                                {% if profile.partner_age_min and profile.partner_age_max %}
+                                    {{ profile.partner_age_min }} - {{ profile.partner_age_max }} years
+                                {% else %}
+                                    Open to all ages
+                                {% endif %}
+                            </p>
+                            <p><strong>Education:</strong> {{ profile.partner_education or 'Open to all' }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Occupation:</strong> {{ profile.partner_occupation or 'Open to all' }}</p>
+                            <p><strong>Income:</strong> {{ profile.partner_income_min or 'No preference' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <div class="text-center mt-4">
+        <a href="{{ url_for('matrimony_profiles') }}" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Profiles
+        </a>
+        <a href="{{ url_for('matrimony') }}" class="btn btn-primary">
+            <i class="fas fa-home me-2"></i>Matrimony Home
+        </a>
+    </div>
+</div>
+
+<style>
+.profile-image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.badge {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+}
+
+.bg-silver {
+    background-color: #c0c0c0 !important;
+    color: #333 !important;
+}
+
+.bg-light {
+    background-color: #c0c0c0 !important;
+    color: #333 !important;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 12px;
+}
+
+.card-header {
+    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+    border-bottom: 1px solid #dee2e6;
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.btn-danger {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    border: none;
+    border-radius: 8px;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(45deg, #c82333, #a71e2a);
+    transform: translateY(-2px);
+}
+
+.btn-outline-secondary {
+    border-radius: 8px;
+    border: 2px solid #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}

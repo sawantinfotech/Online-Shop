@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Delivery Partner</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .application-card {
+            border: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-radius: 15px;
+        }
+        
+        .vehicle-type {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .vehicle-type:hover {
+            border-color: #007bff;
+            transform: scale(1.02);
+        }
+        
+        .vehicle-type.selected {
+            border-color: #007bff;
+            background-color: #e7f3ff;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            padding: 10px 15px;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-mobile-alt me-2"></i>Mobile Shop Hub
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text me-3">Welcome, {{ user.full_name }}</span>
+                <a href="{{ url_for('user_logout') }}" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-sign-out-alt me-1"></i>Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card application-card">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-motorcycle me-2"></i>Delivery Partner Application
+                        </h4>
+                        <p class="mb-0 mt-2">Complete your application to become a delivery partner</p>
+                    </div>
+                    <div class="card-body">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                        
+                        <!-- User Information Display -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    <h6><i class="fas fa-info-circle me-2"></i>Your Information</h6>
+                                    <p class="mb-1"><strong>Name:</strong> {{ user.full_name }}</p>
+                                    <p class="mb-1"><strong>Email:</strong> {{ user.email }}</p>
+                                    <p class="mb-0"><strong>Phone:</strong> {{ user.phone_number or 'Please update in profile' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <form method="POST" enctype="multipart/form-data">
+                            <h5 class="mb-3">Additional Information Required</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Driving License Number</label>
+                                    <input type="text" class="form-control" name="driving_license" 
+                                           placeholder="Enter your driving license number">
+                                    <div class="form-text">Required for motorized vehicles</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Aadhar Number *</label>
+                                    <input type="text" class="form-control" name="aadhar_number" required
+                                           placeholder="Enter your Aadhar number">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Emergency Contact *</label>
+                                    <input type="tel" class="form-control" name="emergency_contact" required
+                                           placeholder="Emergency contact number">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Delivery Zone *</label>
+                                    <select class="form-select" name="delivery_zone" required>
+                                        <option value="">Select Zone</option>
+                                        <option value="local">Local (Within City)</option>
+                                        <option value="outdoor">Outdoor (Inter-City)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <h5 class="mb-3 mt-4">Vehicle Information</h5>
+                            
+                            <!-- Vehicle Type Selection -->
+                            <div class="mb-4">
+                                <label class="form-label">Vehicle Type *</label>
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-6 mb-3">
+                                        <div class="vehicle-type text-center" data-vehicle="cycle">
+                                            <i class="fas fa-bicycle fa-2x text-success mb-2"></i>
+                                            <h6>Bicycle</h6>
+                                            <small class="text-muted">Eco-friendly local delivery</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 mb-3">
+                                        <div class="vehicle-type text-center" data-vehicle="bike">
+                                            <i class="fas fa-motorcycle fa-2x text-primary mb-2"></i>
+                                            <h6>Motorcycle</h6>
+                                            <small class="text-muted">Fast city delivery</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 mb-3">
+                                        <div class="vehicle-type text-center" data-vehicle="car">
+                                            <i class="fas fa-car fa-2x text-warning mb-2"></i>
+                                            <h6>Car</h6>
+                                            <small class="text-muted">Bulk delivery</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 mb-3">
+                                        <div class="vehicle-type text-center" data-vehicle="tempo">
+                                            <i class="fas fa-truck fa-2x text-danger mb-2"></i>
+                                            <h6>Tempo</h6>
+                                            <small class="text-muted">Heavy duty delivery</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="vehicle_type" id="vehicleTypeInput" required>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Vehicle Number *</label>
+                                    <input type="text" class="form-control" name="vehicle_number" required
+                                           placeholder="Enter vehicle number">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">License Plate</label>
+                                    <input type="text" class="form-control" name="license_plate"
+                                           placeholder="Vehicle license plate">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Insurance Number</label>
+                                    <input type="text" class="form-control" name="insurance_number"
+                                           placeholder="Vehicle insurance number">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Vehicle Photo</label>
+                                    <input type="file" class="form-control" name="vehicle_photo" accept="image/*">
+                                    <div class="form-text">Upload a clear photo of your vehicle</div>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-warning mt-4">
+                                <h6><i class="fas fa-exclamation-triangle me-2"></i>Important Notes:</h6>
+                                <ul class="mb-0">
+                                    <li>Registration fee of ₹500 is required for verification</li>
+                                    <li>All documents will be verified by our team</li>
+                                    <li>You'll receive approval notification within 2-3 business days</li>
+                                    <li>Only verified delivery partners can accept orders</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" required>
+                                <label class="form-check-label">
+                                    I agree to the <a href="#" target="_blank">Delivery Partner Terms</a> and 
+                                    <a href="#" target="_blank">Privacy Policy</a>
+                                </label>
+                            </div>
+                            
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                                </a>
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-paper-plane me-2"></i>Submit Application
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Vehicle type selection
+        document.querySelectorAll('.vehicle-type').forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove selected class from all cards
+                document.querySelectorAll('.vehicle-type').forEach(c => c.classList.remove('selected'));
+                
+                // Add selected class to clicked card
+                this.classList.add('selected');
+                
+                // Update hidden input
+                const vehicleType = this.dataset.vehicle;
+                document.getElementById('vehicleTypeInput').value = vehicleType;
+            });
+        });
+        
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const vehicleType = document.getElementById('vehicleTypeInput').value;
+            if (!vehicleType) {
+                e.preventDefault();
+                alert('Please select a vehicle type');
+                return;
+            }
+        });
+    </script>
+</body>
+</html>

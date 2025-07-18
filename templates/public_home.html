@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Shop Management - Find Products & Businesses</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-carousel {
+            height: 400px;
+        }
+        
+        .carousel-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 400px;
+        }
+        
+        .product-card {
+            transition: transform 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .business-card {
+            transition: transform 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .business-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .user-scroll {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            gap: 15px;
+            padding: 10px 0;
+        }
+        
+        .user-card {
+            min-width: 120px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .user-card:hover {
+            transform: scale(1.1);
+        }
+        
+        .online-indicator {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 12px;
+            height: 12px;
+            background: #28a745;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+        
+        .offline-indicator {
+            background: #6c757d;
+        }
+        
+        .app-logo svg {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        }
+        
+        .floating-search {
+            position: sticky;
+            top: 20px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .category-filter {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .category-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #dee2e6;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-chip:hover, .category-chip.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .view-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+        
+        .grid-view .row > * {
+            margin-bottom: 20px;
+        }
+        
+        .list-view .product-card {
+            display: flex;
+            flex-direction: row;
+            max-width: 100%;
+        }
+        
+        .list-view .card-img-top {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .social-share {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        
+        .rating-stars {
+            color: #ffc107;
+        }
+        
+        .new-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #dc3545;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .discount-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .testimonial-carousel {
+            background: #f8f9fa;
+            padding: 60px 0;
+        }
+        
+        .advertisement-section {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 40px 0;
+            margin: 40px 0;
+        }
+        
+        /* Membership Badge Styles */
+        .bg-basic { background-color: #6c757d !important; }
+        .bg-silver { background-color: #c0c0c0 !important; }
+        .bg-gold { background-color: #ffd700 !important; }
+        .bg-platinum { background-color: #e5e4e2 !important; }
+        
+        .matrimony-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fas fa-mobile-alt me-2"></i>Mobile Shop Hub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="#products">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#businesses">Businesses</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#categories">Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#pricing">Pricing</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/careers">Careers</a></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Business Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_login') }}">User Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Join Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/admin/login">Admin</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Carousel -->
+    <div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3"></button>
+        </div>
+        <div class="carousel-inner h-100">
+            <div class="carousel-item active h-100 d-flex align-items-center">
+                <div class="container text-center text-white">
+                    <h1 class="display-4 fw-bold mb-4">Discover Amazing Products</h1>
+                    <p class="lead mb-4">Find the best mobile accessories and electronics from verified businesses</p>
+                    <a href="#products" class="btn btn-light btn-lg">Shop Now</a>
+                </div>
+            </div>
+            <div class="carousel-item h-100 d-flex align-items-center">
+                <div class="container text-center text-white">
+                    <h1 class="display-4 fw-bold mb-4">Connect with Businesses</h1>
+                    <p class="lead mb-4">Follow your favorite shops and get updates on new arrivals</p>
+                    <a href="#businesses" class="btn btn-light btn-lg">Explore Businesses</a>
+                </div>
+            </div>
+            <div class="carousel-item h-100 d-flex align-items-center">
+                <div class="container text-center text-white">
+                    <h1 class="display-4 fw-bold mb-4">Join Our Community</h1>
+                    <p class="lead mb-4">Share reviews, earn points, and enjoy exclusive offers</p>
+                    <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">Get Started</a>
+                </div>
+            </div>
+            <div class="carousel-item h-100 d-flex align-items-center">
+                <div class="container text-center text-white">
+                    <h1 class="display-4 fw-bold mb-4">Special Offers & Discounts</h1>
+                    <p class="lead mb-4">Don't miss out on amazing deals and exclusive promotions</p>
+                    <a href="#offers" class="btn btn-light btn-lg">View Offers</a>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+
+    <!-- Floating Search Bar -->
+    <div class="container">
+        <div class="floating-search">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search products, businesses, categories..." id="searchInput">
+                        <button class="btn btn-primary" type="button" id="searchBtn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select" id="locationFilter">
+                        <option value="">All Locations</option>
+                        <option value="mumbai">Mumbai</option>
+                        <option value="delhi">Delhi</option>
+                        <option value="bangalore">Bangalore</option>
+                        <option value="chennai">Chennai</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Advanced Filters -->
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <select class="form-select form-select-sm" id="priceFilter">
+                        <option value="">All Prices</option>
+                        <option value="0-500">₹0 - ₹500</option>
+                        <option value="500-1000">₹500 - ₹1,000</option>
+                        <option value="1000-5000">₹1,000 - ₹5,000</option>
+                        <option value="5000+">₹5,000+</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select form-select-sm" id="categoryFilter">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select form-select-sm" id="sortFilter">
+                        <option value="newest">Newest First</option>
+                        <option value="price_low">Price: Low to High</option>
+                        <option value="price_high">Price: High to Low</option>
+                        <option value="rating">Highest Rated</option>
+                        <option value="popular">Most Popular</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-outline-secondary btn-sm w-100" id="resetFilters">Reset Filters</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Scroll Section -->
+    <div class="container my-5">
+        <h3 class="mb-4">Active Users <span class="badge bg-success">Online</span></h3>
+        <div class="user-scroll" id="userScroll">
+            <!-- Sample users - in real implementation, fetch from database -->
+            <div class="user-card" onclick="showUserProfile(1)">
+                <div class="position-relative">
+                    <img src="https://via.placeholder.com/80x80" class="rounded-circle" alt="User">
+                    <div class="online-indicator"></div>
+                </div>
+                <p class="mb-1 mt-2 fw-bold">John Doe</p>
+                <button class="btn btn-outline-primary btn-sm">Follow</button>
+            </div>
+            
+            <div class="user-card" onclick="showUserProfile(2)">
+                <div class="position-relative">
+                    <img src="https://via.placeholder.com/80x80" class="rounded-circle" alt="User">
+                    <div class="online-indicator offline-indicator"></div>
+                </div>
+                <p class="mb-1 mt-2 fw-bold">Jane Smith</p>
+                <button class="btn btn-outline-primary btn-sm">Follow</button>
+            </div>
+            
+            <!-- More users would be dynamically loaded -->
+        </div>
+    </div>
+
+    <!-- Featured Products Section -->
+    <div class="container my-5" id="products">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Featured Products</h2>
+            <div class="view-toggle">
+                <button class="btn btn-outline-secondary btn-sm" id="gridViewBtn" onclick="toggleView('grid')">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button class="btn btn-outline-secondary btn-sm" id="listViewBtn" onclick="toggleView('list')">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Category Filters -->
+        <div class="category-filter">
+            <div class="category-chip active" onclick="filterByCategory('all')">All</div>
+            {% for category in categories %}
+            <div class="category-chip" onclick="filterByCategory('{{ category.id }}')">{{ category.name }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="row grid-view" id="productsContainer">
+            {% for product in featured_products %}
+            <div class="col-lg-3 col-md-4 col-sm-6" data-category="{{ product.category_id or 'all' }}">
+                <div class="card product-card h-100 position-relative">
+                    {% if loop.index <= 3 %}
+                    <div class="new-badge">NEW</div>
+                    {% endif %}
+                    
+                    <div class="social-share">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-light" data-bs-toggle="dropdown">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="shareProduct('whatsapp', {{ product.id }})">
+                                    <i class="fab fa-whatsapp text-success me-2"></i>WhatsApp</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="shareProduct('facebook', {{ product.id }})">
+                                    <i class="fab fa-facebook text-primary me-2"></i>Facebook</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="shareProduct('twitter', {{ product.id }})">
+                                    <i class="fab fa-twitter text-info me-2"></i>Twitter</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="{{ product.product_name }}">
+                    
+                    <div class="card-body">
+                        <h6 class="card-title">{{ product.product_name }}</h6>
+                        <p class="card-text text-muted small">{{ product.description[:100] }}...</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="text-primary mb-0">₹{{ "%.2f"|format(product.price) }}</h5>
+                            <div class="rating-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <small class="text-muted">(4.2)</small>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <small class="text-muted">Stock: {{ product.quantity }}</small>
+                            {% if product.quantity > 0 %}
+                            <span class="badge bg-success ms-2">In Stock</span>
+                            {% else %}
+                            <span class="badge bg-danger ms-2">Out of Stock</span>
+                            {% endif %}
+                        </div>
+                        <div class="mt-3">
+                            <button class="btn btn-primary btn-sm me-2" onclick="addToCart({{ product.id }})">
+                                <i class="fas fa-cart-plus me-1"></i>Add to Cart
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="toggleFavorite({{ product.id }})">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="mt-2">
+                            <small class="text-muted">By: {{ product.business.business_name }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <button class="btn btn-primary btn-lg" onclick="loadMoreProducts()">
+                Load More Products <i class="fas fa-arrow-down ms-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Featured Businesses Section -->
+    <div class="container my-5" id="businesses">
+        <h2 class="mb-4">Featured Businesses</h2>
+        <div class="row">
+            {% for business in featured_businesses %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card business-card h-100">
+                    <div class="card-header text-center">
+                        <img src="https://via.placeholder.com/80x80" class="rounded-circle mb-2" alt="{{ business.business_name }}">
+                        <h6 class="mb-0">{{ business.business_name }}</h6>
+                        <small class="text-muted">{{ business.business_type.title() if business.business_type else 'Business' }}</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="rating-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <small class="text-muted">(5.0)</small>
+                            </div>
+                            <span class="badge bg-success">Verified</span>
+                        </div>
+                        <p class="card-text text-muted small">{{ business.address[:100] if business.address else 'Business address not available' }}...</p>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary btn-sm flex-fill" onclick="followBusiness({{ business.id }})">
+                                <i class="fas fa-plus me-1"></i>Follow
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="shareBusiness({{ business.id }})">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="toggleBusinessFavorite({{ business.id }})">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-outline-info btn-sm w-100" onclick="viewBusinessProducts({{ business.id }})">
+                                View Products
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Testimonials Section -->
+    <div class="testimonial-carousel">
+        <div class="container">
+            <h2 class="text-center mb-5">What Our Customers Say</h2>
+            <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="row justify-content-center">
+                            <div class="col-md-8 text-center">
+                                <img src="https://via.placeholder.com/100x100" class="rounded-circle mb-3" alt="Customer">
+                                <blockquote class="blockquote">
+                                    <p>"Amazing platform! Found exactly what I was looking for and the delivery was super fast."</p>
+                                    <footer class="blockquote-footer">Sarah Johnson</footer>
+                                </blockquote>
+                                <div class="rating-stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="row justify-content-center">
+                            <div class="col-md-8 text-center">
+                                <img src="https://via.placeholder.com/100x100" class="rounded-circle mb-3" alt="Customer">
+                                <blockquote class="blockquote">
+                                    <p>"Great variety of products and excellent customer service. Highly recommended!"</p>
+                                    <footer class="blockquote-footer">Mike Chen</footer>
+                                </blockquote>
+                                <div class="rating-stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advertisement Section -->
+    <div class="advertisement-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3>Special Partnership Offers</h3>
+                    <p class="mb-0">Get exclusive deals from our partner businesses and earn reward points!</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-light btn-lg">Learn More</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing Plans Section -->
+    <div class="container my-5" id="pricing">
+        <h2 class="text-center mb-5">Choose Your Plan</h2>
+        <div class="row">
+            <!-- Add Premium Platinum Plan -->
+            <div class="col-lg-3 mb-4">
+                <div class="card h-100 text-center border-info">
+                    <div class="card-header bg-gradient text-white" style="background: linear-gradient(45deg, #E5E4E2, #C0C0C0) !important;">
+                        <div class="d-flex justify-content-center align-items-center mb-2">
+                            <i class="fas fa-gem text-info fa-2x me-2"></i>
+                            <span class="badge bg-info">PLATINUM</span>
+                        </div>
+                        <h6 class="text-dark">Premium Plan</h6>
+                        <h4 class="text-dark">₹4999<small>/month</small></h4>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-infinity text-success me-2"></i>Unlimited everything</li>
+                            <li><i class="fas fa-check text-success me-2"></i>AI-powered analytics</li>
+                            <li><i class="fas fa-check text-success me-2"></i>24/7 dedicated support</li>
+                            <li><i class="fas fa-check text-success me-2"></i>White-label solution</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Custom integrations</li>
+                        </ul>
+                        <button class="btn btn-info">Choose Platinum</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-center align-items-center mb-2">
+                            <i class="fas fa-medal text-secondary fa-2x me-2"></i>
+                            <span class="badge bg-secondary">BASIC</span>
+                        </div>
+                        <h5>Free Plan</h5>
+                        <h2 class="text-primary">₹0<small>/month</small></h2>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Up to 10 products</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Basic analytics</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Email support</li>
+                            <li><i class="fas fa-times text-muted me-2"></i>Custom homepage</li>
+                            <li><i class="fas fa-times text-muted me-2"></i>Priority support</li>
+                        </ul>
+                        <button class="btn btn-outline-primary">Get Started</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 mb-4">
+                <div class="card h-100 text-center border-warning">
+                    <div class="card-header bg-warning text-dark">
+                        <div class="d-flex justify-content-center align-items-center mb-2">
+                            <i class="fas fa-medal text-warning fa-2x me-2"></i>
+                            <span class="badge bg-dark">SILVER</span>
+                        </div>
+                        <h5>Professional Plan</h5>
+                        <h2>₹999<small>/month</small></h2>
+                        <span class="badge bg-primary">Most Popular</span>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Unlimited products</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Advanced analytics</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Priority support</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Custom homepage</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Marketing tools</li>
+                        </ul>
+                        <button class="btn btn-primary">Choose Plan</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 mb-4">
+                <div class="card h-100 text-center border-warning">
+                    <div class="card-header bg-gradient" style="background: linear-gradient(45deg, #FFD700, #FFA500);">
+                        <div class="d-flex justify-content-center align-items-center mb-2">
+                            <i class="fas fa-crown text-warning fa-2x me-2"></i>
+                            <span class="badge bg-dark">GOLD</span>
+                        </div>
+                        <h5 class="text-dark">Enterprise Plan</h5>
+                        <h2 class="text-dark">₹2999<small>/month</small></h2>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Everything in Pro</li>
+                            <li><i class="fas fa-check text-success me-2"></i>White-label solution</li>
+                            <li><i class="fas fa-check text-success me-2"></i>API access</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Dedicated manager</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Custom integrations</li>
+                        </ul>
+                        <button class="btn btn-outline-primary">Contact Sales</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Apps Showcase Section -->
+    <div class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="mb-0">
+                <i class="fas fa-mobile-alt me-2"></i>Featured Apps
+                <span class="badge bg-info">{{ featured_apps|length }}</span>
+            </h3>
+            <a href="{{ url_for('apps') }}" class="btn btn-outline-primary">
+                View All Apps <i class="fas fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+        
+        <div class="apps-carousel-container position-relative">
+            <div class="apps-scroll" id="appsScroll" style="display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 20px; padding: 10px 0;">
+                {% for app in featured_apps %}
+                <div class="app-card" style="min-width: 250px; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 20px; transition: transform 0.3s ease; cursor: pointer;" onclick="location.href='{{ url_for('app_detail', slug=app.slug) }}'">
+                    <div class="text-center mb-3">
+                        <div class="app-logo mb-2">
+                            {{ app.logo_url|safe }}
+                        </div>
+                        <h6 class="mb-1">{{ app.name }}</h6>
+                        <small class="text-muted">{{ app.category }}</small>
+                    </div>
+                    
+                    <div class="app-stats d-flex justify-content-between mb-3">
+                        <div class="rating">
+                            <span class="text-warning">
+                                {% for i in range(5) %}
+                                    {% if i < app.rating|int %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                            <small class="text-muted">{{ app.rating }}</small>
+                        </div>
+                        <div class="downloads">
+                            <small class="text-muted">
+                                <i class="fas fa-download me-1"></i>{{ app.downloads }}
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <p class="text-muted mb-3" style="font-size: 13px; line-height: 1.4;">
+                        {{ app.short_description[:80] }}...
+                    </p>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">v{{ app.version }}</small>
+                        <div class="app-actions">
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fas fa-eye me-1"></i>View
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Navigation arrows for apps scroll -->
+            <div class="text-center mt-3">
+                <button class="btn btn-outline-primary btn-sm me-2" onclick="scrollApps('left')">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="btn btn-outline-primary btn-sm" onclick="scrollApps('right')">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delivery Partners Section -->
+    <div class="container my-5">
+        <h3 class="mb-4">Our Delivery Partners <span class="badge bg-success">Live</span></h3>
+        <div class="delivery-scroll" id="deliveryScroll" style="display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 15px; padding: 10px 0;">
+            {% for profile in delivery_profiles %}
+            <!-- Delivery Partner {{ loop.index }} -->
+            <div class="delivery-card" style="min-width: 200px; text-align: center; cursor: pointer; transition: transform 0.3s ease; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div class="position-relative mb-3">
+                    <img src="https://images.unsplash.com/photo-{{ '1507003211169-0a1dd7228f2d' if loop.index == 1 else ('1472099645785-5658abf4ff4e' if loop.index == 2 else ('1500648767791-00dcc994a43e' if loop.index == 3 else '1560250097-0b93528c311a')) }}?w=80&h=80&fit=crop&crop=face" class="rounded-circle" alt="Delivery Partner" style="width: 80px; height: 80px; object-fit: cover;">
+                    <div style="position: absolute; bottom: 5px; right: 5px; width: 12px; height: 12px; background: {% if profile.is_available %}#28a745{% else %}#6c757d{% endif %}; border-radius: 50%; border: 2px solid white;"></div>
+                </div>
+                <h6 class="mb-1">{{ profile.user.full_name }}</h6>
+                <p class="text-muted mb-2" style="font-size: 12px;">
+                    {% if profile.vehicles %}
+                        {% set vehicle = profile.vehicles[0] %}
+                        <i class="fas fa-{% if vehicle.vehicle_type == 'bike' %}motorcycle{% elif vehicle.vehicle_type == 'car' %}car{% elif vehicle.vehicle_type == 'cycle' %}bicycle{% else %}truck{% endif %} me-1"></i>{{ vehicle.vehicle_type.title() }} • {{ profile.delivery_zone.title() }}
+                    {% else %}
+                        <i class="fas fa-motorcycle me-1"></i>Vehicle • {{ profile.delivery_zone.title() }}
+                    {% endif %}
+                </p>
+                <div class="mb-2">
+                    <span class="badge bg-{% if profile.is_available %}success{% else %}secondary{% endif %}">
+                        {% if profile.is_available %}Available{% else %}Offline{% endif %}
+                    </span>
+                </div>
+                <div class="rating-stars mb-2" style="font-size: 12px;">
+                    {% for i in range(5) %}
+                        {% if i < profile.rating|int %}
+                            <i class="fas fa-star text-warning"></i>
+                        {% else %}
+                            <i class="far fa-star text-warning"></i>
+                        {% endif %}
+                    {% endfor %}
+                    <small class="text-muted">({{ "%.1f"|format(profile.rating) }})</small>
+                </div>
+                <small class="{% if profile.is_available %}text-success{% else %}text-muted{% endif %}">
+                    {{ profile.total_deliveries }} deliveries completed
+                </small>
+            </div>
+            {% endfor %}
+
+        </div>
+        
+        <!-- Navigation arrows for delivery scroll -->
+        <div class="text-center mt-3">
+            <button class="btn btn-outline-primary btn-sm me-2" onclick="scrollDelivery('left')">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="btn btn-outline-primary btn-sm" onclick="scrollDelivery('right')">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Matrimony Profiles Section -->
+    <div class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="mb-0">Find Your Perfect Match <span class="badge bg-danger">💕</span></h3>
+            <a href="/matrimony" class="btn btn-outline-primary">
+                <i class="fas fa-heart me-2"></i>View All Profiles
+            </a>
+        </div>
+        
+        <div class="matrimony-carousel-container position-relative">
+            <div class="matrimony-scroll" id="matrimonyScroll" style="display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 20px; padding: 10px 0;">
+                
+                <!-- Sample Profile 1 -->
+                <div class="matrimony-card" style="min-width: 280px; background: white; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.1); transition: transform 0.3s ease; cursor: pointer; overflow: hidden;">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b30d8c87?w=280&h=200&fit=crop&crop=face" class="card-img-top" alt="Profile" style="height: 200px; object-fit: cover;">
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-success">Online</span>
+                        </div>
+                        <div class="position-absolute bottom-0 start-0 m-2">
+                            <span class="badge bg-gold text-dark">Gold Member</span>
+                        </div>
+                    </div>
+                    <div class="card-body p-3">
+                        <h6 class="card-title mb-1">Priya Sharma</h6>
+                        <p class="text-muted mb-2" style="font-size: 14px;">
+                            <i class="fas fa-map-marker-alt me-1"></i>Mumbai, Maharashtra
+                        </p>
+                        <div class="row text-center mb-2">
+                            <div class="col-4">
+                                <small class="text-muted">Age</small>
+                                <div class="fw-bold">26</div>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted">Height</small>
+                                <div class="fw-bold">5'6"</div>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted">Education</small>
+                                <div class="fw-bold">MBA</div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">Software Engineer</small>
+                            <div class="matrimony-actions">
+                                <button class="btn btn-outline-danger btn-sm me-1" title="Skip">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm" title="Interested">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Profile 2 -->
+                <div class="matrimony-card" style="min-width: 280px; background: white; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.1); transition: transform 0.3s ease; cursor: pointer; overflow: hidden;">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=280&h=200&fit=crop&crop=face" class="card-img-top" alt="Profile" style="height: 200px; object-fit: cover;">
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-warning">Recently Active</span>
+                        </div>
+                        <div class="position-absolute bottom-0 start-0 m-2">
+                            <span class="badge bg-platinum text-dark">Platinum Member</span>
+                        </div>
+                    </div>
+                    <div class="card-body p-3">
+                        <h6 class="card-title mb-1">Rahul Patel</h6>
+                        <p class="text-muted mb-2" style="font-size: 14px;">
+                            <i class="fas fa-map-marker-alt me-1"></i>Delhi, India
+                        </p>
+                        <div class="row text-center mb-2">
+                            <div class="col-4">
+                                <small class="text-muted">Age</small>
+                                <div class="fw-bold">28</div>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted">Height</small>
+                                <div class="fw-bold">5'10"</div>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted">Education</small>
+                                <div class="fw-bold">M.Tech</div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">Data Scientist</small>
+                            <div class="matrimony-actions">
+                                <button class="btn btn-outline-danger btn-sm me-1" title="Skip">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm" title="Interested">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Profile 3 -->
+                <div class="matrimony-card" style="min-width: 280px; background: white; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.1); transition: transform 0.3s ease; cursor: pointer; overflow: hidden;">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=280&h=200&fit=crop&crop=face" class="card-img-top" alt="Profile" style="height: 200px; object-fit: cover;">
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-success">Online</span>
+                        </div>
+                        <div class="position-absolute bottom-0 start-0 m-2">
+                            <span class="badge bg-silver text-dark">Silver Member</span>
+                        </div>
+                    </div>
+                    <div class="card-body p-3">
+                        <h6 class="card-title mb-1">Ananya Singh</h6>
+                        <p class="text-muted mb-2" style="font-size: 14px;">
+                            <i class="fas fa-map-marker-alt me-1"></i>Bangalore, Karnataka
+                        </p>
+                        <div class="row text-center mb-2">
+                            <div class="col-4">
+                                <small class="text-muted">Age</small>
+                                <div class="fw-bold">25</div>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted">Height</small>
+                                <div class="fw-bold">5'4"</div>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted">Education</small>
+                                <div class="fw-bold">B.Tech</div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">Product Manager</small>
+                            <div class="matrimony-actions">
+                                <button class="btn btn-outline-danger btn-sm me-1" title="Skip">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm" title="Interested">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Profile 4 -->
+                <div class="matrimony-card" style="min-width: 280px; background: white; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.1); transition: transform 0.3s ease; cursor: pointer; overflow: hidden;">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=280&h=200&fit=crop&crop=face" class="card-img-top" alt="Profile" style="height: 200px; object-fit: cover;">
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-secondary">Offline</span>
+                        </div>
+                        <div class="position-absolute bottom-0 start-0 m-2">
+                            <span class="badge bg-basic text-white">Basic Member</span>
+                        </div>
+                    </div>
+                    <div class="card-body p-3">
+                        <h6 class="card-title mb-1">Arjun Gupta</h6>
+                        <p class="text-muted mb-2" style="font-size: 14px;">
+                            <i class="fas fa-map-marker-alt me-1"></i>Pune, Maharashtra
+                        </p>
+                        <div class="row text-center mb-2">
+                            <div class="col-4">
+                                <small class="text-muted">Age</small>
+                                <div class="fw-bold">30</div>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted">Height</small>
+                                <div class="fw-bold">5'8"</div>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted">Education</small>
+                                <div class="fw-bold">CA</div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">Financial Analyst</small>
+                            <div class="matrimony-actions">
+                                <button class="btn btn-outline-danger btn-sm me-1" title="Skip">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm" title="Interested">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Profile 5 -->
+                <div class="matrimony-card" style="min-width: 280px; background: white; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.1); transition: transform 0.3s ease; cursor: pointer; overflow: hidden;">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=280&h=200&fit=crop&crop=face" class="card-img-top" alt="Profile" style="height: 200px; object-fit: cover;">
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-success">Online</span>
+                        </div>
+                        <div class="position-absolute bottom-0 start-0 m-2">
+                            <span class="badge bg-gold text-dark">Gold Member</span>
+                        </div>
+                    </div>
+                    <div class="card-body p-3">
+                        <h6 class="card-title mb-1">Vikram Sharma</h6>
+                        <p class="text-muted mb-2" style="font-size: 14px;">
+                            <i class="fas fa-map-marker-alt me-1"></i>Hyderabad, Telangana
+                        </p>
+                        <div class="row text-center mb-2">
+                            <div class="col-4">
+                                <small class="text-muted">Age</small>
+                                <div class="fw-bold">29</div>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted">Height</small>
+                                <div class="fw-bold">5'11"</div>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted">Education</small>
+                                <div class="fw-bold">MS</div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">Business Analyst</small>
+                            <div class="matrimony-actions">
+                                <button class="btn btn-outline-danger btn-sm me-1" title="Skip">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm" title="Interested">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation arrows for matrimony scroll -->
+            <div class="text-center mt-3">
+                <button class="btn btn-outline-primary btn-sm me-2" onclick="scrollMatrimony('left')">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="btn btn-outline-primary btn-sm" onclick="scrollMatrimony('right')">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h5>Mobile Shop Hub</h5>
+                    <p>Your one-stop destination for mobile accessories and electronics.</p>
+                </div>
+                <div class="col-md-3">
+                    <h6>Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50">About Us</a></li>
+                        <li><a href="#" class="text-white-50">Contact</a></li>
+                        <li><a href="#" class="text-white-50">Terms of Service</a></li>
+                        <li><a href="#" class="text-white-50">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6>Categories</h6>
+                    <ul class="list-unstyled">
+                        {% for category in categories[:4] %}
+                        <li><a href="#" class="text-white-50">{{ category.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6>Connect With Us</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white-50"><i class="fab fa-facebook fa-2x"></i></a>
+                        <a href="#" class="text-white-50"><i class="fab fa-twitter fa-2x"></i></a>
+                        <a href="#" class="text-white-50"><i class="fab fa-instagram fa-2x"></i></a>
+                        <a href="#" class="text-white-50"><i class="fab fa-whatsapp fa-2x"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2025 Mobile Shop Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // View toggle functionality
+        function toggleView(view) {
+            const container = document.getElementById('productsContainer');
+            const gridBtn = document.getElementById('gridViewBtn');
+            const listBtn = document.getElementById('listViewBtn');
+            
+            if (view === 'grid') {
+                container.className = 'row grid-view';
+                gridBtn.classList.add('active');
+                listBtn.classList.remove('active');
+            } else {
+                container.className = 'row list-view';
+                listBtn.classList.add('active');
+                gridBtn.classList.remove('active');
+            }
+        }
+
+        // Category filtering
+        function filterByCategory(categoryId) {
+            const products = document.querySelectorAll('[data-category]');
+            const chips = document.querySelectorAll('.category-chip');
+            
+            chips.forEach(chip => chip.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            products.forEach(product => {
+                if (categoryId === 'all' || product.dataset.category === categoryId) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+
+        // Product interactions
+        function addToCart(productId) {
+            alert('Added to cart! (Feature to be implemented)');
+        }
+
+        function toggleFavorite(productId) {
+            const btn = event.target.closest('button');
+            const icon = btn.querySelector('i');
+            
+            if (icon.classList.contains('far')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                btn.classList.remove('btn-outline-danger');
+                btn.classList.add('btn-danger');
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                btn.classList.remove('btn-danger');
+                btn.classList.add('btn-outline-danger');
+            }
+        }
+
+        // Social sharing
+        function shareProduct(platform, productId) {
+            const url = encodeURIComponent(window.location.href + '#product-' + productId);
+            const text = encodeURIComponent('Check out this amazing product!');
+            
+            let shareUrl = '';
+            switch(platform) {
+                case 'buddhistan':
+                    shareUrl = `https://buddhistan.org/share?url=${url}&text=${text}`;
+                    break;
+                case 'whatsapp':
+                    shareUrl = `https://wa.me/?text=${text}%20${url}`;
+                    break;
+                case 'facebook':
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+                    break;
+                case 'twitter':
+                    shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+                    break;
+            }
+            
+            if (shareUrl) {
+                window.open(shareUrl, '_blank', 'width=600,height=400');
+            }
+        }
+
+        // Business interactions
+        function followBusiness(businessId) {
+            const btn = event.target;
+            if (btn.textContent.includes('Follow')) {
+                btn.innerHTML = '<i class="fas fa-check me-1"></i>Following';
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-success');
+            } else {
+                btn.innerHTML = '<i class="fas fa-plus me-1"></i>Follow';
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-primary');
+            }
+        }
+
+        function toggleBusinessFavorite(businessId) {
+            toggleFavorite(businessId);
+        }
+
+        function shareBusiness(businessId) {
+            shareProduct('whatsapp', businessId);
+        }
+
+        function viewBusinessProducts(businessId) {
+            alert('Redirecting to business products page... (Feature to be implemented)');
+        }
+
+        // User profile
+        function showUserProfile(userId) {
+            alert('Showing user profile... (Feature to be implemented)');
+        }
+
+        // Load more products
+        function loadMoreProducts() {
+            alert('Loading more products... (Feature to be implemented)');
+        }
+
+        // Search functionality
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            const query = document.getElementById('searchInput').value;
+            alert('Searching for: ' + query + ' (Feature to be implemented)');
+        });
+
+        // Filter reset
+        document.getElementById('resetFilters').addEventListener('click', function() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('locationFilter').value = '';
+            document.getElementById('priceFilter').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('sortFilter').value = 'newest';
+            filterByCategory('all');
+        });
+
+        // User scroll navigation
+        const userScroll = document.getElementById('userScroll');
+        userScroll.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            userScroll.scrollLeft += e.deltaY;
+        });
+        
+        // Delivery scroll navigation
+        const deliveryScroll = document.getElementById('deliveryScroll');
+        deliveryScroll.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            deliveryScroll.scrollLeft += e.deltaY;
+        });
+        
+        function scrollDelivery(direction) {
+            const scrollAmount = 200;
+            if (direction === 'left') {
+                deliveryScroll.scrollLeft -= scrollAmount;
+            } else {
+                deliveryScroll.scrollLeft += scrollAmount;
+            }
+        }
+        
+        // Apps scroll navigation
+        const appsScroll = document.getElementById('appsScroll');
+        appsScroll.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            appsScroll.scrollLeft += e.deltaY;
+        });
+        
+        function scrollApps(direction) {
+            const scrollAmount = 250;
+            if (direction === 'left') {
+                appsScroll.scrollLeft -= scrollAmount;
+            } else {
+                appsScroll.scrollLeft += scrollAmount;
+            }
+        }
+        
+        // Matrimony scroll navigation
+        const matrimonyScroll = document.getElementById('matrimonyScroll');
+        matrimonyScroll.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            matrimonyScroll.scrollLeft += e.deltaY;
+        });
+        
+        function scrollMatrimony(direction) {
+            const scrollAmount = 300;
+            if (direction === 'left') {
+                matrimonyScroll.scrollLeft -= scrollAmount;
+            } else {
+                matrimonyScroll.scrollLeft += scrollAmount;
+            }
+        }
+        
+        // Delivery card hover effects
+        document.querySelectorAll('.delivery-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+                this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+                this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+            });
+        });
+    </script>
+</body>
+</html>

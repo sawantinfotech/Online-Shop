@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}Invoice #{{ order.id }} - Mobile Shop{% endblock %}
+
+{% block content %}
+<div class="invoice-container">
+    <div class="d-flex justify-content-between align-items-center mb-4 d-print-none">
+        <h1>
+            <i class="fas fa-file-invoice me-2"></i>Invoice #{{ order.id }}
+        </h1>
+        <div class="d-flex gap-2">
+            <button class="btn btn-primary" onclick="window.print()">
+                <i class="fas fa-print me-2"></i>Print Invoice
+            </button>
+            <a href="{{ url_for('generate_invoice', order_id=order.id) }}" class="btn btn-success">
+                <i class="fas fa-download me-2"></i>Download PDF
+            </a>
+        </div>
+    </div>
+
+    <div class="invoice-content">
+        <!-- Invoice Header -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="business-info">
+                    {% if order.business.logo_url %}
+                        <img src="{{ url_for('static', filename='uploads/' + order.business.logo_url) }}" 
+                             alt="{{ order.business.business_name }}" class="business-logo mb-3" height="60">
+                    {% endif %}
+                    <h2 class="text-primary">{{ order.business.business_name }}</h2>
+                    <p class="text-muted mb-1">{{ order.business.address }}</p>
+                    <p class="text-muted mb-1">Phone: {{ order.business.contact_number }}</p>
+                    <p class="text-muted">Email: {{ order.business.email }}</p>
+                </div>
+            </div>
+            <div class="col-md-6 text-end">
+                <h1 class="text-primary">INVOICE</h1>
+                <div class="invoice-details">
+                    <p><strong>Invoice #:</strong> {{ order.id }}</p>
+                    <p><strong>Date:</strong> {{ order.order_date.strftime('%B %d, %Y') }}</p>
+                    <p><strong>Due Date:</strong> {{ order.order_date.strftime('%B %d, %Y') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Information -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="customer-info">
+                    <h5 class="text-secondary">Bill To:</h5>
+                    <p class="mb-1"><strong>{{ order.customer.name }}</strong></p>
+                    <p class="mb-1">{{ order.customer.phone_number }}</p>
+                    {% if order.customer.email %}
+                        <p class="mb-1">{{ order.customer.email }}</p>
+                    {% endif %}
+                    <p class="mb-1">{{ order.delivery_address }}</p>
+                </div>
+            </div>
+            <div class="col-md-6 text-end">
+                <div class="order-info">
+                    <h5 class="text-secondary">Order Details:</h5>
+                    <p class="mb-1"><strong>Order ID:</strong> #{{ order.id }}</p>
+                    <p class="mb-1"><strong>Order Date:</strong> {{ order.order_date.strftime('%B %d, %Y') }}</p>
+                    <p class="mb-1"><strong>Payment Method:</strong> {{ order.payment_method.title() if order.payment_method else 'N/A' }}</p>
+                    <p class="mb-1">
+                        <strong>Payment Status:</strong> 
+                        <span class="badge bg-{{ 'success' if order.payment_status == 'completed' else 'warning' if order.payment_status == 'pending' else 'danger' }}">
+                            {{ order.payment_status.title() }}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Items Table -->
+        <div class="table-responsive mb-4">
+            <table class="table table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Product</th>
+                        <th class="text-center">Quantity</th>
+                        <th class="text-end">Unit Price</th>
+                        <th class="text-end">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.order_items %}
+                    <tr>
+                        <td>
+                            <div>
+                                <strong>{{ item.product.product_name }}</strong>
+                                {% if item.product.description %}
+                                    <br><small class="text-muted">{{ item.product.description[:100] }}...</small>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="text-center">{{ item.quantity }}</td>
+                        <td class="text-end">₹{{ "%.2f"|format(item.price) }}</td>
+                        <td class="text-end">₹{{ "%.2f"|format(item.total) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Invoice Summary -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="payment-info">
+                    <h5 class="text-secondary">Payment Information:</h5>
+                    {% if order.payments %}
+                        {% for payment in order.payments %}
+                            <p class="mb-1"><strong>Transaction ID:</strong> {{ payment.transaction_id }}</p>
+                            <p class="mb-1"><strong>Payment Method:</strong> {{ payment.payment_method.title() }}</p>
+                            <p class="mb-1"><strong>Payment Date:</strong> {{ payment.created_at.strftime('%B %d, %Y') }}</p>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">Payment information not available</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="invoice-summary">
+                    <table class="table table-sm">
+                        <tr>
+                            <td class="text-end"><strong>Subtotal:</strong></td>
+                            <td class="text-end">₹{{ "%.2f"|format(order.total_amount) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-end"><strong>Delivery Charges:</strong></td>
+                            <td class="text-end">₹{{ "%.2f"|format(order.delivery_charges) }}</td>
+                        </tr>
+                        <tr class="table-primary">
+                            <td class="text-end"><strong>Total Amount:</strong></td>
+                            <td class="text-end"><strong>₹{{ "%.2f"|format(order.total_amount + order.delivery_charges) }}</strong></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Invoice Footer -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="invoice-footer text-center">
+                    <hr>
+                    <p class="text-muted">
+                        <strong>Thank you for your business!</strong><br>
+                        For any queries, please contact us at {{ order.business.contact_number }} or {{ order.business.email }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@media print {
+    .d-print-none {
+        display: none !important;
+    }
+    
+    .invoice-container {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .invoice-content {
+        padding: 20px;
+    }
+    
+    .business-logo {
+        max-height: 80px;
+    }
+    
+    .table {
+        page-break-inside: auto;
+    }
+    
+    .table tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+}
+
+.invoice-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.business-info h2 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.invoice-details p,
+.customer-info p,
+.order-info p {
+    margin-bottom: 5px;
+}
+
+.invoice-summary {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.payment-info {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.invoice-footer {
+    border-top: 2px solid #2c3e50;
+    padding-top: 20px;
+    margin-top: 30px;
+}
+</style>
+{% endblock %}
