@@ -40,9 +40,13 @@ def index():
     categories = Category.query.all()
     
     # Get delivery profiles for carousel
-    delivery_profiles = db.session.query(DeliveryProfile).join(
-        User, DeliveryProfile.user_id == User.id
-    ).filter(DeliveryProfile.verification_status == 'verified').limit(10).all()
+    try:
+        delivery_profiles = db.session.query(DeliveryProfile).join(
+            User, DeliveryProfile.user_id == User.id
+        ).filter(DeliveryProfile.verification_status == 'verified').limit(10).all()
+    except Exception as e:
+        logging.error(f"Error fetching delivery profiles: {e}")
+        delivery_profiles = []
     
     # Get featured apps for carousel
     featured_apps = App.query.filter_by(status='active').order_by(App.featured.desc(), App.downloads.desc()).limit(20).all()

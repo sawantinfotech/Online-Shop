@@ -287,7 +287,7 @@ def admin_reports():
         db.func.count(Order.id).label('order_count')
     ).join(Order).filter(
         Order.payment_status == 'completed'
-    ).group_by(Business.id).order_by('revenue desc').limit(10).all()
+    ).group_by(Business.id).order_by(db.text('revenue desc')).limit(10).all()
     
     return render_template('admin/reports.html', 
                          daily_sales=daily_sales, 
