@@ -17,30 +17,18 @@ app.secret_key = os.environ.get("SESSION_SECRET", "mobile-shop-secret-key")
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 # Database configuration
-database_url = os.environ.get("DATABASE_URL", "sqlite:///mobile_shop.db")
+database_url = os.environ.get("DATABASE_URL")
 
-# Check if the database URL is accessible
-try:
-    import psycopg2
-    from urllib.parse import urlparse
-    
-    if database_url.startswith("postgresql://"):
-        # Test PostgreSQL connection
-        conn = psycopg2.connect(database_url)
-        conn.close()
-        app.config["SQLALCHEMY_DATABASE_URI"] = database_url
-        app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-            "pool_recycle": 300,
-            "pool_pre_ping": True,
-        }
-        logging.info("Using PostgreSQL database")
-    else:
-        app.config["SQLALCHEMY_DATABASE_URI"] = database_url
-        logging.info("Using SQLite database")
-except Exception as e:
-    logging.warning(f"PostgreSQL connection failed: {e}")
-    logging.info("Falling back to SQLite database")
+if database_url:
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+        "pool_recycle": 300,
+        "pool_pre_ping": True,
+    }
+    logging.info("Using PostgreSQL database")
+else:
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mobile_shop.db"
+    logging.info("Using SQLite database")
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
