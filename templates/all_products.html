@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block title %}All Products - Mobile Shop Hub{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>All Products <span class="badge bg-primary">{{ products|length }}</span></h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                    <li class="breadcrumb-item active">All Products</li>
+                </ol>
+            </nav>
+        </div>
+        
+        <!-- View Toggle Buttons -->
+        <div class="view-toggle">
+            <div class="btn-group" role="group">
+                <a href="{{ url_for('all_products', view='grid', search=search, category=category_id) }}" 
+                   class="btn btn-outline-secondary{% if view_type == 'grid' %} active{% endif %}">
+                    <i class="fas fa-th"></i> Grid
+                </a>
+                <a href="{{ url_for('all_products', view='list', search=search, category=category_id) }}" 
+                   class="btn btn-outline-secondary{% if view_type == 'list' %} active{% endif %}">
+                    <i class="fas fa-list"></i> List
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <form method="GET" class="d-flex">
+                <input type="text" class="form-control me-2" name="search" value="{{ search }}" placeholder="Search products...">
+                <input type="hidden" name="view" value="{{ view_type }}">
+                <input type="hidden" name="category" value="{{ category_id }}">
+                <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" onchange="filterByCategory(this.value)">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}" {% if category_id|string == category.id|string %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" id="sortSelect" onchange="sortProducts(this.value)">
+                <option value="newest">Newest First</option>
+                <option value="price_low">Price: Low to High</option>
+                <option value="price_high">Price: High to Low</option>
+                <option value="name">Name A-Z</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Products Container -->
+    <div class="products-container">
+        {% if products %}
+            <div class="row {% if view_type == 'list' %}list-view{% else %}grid-view{% endif %}" id="productsContainer">
+                {% for product in products %}
+                <div class="{% if view_type == 'list' %}col-12 mb-3{% else %}col-lg-3 col-md-4 col-sm-6 mb-4{% endif %}" data-category="{{ product.category_id or 'all' }}">
+                    {% if view_type == 'list' %}
+                    <!-- List View -->
+                    <div class="card h-100">
+                        <div class="row g-0">
+                            <div class="col-md-3">
+                                <img src="https://via.placeholder.com/200x150" class="img-fluid rounded-start h-100" style="object-fit: cover;" alt="{{ product.product_name }}">
+                            </div>
+                            <div class="col-md-9">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <h5 class="card-title">{{ product.product_name }}</h5>
+                                            <p class="card-text text-muted">{{ product.description }}</p>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div class="rating-stars me-3">
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="far fa-star text-warning"></i>
+                                                    <small class="text-muted ms-1">(4.2)</small>
+                                                </div>
+                                                <small class="text-muted">Stock: {{ product.quantity }}</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 text-end">
+                                            <h4 class="text-primary mb-2">₹{{ "%.2f"|format(product.price) }}</h4>
+                                            <div class="mb-2">
+                                                {% if product.quantity > 0 %}
+                                                <span class="badge bg-success">In Stock</span>
+                                                {% else %}
+                                                <span class="badge bg-danger">Out of Stock</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="d-grid gap-2">
+                                                <button class="btn btn-primary btn-sm" onclick="addToCart({{ product.id }})">
+                                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                                </button>
+                                                <button class="btn btn-outline-danger btn-sm" onclick="toggleFavorite({{ product.id }})">
+                                                    <i class="far fa-heart"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- Grid View -->
+                    <div class="card product-card h-100">
+                        <div class="position-relative">
+                            <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="{{ product.product_name }}">
+                            <div class="social-share">
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-light" data-bs-toggle="dropdown">
+                                        <i class="fas fa-share-alt"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#" onclick="shareProduct('whatsapp', {{ product.id }})">
+                                            <i class="fab fa-whatsapp text-success me-2"></i>WhatsApp</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="shareProduct('facebook', {{ product.id }})">
+                                            <i class="fab fa-facebook text-primary me-2"></i>Facebook</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">{{ product.product_name }}</h6>
+                            <p class="card-text text-muted small">{{ product.description[:80] }}...</p>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="text-primary mb-0">₹{{ "%.2f"|format(product.price) }}</h5>
+                                <div class="rating-stars">
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="far fa-star text-warning"></i>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">Stock: {{ product.quantity }}</small>
+                                {% if product.quantity > 0 %}
+                                <span class="badge bg-success">Available</span>
+                                {% else %}
+                                <span class="badge bg-danger">Out of Stock</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-primary btn-sm flex-fill" onclick="addToCart({{ product.id }})">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" onclick="toggleFavorite({{ product.id }})">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-box fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">No products found</h4>
+                <p class="text-muted">Try adjusting your search or filters.</p>
+                <a href="{{ url_for('all_products') }}" class="btn btn-primary">View All Products</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.product-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.social-share {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.rating-stars {
+    font-size: 14px;
+}
+.list-view .card {
+    border: 1px solid #e0e0e0;
+}
+.list-view .card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+</style>
+
+<script>
+function filterByCategory(categoryId) {
+    const url = new URL(window.location);
+    url.searchParams.set('category', categoryId);
+    window.location.href = url.toString();
+}
+
+function sortProducts(sortBy) {
+    // Implement sorting logic here
+    console.log('Sorting by:', sortBy);
+}
+
+function addToCart(productId) {
+    alert('Added to cart! (Feature to be implemented)');
+}
+
+function toggleFavorite(productId) {
+    const btn = event.target.closest('button');
+    const icon = btn.querySelector('i');
+    
+    if (icon.classList.contains('far')) {
+        icon.classList.remove('far');
+        icon.classList.add('fas');
+    } else {
+        icon.classList.remove('fas');
+        icon.classList.add('far');
+    }
+}
+
+function shareProduct(platform, productId) {
+    alert(`Share to ${platform} - Product ${productId}`);
+}
+</script>
+{% endblock %}

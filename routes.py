@@ -987,6 +987,78 @@ def categories():
     
     return render_template('categories.html', category_data=category_data)
 
+@app.route('/all-products')
+def all_products():
+    """All products page with grid/list view toggle"""
+    view_type = request.args.get('view', 'grid')
+    search = request.args.get('search', '')
+    category_id = request.args.get('category', '')
+    
+    query = Product.query.filter_by(is_active=True)
+    
+    if search:
+        query = query.filter(Product.product_name.contains(search))
+    if category_id:
+        query = query.filter_by(category_id=category_id)
+    
+    products = query.order_by(Product.created_at.desc()).all()
+    categories = Category.query.all()
+    
+    return render_template('all_products.html', 
+                         products=products, 
+                         categories=categories,
+                         view_type=view_type,
+                         search=search,
+                         category_id=category_id)
+
+@app.route('/all-businesses')
+def all_businesses():
+    """All businesses page with grid/list view toggle"""
+    view_type = request.args.get('view', 'grid')
+    search = request.args.get('search', '')
+    business_type = request.args.get('type', '')
+    
+    query = Business.query.filter_by(verification_status='verified')
+    
+    if search:
+        query = query.filter(Business.business_name.contains(search))
+    if business_type:
+        query = query.filter_by(business_type=business_type)
+    
+    businesses = query.order_by(Business.created_at.desc()).all()
+    business_types = db.session.query(Business.business_type).distinct().all()
+    
+    return render_template('all_businesses.html', 
+                         businesses=businesses,
+                         business_types=business_types,
+                         view_type=view_type,
+                         search=search,
+                         business_type=business_type)
+
+@app.route('/all-apps')
+def all_apps():
+    """All apps page with grid/list view toggle"""
+    view_type = request.args.get('view', 'grid')
+    search = request.args.get('search', '')
+    category = request.args.get('category', '')
+    
+    query = App.query.filter_by(status='active')
+    
+    if search:
+        query = query.filter(App.name.contains(search))
+    if category:
+        query = query.filter_by(category=category)
+    
+    apps = query.order_by(App.downloads.desc()).all()
+    categories = db.session.query(App.category).distinct().all()
+    
+    return render_template('all_apps.html', 
+                         apps=apps,
+                         categories=categories,
+                         view_type=view_type,
+                         search=search,
+                         selected_category=category)
+
 @app.route('/submit-app', methods=['GET', 'POST'])
 def submit_app():
     """App registration/submission page"""

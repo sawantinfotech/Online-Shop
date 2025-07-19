@@ -53,11 +53,11 @@
                         
                         <div class="text-center mt-3">
                             {% if key == 'business' %}
-                                <a href="#" class="btn btn-outline-{{ category.color }}">View All Businesses</a>
+                                <a href="{{ url_for('all_businesses') }}" class="btn btn-outline-{{ category.color }}">View All Businesses</a>
                             {% elif key == 'products' %}
-                                <a href="#" class="btn btn-outline-{{ category.color }}">View All Products</a>
+                                <a href="{{ url_for('all_products') }}" class="btn btn-outline-{{ category.color }}">View All Products</a>
                             {% elif key == 'apps' %}
-                                <a href="{{ url_for('apps') }}" class="btn btn-outline-{{ category.color }}">View All Apps</a>
+                                <a href="{{ url_for('all_apps') }}" class="btn btn-outline-{{ category.color }}">View All Apps</a>
                             {% elif key == 'delivery' %}
                                 <a href="#" class="btn btn-outline-{{ category.color }}">View All Partners</a>
                             {% elif key == 'matrimony' %}

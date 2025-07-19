@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}All Apps - Mobile Shop Hub{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>All Apps <span class="badge bg-primary">{{ apps|length }}</span></h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                    <li class="breadcrumb-item active">All Apps</li>
+                </ol>
+            </nav>
+        </div>
+        
+        <!-- View Toggle Buttons -->
+        <div class="view-toggle">
+            <div class="btn-group" role="group">
+                <a href="{{ url_for('all_apps', view='grid', search=search, category=selected_category) }}" 
+                   class="btn btn-outline-secondary{% if view_type == 'grid' %} active{% endif %}">
+                    <i class="fas fa-th"></i> Grid
+                </a>
+                <a href="{{ url_for('all_apps', view='list', search=search, category=selected_category) }}" 
+                   class="btn btn-outline-secondary{% if view_type == 'list' %} active{% endif %}">
+                    <i class="fas fa-list"></i> List
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <form method="GET" class="d-flex">
+                <input type="text" class="form-control me-2" name="search" value="{{ search }}" placeholder="Search apps...">
+                <input type="hidden" name="view" value="{{ view_type }}">
+                <input type="hidden" name="category" value="{{ selected_category }}">
+                <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" onchange="filterByCategory(this.value)">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category[0] }}" {% if selected_category == category[0] %}selected{% endif %}>
+                    {{ category[0] }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" id="sortSelect" onchange="sortApps(this.value)">
+                <option value="downloads">Most Downloaded</option>
+                <option value="rating">Highest Rated</option>
+                <option value="newest">Newest First</option>
+                <option value="name">Name A-Z</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Apps Container -->
+    <div class="apps-container">
+        {% if apps %}
+            <div class="row {% if view_type == 'list' %}list-view{% else %}grid-view{% endif %}" id="appsContainer">
+                {% for app in apps %}
+                <div class="{% if view_type == 'list' %}col-12 mb-3{% else %}col-lg-3 col-md-4 col-sm-6 mb-4{% endif %}">
+                    {% if view_type == 'list' %}
+                    <!-- List View -->
+                    <div class="card h-100">
+                        <div class="row g-0">
+                            <div class="col-md-2 text-center p-3">
+                                <div class="app-logo">
+                                    {{ app.logo_url|safe }}
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <h5 class="card-title">{{ app.name }}</h5>
+                                            <p class="card-text text-muted">{{ app.short_description }}</p>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div class="rating-stars me-3">
+                                                    {% for i in range(5) %}
+                                                        {% if i < app.rating|int %}
+                                                            <i class="fas fa-star text-warning"></i>
+                                                        {% else %}
+                                                            <i class="far fa-star text-warning"></i>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    <small class="text-muted ms-1">({{ app.rating }})</small>
+                                                </div>
+                                                <span class="badge bg-info">{{ app.category }}</span>
+                                            </div>
+                                            <small class="text-muted">
+                                                <i class="fas fa-download me-1"></i>{{ app.downloads }} downloads
+                                            </small>
+                                        </div>
+                                        <div class="col-md-4 text-end">
+                                            <div class="mb-2">
+                                                <span class="badge bg-success">{{ app.version }}</span>
+                                            </div>
+                                            <div class="d-grid gap-2">
+                                                <a href="{{ url_for('app_detail', slug=app.slug) }}" class="btn btn-primary btn-sm">
+                                                    <i class="fas fa-eye"></i> View Details
+                                                </a>
+                                                <button class="btn btn-outline-success btn-sm">
+                                                    <i class="fas fa-download"></i> Download
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- Grid View -->
+                    <div class="card app-card h-100">
+                        <div class="card-body text-center">
+                            <div class="app-logo mb-3">
+                                {{ app.logo_url|safe }}
+                            </div>
+                            <h6 class="card-title">{{ app.name }}</h6>
+                            <p class="text-muted small">{{ app.short_description[:60] }}...</p>
+                            
+                            <div class="app-stats d-flex justify-content-between mb-3">
+                                <div class="rating text-center">
+                                    <span class="text-warning">
+                                        {% for i in range(5) %}
+                                            {% if i < app.rating|int %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <small class="text-muted d-block">{{ app.rating }}</small>
+                                </div>
+                                <div class="downloads text-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-download"></i>
+                                        <div>{{ app.downloads }}</div>
+                                    </small>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-info">{{ app.category }}</span>
+                                <small class="text-muted">v{{ app.version }}</small>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-flex gap-2">
+                                <a href="{{ url_for('app_detail', slug=app.slug) }}" class="btn btn-primary btn-sm flex-fill">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                                <button class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-mobile-alt fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">No apps found</h4>
+                <p class="text-muted">Try adjusting your search or filters.</p>
+                <a href="{{ url_for('all_apps') }}" class="btn btn-primary">View All Apps</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.app-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.app-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.app-logo {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.rating-stars {
+    font-size: 14px;
+}
+.list-view .card {
+    border: 1px solid #e0e0e0;
+}
+.list-view .card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+</style>
+
+<script>
+function filterByCategory(category) {
+    const url = new URL(window.location);
+    url.searchParams.set('category', category);
+    window.location.href = url.toString();
+}
+
+function sortApps(sortBy) {
+    console.log('Sorting by:', sortBy);
+}
+</script>
+{% endblock %}
