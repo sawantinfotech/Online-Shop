@@ -46,6 +46,11 @@ os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 with app.app_context():
     # Import models to create tables
     import models  # noqa: F401
+    import json
+    
+    # Add JSON filter for templates
+    app.jinja_env.filters['from_json'] = json.loads
+    
     db.create_all()
     logging.info("Database tables created")
     

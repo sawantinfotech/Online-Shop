@@ -230,7 +230,8 @@
                                         </div>
                                         
                                         <ul class="feature-list">
-                                            {% for feature in plan.features %}
+                                            {% set features = plan.features|from_json if plan.features else [] %}
+                                            {% for feature in features %}
                                             <li>
                                                 <i class="fas fa-check"></i> {{ feature }}
                                             </li>
