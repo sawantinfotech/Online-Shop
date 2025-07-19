@@ -54,8 +54,12 @@ def index():
     # Get matrimony profiles for carousel
     matrimony_profiles = MatrimonyProfile.query.filter_by(profile_visible=True).order_by(MatrimonyProfile.created_at.desc()).limit(10).all()
     
-    # Get recent reviews and ratings (if available)
-    # recent_reviews = Review.query.order_by(Review.created_at.desc()).limit(5).all()
+    # Get active subscribers for active users section
+    try:
+        active_subscribers = User.query.filter_by(user_type='subscriber', is_online=True).limit(20).all()
+    except Exception as e:
+        logging.error(f"Error fetching active subscribers: {e}")
+        active_subscribers = []
     
     return render_template('public_home.html', 
                          featured_products=featured_products,
@@ -63,7 +67,8 @@ def index():
                          categories=categories,
                          delivery_profiles=delivery_profiles,
                          featured_apps=featured_apps,
-                         matrimony_profiles=matrimony_profiles)
+                         matrimony_profiles=matrimony_profiles,
+                         active_subscribers=active_subscribers)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -924,6 +929,63 @@ def apps_by_category(category):
     apps = App.query.filter_by(category=category, status='active').order_by(App.downloads.desc()).all()
     categories = db.session.query(App.category).distinct().all()
     return render_template('apps.html', apps=apps, categories=categories, selected_category=category)
+
+@app.route('/categories')
+def categories():
+    """Categories page with listings for all service types"""
+    # Get counts for each category
+    business_count = Business.query.filter_by(verification_status='verified').count()
+    product_count = Product.query.filter_by(is_active=True).count()
+    app_count = App.query.filter_by(status='active').count()
+    delivery_count = DeliveryProfile.query.filter_by(verification_status='verified').count()
+    matrimony_count = MatrimonyProfile.query.filter_by(profile_visible=True).count()
+    
+    # Get sample listings for each category
+    featured_businesses = Business.query.filter_by(verification_status='verified').limit(6).all()
+    featured_products = Product.query.filter_by(is_active=True).limit(6).all()
+    featured_apps = App.query.filter_by(status='active').limit(6).all()
+    featured_delivery = DeliveryProfile.query.filter_by(verification_status='verified').limit(6).all()
+    featured_matrimony = MatrimonyProfile.query.filter_by(profile_visible=True).limit(6).all()
+    
+    category_data = {
+        'business': {
+            'count': business_count,
+            'items': featured_businesses,
+            'title': 'Business Listings',
+            'icon': 'fas fa-store',
+            'color': 'primary'
+        },
+        'products': {
+            'count': product_count,
+            'items': featured_products,
+            'title': 'Product Listings',
+            'icon': 'fas fa-box',
+            'color': 'success'
+        },
+        'apps': {
+            'count': app_count,
+            'items': featured_apps,
+            'title': 'App Listings',
+            'icon': 'fas fa-mobile-alt',
+            'color': 'info'
+        },
+        'delivery': {
+            'count': delivery_count,
+            'items': featured_delivery,
+            'title': 'Delivery Partners',
+            'icon': 'fas fa-truck',
+            'color': 'warning'
+        },
+        'matrimony': {
+            'count': matrimony_count,
+            'items': featured_matrimony,
+            'title': 'Matrimonial Listings',
+            'icon': 'fas fa-heart',
+            'color': 'danger'
+        }
+    }
+    
+    return render_template('categories.html', category_data=category_data)
 
 @app.route('/submit-app', methods=['GET', 'POST'])
 def submit_app():

@@ -32,6 +32,11 @@ def subscriber_auth():
         # Login existing subscriber
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password_hash, password):
+            # Update online status
+            user.is_online = True
+            user.last_seen = datetime.utcnow()
+            db.session.commit()
+            
             session['subscriber_id'] = user.id
             session['subscriber_email'] = user.email
             session['subscriber_name'] = user.full_name
@@ -57,6 +62,8 @@ def subscriber_auth():
                 mobile=mobile,
                 password_hash=generate_password_hash(password),
                 user_type='subscriber',
+                is_online=True,
+                last_seen=datetime.utcnow(),
                 created_at=datetime.utcnow()
             )
             db.session.add(user)

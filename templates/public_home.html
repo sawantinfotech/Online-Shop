@@ -326,30 +326,35 @@
         </div>
     </div>
 
-    <!-- Users Scroll Section -->
+    <!-- Active Subscribers Section -->
     <div class="container my-5">
-        <h3 class="mb-4">Active Users <span class="badge bg-success">Online</span></h3>
+        <h3 class="mb-4">Active Subscribers <span class="badge bg-success">{{ active_subscribers|length }} Online</span></h3>
         <div class="user-scroll" id="userScroll">
-            <!-- Sample users - in real implementation, fetch from database -->
-            <div class="user-card" onclick="showUserProfile(1)">
+            {% for subscriber in active_subscribers %}
+            <div class="user-card" onclick="showUserProfile({{ subscriber.id }})">
                 <div class="position-relative">
-                    <img src="https://via.placeholder.com/80x80" class="rounded-circle" alt="User">
-                    <div class="online-indicator"></div>
+                    {% if subscriber.profile_photo %}
+                        <img src="{{ subscriber.profile_photo }}" class="rounded-circle" alt="User" style="width: 80px; height: 80px; object-fit: cover;">
+                    {% else %}
+                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="fas fa-user text-white fa-2x"></i>
+                        </div>
+                    {% endif %}
+                    <div class="{% if subscriber.is_online %}online-indicator{% else %}online-indicator offline-indicator{% endif %}"></div>
                 </div>
-                <p class="mb-1 mt-2 fw-bold">John Doe</p>
-                <button class="btn btn-outline-primary btn-sm">Follow</button>
+                <p class="mb-1 mt-2 fw-bold">{{ subscriber.full_name or subscriber.username }}</p>
+                <small class="text-muted d-block">{{ subscriber.subscription_plan or 'Free' }} Member</small>
+                <button class="btn btn-outline-primary btn-sm mt-1">Connect</button>
             </div>
+            {% endfor %}
             
-            <div class="user-card" onclick="showUserProfile(2)">
-                <div class="position-relative">
-                    <img src="https://via.placeholder.com/80x80" class="rounded-circle" alt="User">
-                    <div class="online-indicator offline-indicator"></div>
-                </div>
-                <p class="mb-1 mt-2 fw-bold">Jane Smith</p>
-                <button class="btn btn-outline-primary btn-sm">Follow</button>
+            {% if not active_subscribers %}
+            <div class="text-center w-100 py-4">
+                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                <p class="text-muted">No active subscribers at the moment</p>
+                <a href="{{ url_for('subscriber_login') }}" class="btn btn-primary">Join as Subscriber</a>
             </div>
-            
-            <!-- More users would be dynamically loaded -->
+            {% endif %}
         </div>
     </div>
 

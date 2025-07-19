@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Service Categories - Mobile Shop Hub{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-4">Service Categories</h1>
+        <p class="lead text-muted">Explore our comprehensive range of services and listings</p>
+    </div>
+
+    <!-- Category Cards -->
+    <div class="row g-4">
+        {% for key, category in category_data.items() %}
+        <div class="col-lg-6">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-{{ category.color }} text-white">
+                    <h4 class="mb-0">
+                        <i class="{{ category.icon }} me-2"></i>{{ category.title }}
+                        <span class="badge bg-light text-{{ category.color }} ms-2">{{ category.count }}</span>
+                    </h4>
+                </div>
+                
+                <div class="card-body">
+                    {% if category.items %}
+                        <div class="row g-2">
+                            {% for item in category.items %}
+                            <div class="col-md-6">
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body p-2">
+                                        {% if key == 'business' %}
+                                            <h6 class="card-title mb-1">{{ item.business_name }}</h6>
+                                            <small class="text-muted">{{ item.business_type }}</small>
+                                        {% elif key == 'products' %}
+                                            <h6 class="card-title mb-1">{{ item.product_name }}</h6>
+                                            <small class="text-muted">${{ item.price }}</small>
+                                        {% elif key == 'apps' %}
+                                            <h6 class="card-title mb-1">{{ item.app_name }}</h6>
+                                            <small class="text-muted">{{ item.category }}</small>
+                                        {% elif key == 'delivery' %}
+                                            <h6 class="card-title mb-1">{{ item.user.full_name }}</h6>
+                                            <small class="text-muted">{{ item.delivery_zone }} • {{ "%.1f"|format(item.rating) }}⭐</small>
+                                        {% elif key == 'matrimony' %}
+                                            <h6 class="card-title mb-1">{{ item.first_name }}</h6>
+                                            <small class="text-muted">{{ item.age }} years • {{ item.location }}</small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            {% if key == 'business' %}
+                                <a href="#" class="btn btn-outline-{{ category.color }}">View All Businesses</a>
+                            {% elif key == 'products' %}
+                                <a href="#" class="btn btn-outline-{{ category.color }}">View All Products</a>
+                            {% elif key == 'apps' %}
+                                <a href="{{ url_for('apps') }}" class="btn btn-outline-{{ category.color }}">View All Apps</a>
+                            {% elif key == 'delivery' %}
+                                <a href="#" class="btn btn-outline-{{ category.color }}">View All Partners</a>
+                            {% elif key == 'matrimony' %}
+                                <a href="/matrimony" class="btn btn-outline-{{ category.color }}">View All Profiles</a>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="{{ category.icon }} fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No listings available yet</p>
+                            <a href="#" class="btn btn-sm btn-outline-{{ category.color }}">Be the First to List</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Action Section -->
+    <div class="text-center mt-5 mb-4">
+        <div class="card bg-light">
+            <div class="card-body py-4">
+                <h4>Ready to Get Started?</h4>
+                <p class="text-muted mb-3">Join thousands of users already benefiting from our platform</p>
+                <div class="row g-2 justify-content-center">
+                    <div class="col-md-3">
+                        <a href="{{ url_for('register') }}" class="btn btn-primary w-100">
+                            <i class="fas fa-store me-1"></i>Register Business
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('subscriber_login') }}" class="btn btn-success w-100">
+                            <i class="fas fa-user-circle me-1"></i>Join as Subscriber
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('submit_app') }}" class="btn btn-info w-100">
+                            <i class="fas fa-upload me-1"></i>Submit App
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('delivery_application') }}" class="btn btn-warning w-100">
+                            <i class="fas fa-truck me-1"></i>Join Delivery
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
