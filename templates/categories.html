@@ -8,6 +8,17 @@
     <div class="text-center mb-5">
         <h1 class="display-4">Service Categories</h1>
         <p class="lead text-muted">Explore our comprehensive range of services and listings</p>
+        <div class="d-flex justify-content-center gap-2 mt-3">
+            <a href="{{ url_for('export_csv', model_type='categories') }}" class="btn btn-outline-success">
+                <i class="fas fa-download"></i> Export CSV
+            </a>
+            <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#importModal">
+                <i class="fas fa-upload"></i> Import CSV
+            </button>
+            <a href="{{ url_for('download_demo_csv', filename='categories.csv') }}" class="btn btn-outline-info">
+                <i class="fas fa-file-csv"></i> Demo CSV
+            </a>
+        </div>
     </div>
 
     <!-- Category Cards -->
@@ -100,8 +111,8 @@
                         </a>
                     </div>
                     <div class="col-md-3">
-                        <a href="{{ url_for('delivery_application') }}" class="btn btn-warning w-100">
-                            <i class="fas fa-truck me-1"></i>Join Delivery
+                        <a href="{{ url_for('careers') }}" class="btn btn-warning w-100">
+                            <i class="fas fa-truck me-1"></i>Join Our Team
                         </a>
                     </div>
                 </div>
@@ -109,4 +120,32 @@
         </div>
     </div>
 </div>
+
+<!-- Import Modal -->
+<div class="modal fade" id="importModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Import Categories from CSV</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ url_for('import_csv', model_type='categories') }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="csvFile" class="form-label">Select CSV File</label>
+                        <input type="file" class="form-control" id="csvFile" name="csv_file" accept=".csv" required>
+                        <small class="form-text text-muted">
+                            CSV should contain columns: name, description
+                        </small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Import Categories</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

@@ -1,0 +1,11 @@
+name,email,phone,address,customer_group
+John Smith,john.smith@email.com,+1-555-1001,123 Main St Anytown,Premium
+Sarah Johnson,sarah.j@email.com,+1-555-1002,456 Oak Ave Springfield,Regular
+Mike Davis,mike.davis@email.com,+1-555-1003,789 Pine Rd Riverside,VIP
+Emily Brown,emily.brown@email.com,+1-555-1004,321 Elm St Lakewood,Regular
+David Wilson,david.w@email.com,+1-555-1005,654 Maple Dr Hillview,Premium
+Lisa Anderson,lisa.anderson@email.com,+1-555-1006,987 Cedar Ln Parkside,Regular
+Robert Taylor,robert.t@email.com,+1-555-1007,147 Birch Way Greenfield,VIP
+Jennifer Martinez,jennifer.m@email.com,+1-555-1008,258 Spruce St Fairview,Premium
+Christopher Lee,chris.lee@email.com,+1-555-1009,369 Walnut Ave Westside,Regular
+Amanda Garcia,amanda.g@email.com,+1-555-1010,741 Cherry Blvd Eastview,VIP

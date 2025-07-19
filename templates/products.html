@@ -11,9 +11,15 @@
         <a href="{{ url_for('add_product') }}" class="btn btn-primary">
             <i class="fas fa-plus me-2"></i>Add Product
         </a>
+        <a href="{{ url_for('export_csv', model_type='products') }}" class="btn btn-outline-success">
+            <i class="fas fa-download me-2"></i>Export CSV
+        </a>
         <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#importModal">
             <i class="fas fa-upload me-2"></i>Import CSV
         </button>
+        <a href="{{ url_for('download_demo_csv', filename='products.csv') }}" class="btn btn-outline-info">
+            <i class="fas fa-file-csv me-2"></i>Demo CSV
+        </a>
     </div>
 </div>
 
@@ -188,12 +194,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ url_for('import_products') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ url_for('import_csv', model_type='products') }}" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="csvFile" class="form-label">Select CSV File</label>
-                        <input type="file" class="form-control" id="csvFile" name="file" accept=".csv" required>
+                        <input type="file" class="form-control" id="csvFile" name="csv_file" accept=".csv" required>
                         <small class="form-text text-muted">
-                            CSV should contain columns: product_name, description, price, quantity, weight, dimensions
+                            CSV should contain columns: name, description, price, quantity, category
                         </small>
                     </div>
                     <div class="modal-footer">

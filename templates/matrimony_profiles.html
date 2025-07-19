@@ -8,12 +8,21 @@
     <div class="text-center mb-5">
         <h1>Find Your Perfect Match</h1>
         <p class="lead">Browse through verified matrimony profiles</p>
-        <div class="d-flex justify-content-center gap-3">
+        <div class="d-flex justify-content-center gap-2 flex-wrap">
             <a href="{{ url_for('matrimony_register') }}" class="btn btn-primary">
                 <i class="fas fa-plus me-2"></i>Create Profile
             </a>
             <a href="{{ url_for('matrimony') }}" class="btn btn-outline-primary">
                 <i class="fas fa-home me-2"></i>Matrimony Home
+            </a>
+            <a href="{{ url_for('export_csv', model_type='matrimony') }}" class="btn btn-outline-success">
+                <i class="fas fa-download"></i> Export CSV
+            </a>
+            <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#importModal">
+                <i class="fas fa-upload"></i> Import CSV
+            </button>
+            <a href="{{ url_for('download_demo_csv', filename='matrimony_profiles.csv') }}" class="btn btn-outline-info">
+                <i class="fas fa-file-csv"></i> Demo CSV
             </a>
         </div>
     </div>
@@ -238,4 +247,32 @@
     border-color: #007bff;
 }
 </style>
+
+<!-- Import Modal -->
+<div class="modal fade" id="importModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Import Matrimony Profiles from CSV</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ url_for('import_csv', model_type='matrimony') }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="csvFile" class="form-label">Select CSV File</label>
+                        <input type="file" class="form-control" id="csvFile" name="csv_file" accept=".csv" required>
+                        <small class="form-text text-muted">
+                            CSV should contain columns: full_name, age, gender, marital_status, city, state, education, occupation, email, phone
+                        </small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Import Profiles</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
