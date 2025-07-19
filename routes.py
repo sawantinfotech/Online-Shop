@@ -938,14 +938,14 @@ def categories():
     product_count = Product.query.filter_by(is_active=True).count()
     app_count = App.query.filter_by(status='active').count()
     delivery_count = DeliveryProfile.query.filter_by(verification_status='verified').count()
-    matrimony_count = MatrimonyProfile.query.filter_by(profile_visible=True).count()
+    matrimony_count = MatrimonyProfile.query.filter_by(is_verified=True).count()
     
     # Get sample listings for each category
     featured_businesses = Business.query.filter_by(verification_status='verified').limit(6).all()
     featured_products = Product.query.filter_by(is_active=True).limit(6).all()
     featured_apps = App.query.filter_by(status='active').limit(6).all()
     featured_delivery = DeliveryProfile.query.filter_by(verification_status='verified').limit(6).all()
-    featured_matrimony = MatrimonyProfile.query.filter_by(profile_visible=True).limit(6).all()
+    featured_matrimony = MatrimonyProfile.query.filter_by(is_verified=True).limit(6).all()
     
     category_data = {
         'business': {

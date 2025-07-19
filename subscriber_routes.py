@@ -111,6 +111,8 @@ def select_category(category_id):
                          pricing_plans=pricing_plans,
                          user=user)
 
+
+
 @app.route('/subscriber/category/<int:category_id>/register', methods=['POST'])
 @subscriber_login_required
 def register_category(category_id):
@@ -203,9 +205,30 @@ def subscriber_logout():
 @app.route('/subscriber/profile')
 @subscriber_login_required
 def subscriber_profile():
-    """Show subscriber profile"""
+    """Display and edit subscriber profile"""
     user_id = session.get('subscriber_id')
     user = User.query.get(user_id)
     subscriptions = UserSubscription.query.filter_by(user_id=user_id).all()
-    
     return render_template('subscriber_profile.html', user=user, subscriptions=subscriptions)
+
+@app.route('/subscriber/profile/update', methods=['POST'])
+@subscriber_login_required
+def update_subscriber_profile():
+    """Update subscriber profile information"""
+    user_id = session.get('subscriber_id')
+    user = User.query.get(user_id)
+    
+    # Update profile fields
+    user.full_name = request.form.get('full_name', user.full_name)
+    user.mobile = request.form.get('mobile', user.mobile)
+    user.phone_number = request.form.get('phone_number', user.phone_number)
+    user.address = request.form.get('address', user.address)
+    
+    # Handle password update if provided
+    new_password = request.form.get('new_password')
+    if new_password:
+        user.password_hash = generate_password_hash(new_password)
+    
+    db.session.commit()
+    flash('Profile updated successfully!', 'success')
+    return redirect(url_for('subscriber_profile'))
