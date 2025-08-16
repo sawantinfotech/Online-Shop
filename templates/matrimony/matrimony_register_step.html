@@ -1,0 +1,892 @@
+{% extends "base.html" %}
+
+{% block title %}Matrimony Registration - Step {{ step }} of 6{% endblock %}
+
+{% block content %}
+<style>
+/* Hide the base template navigation for matrimony page */
+body > nav:first-of-type {
+    display: none !important;
+}
+</style>
+
+<!-- Custom Matrimony Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('index') }}">
+            <i class="fas fa-mobile-alt me-2"></i>Mobile Shop
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#matrimonyNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="matrimonyNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">
+                        <i class="fas fa-home me-1"></i>Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('matrimony_register_step') }}">
+                        <i class="fas fa-user-plus me-1"></i>Profile Add
+                    </a>
+                </li>
+                
+                <!-- Categories Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-list me-1"></i>Categories
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-user me-2"></i>Single
+                        </a></li>
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-user-slash me-2"></i>Divorced
+                        </a></li>
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-user-times me-2"></i>Widow
+                        </a></li>
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-user-minus me-2"></i>Separated
+                        </a></li>
+                    </ul>
+                </li>
+
+                <!-- Relationship Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="relationshipDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-heart me-1"></i>Relationship
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-glass-cheers me-2"></i>For Party
+                        </a></li>
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-heart me-2"></i>Dating
+                        </a></li>
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-home-heart me-2"></i>Live In
+                        </a></li>
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-file-contract me-2"></i>Contract
+                        </a></li>
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-baby me-2"></i>Sex 4 Baby
+                        </a></li>
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-ring me-2"></i>Marriage
+                        </a></li>
+                    </ul>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-users me-1"></i>All Profiles
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2><i class="fas fa-heart me-2"></i>Create Your Profile</h2>
+                        <span class="badge bg-light text-primary">Step {{ step }} of 6</span>
+                    </div>
+                    
+                    <!-- Progress Bar -->
+                    <div class="progress mt-3" style="height: 8px;">
+                        <div class="progress-bar bg-warning" role="progressbar" 
+                             style="width: {{ (step / 6) * 100 }}%" 
+                             aria-valuenow="{{ step }}" aria-valuemin="0" aria-valuemax="6"></div>
+                    </div>
+                    
+                    <!-- Step Indicators -->
+                    <div class="d-flex justify-content-between mt-3">
+                        <small class="text-light {{ 'fw-bold' if step >= 1 else '' }}">
+                            <i class="fas fa-user {{ 'text-warning' if step >= 1 else '' }}"></i> Basic
+                        </small>
+                        <small class="text-light {{ 'fw-bold' if step >= 2 else '' }}">
+                            <i class="fas fa-heart {{ 'text-warning' if step >= 2 else '' }}"></i> Physical
+                        </small>
+                        <small class="text-light {{ 'fw-bold' if step >= 3 else '' }}">
+                            <i class="fas fa-briefcase {{ 'text-warning' if step >= 3 else '' }}"></i> Career
+                        </small>
+                        <small class="text-light {{ 'fw-bold' if step >= 4 else '' }}">
+                            <i class="fas fa-map-marker {{ 'text-warning' if step >= 4 else '' }}"></i> Location
+                        </small>
+                        <small class="text-light {{ 'fw-bold' if step >= 5 else '' }}">
+                            <i class="fas fa-search {{ 'text-warning' if step >= 5 else '' }}"></i> Partner
+                        </small>
+                        <small class="text-light {{ 'fw-bold' if step >= 6 else '' }}">
+                            <i class="fas fa-camera {{ 'text-warning' if step >= 6 else '' }}"></i> Documents
+                        </small>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" enctype="multipart/form-data" novalidate>
+                        
+                        {% if step == 1 %}
+                        <!-- Step 1: Basic Information -->
+                        <div class="section-header mb-4">
+                            <h4 class="text-primary mb-3">
+                                <i class="fas fa-user me-2"></i>Basic Information
+                            </h4>
+                            <p class="text-muted">Tell us about yourself</p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Full Name *</label>
+                                <input type="text" name="full_name" class="form-control form-control-lg" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Age *</label>
+                                <input type="number" name="age" class="form-control form-control-lg" min="18" max="80" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Gender *</label>
+                                <select name="gender" class="form-select form-control-lg" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Marital Status *</label>
+                                <select name="marital_status" class="form-select form-control-lg" required>
+                                    <option value="">Select Status</option>
+                                    <option value="never_married">Never Married</option>
+                                    <option value="divorced">Divorced</option>
+                                    <option value="widowed">Widowed</option>
+                                    <option value="separated">Separated</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Date of Birth *</label>
+                                <input type="date" name="date_of_birth" class="form-control form-control-lg" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Mother Tongue</label>
+                                <input type="text" name="mother_tongue" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Language Known</label>
+                                <input type="text" name="language" class="form-control" placeholder="English, Hindi, Tamil...">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Relationship Interest *</label>
+                            <select name="relationship_interest" class="form-select" required>
+                                <option value="">Select Relationship Interest</option>
+                                <option value="marriage">Marriage</option>
+                                <option value="party">For Party</option>
+                                <option value="dating">Dating</option>
+                                <option value="livein">Live In</option>
+                                <option value="contract">Contract</option>
+                                <option value="sex4baby">Sex 4 Baby</option>
+                            </select>
+                        </div>
+                        
+                        {% elif step == 2 %}
+                        <!-- Step 2: Physical & Family Details -->
+                        <div class="section-header mb-4">
+                            <h4 class="text-primary mb-3">
+                                <i class="fas fa-heart me-2"></i>Physical & Family Details
+                            </h4>
+                            <p class="text-muted">Share your physical and family information</p>
+                        </div>
+                        
+                        <h5 class="text-secondary mb-3">Physical Details</h5>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Height</label>
+                                <input type="text" name="height" class="form-control" placeholder="5'6\"">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Weight</label>
+                                <input type="text" name="weight" class="form-control" placeholder="60 kg">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Body Type</label>
+                                <select name="body_type" class="form-select">
+                                    <option value="">Select Body Type</option>
+                                    <option value="slim">Slim</option>
+                                    <option value="average">Average</option>
+                                    <option value="athletic">Athletic</option>
+                                    <option value="heavy">Heavy</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Complexion</label>
+                                <select name="complexion" class="form-select">
+                                    <option value="">Select Complexion</option>
+                                    <option value="very_fair">Very Fair</option>
+                                    <option value="fair">Fair</option>
+                                    <option value="wheatish">Wheatish</option>
+                                    <option value="dark">Dark</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Eye Color</label>
+                                <input type="text" name="eye_color" class="form-control">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Hair Color</label>
+                                <input type="text" name="hair_color" class="form-control">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Skin Tone</label>
+                                <input type="text" name="skin_tone" class="form-control">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Blood Group</label>
+                                <select name="blood_group" class="form-select">
+                                    <option value="">Select Blood Group</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Physical Disability</label>
+                                <select name="physical_disability" class="form-select">
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Mental Disability</label>
+                                <select name="mental_disability" class="form-select">
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <h5 class="text-secondary mb-3 mt-4">Family Details</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Father's Name</label>
+                                <input type="text" name="father_name" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Mother's Name</label>
+                                <input type="text" name="mother_name" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Brothers</label>
+                                <input type="number" name="brothers" class="form-control" min="0">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Sisters</label>
+                                <input type="number" name="sisters" class="form-control" min="0">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Family Type</label>
+                                <select name="family_type" class="form-select">
+                                    <option value="">Select Family Type</option>
+                                    <option value="nuclear">Nuclear</option>
+                                    <option value="joint">Joint</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Family Status</label>
+                                <select name="family_status" class="form-select">
+                                    <option value="">Select Family Status</option>
+                                    <option value="middle_class">Middle Class</option>
+                                    <option value="upper_middle">Upper Middle Class</option>
+                                    <option value="rich">Rich</option>
+                                    <option value="affluent">Affluent</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Family Values</label>
+                                <select name="family_values" class="form-select">
+                                    <option value="">Select Family Values</option>
+                                    <option value="orthodox">Orthodox</option>
+                                    <option value="traditional">Traditional</option>
+                                    <option value="moderate">Moderate</option>
+                                    <option value="liberal">Liberal</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Ancestral Origin</label>
+                                <input type="text" name="ancestral_origin" class="form-control">
+                            </div>
+                        </div>
+                        
+                        {% elif step == 3 %}
+                        <!-- Step 3: Professional & Lifestyle Details -->
+                        <div class="section-header mb-4">
+                            <h4 class="text-primary mb-3">
+                                <i class="fas fa-briefcase me-2"></i>Professional & Lifestyle Details
+                            </h4>
+                            <p class="text-muted">Tell us about your professional life and lifestyle</p>
+                        </div>
+                        
+                        <h5 class="text-secondary mb-3">Professional Details</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Education</label>
+                                <input type="text" name="education" class="form-control" placeholder="B.Tech, MBA, etc.">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Occupation</label>
+                                <input type="text" name="occupation" class="form-control" placeholder="Software Engineer, Doctor, etc.">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Annual Income</label>
+                                <select name="annual_income" class="form-select">
+                                    <option value="">Select Annual Income</option>
+                                    <option value="below_2_lakh">Below 2 Lakh</option>
+                                    <option value="2_to_5_lakh">2 - 5 Lakh</option>
+                                    <option value="5_to_10_lakh">5 - 10 Lakh</option>
+                                    <option value="10_to_20_lakh">10 - 20 Lakh</option>
+                                    <option value="20_to_50_lakh">20 - 50 Lakh</option>
+                                    <option value="above_50_lakh">Above 50 Lakh</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Company Name</label>
+                                <input type="text" name="company_name" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">About Yourself</label>
+                            <textarea name="about_yourself" class="form-control" rows="4" 
+                                      placeholder="Tell us about yourself, your interests, and what makes you unique..."></textarea>
+                        </div>
+                        
+                        <h5 class="text-secondary mb-3 mt-4">Lifestyle Details</h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Smoking</label>
+                                <select name="smoking" class="form-select">
+                                    <option value="no">No</option>
+                                    <option value="occasionally">Occasionally</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Drinking</label>
+                                <select name="drinking" class="form-select">
+                                    <option value="no">No</option>
+                                    <option value="occasionally">Occasionally</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Food Preference</label>
+                                <select name="food" class="form-select">
+                                    <option value="">Select Food Preference</option>
+                                    <option value="vegetarian">Vegetarian</option>
+                                    <option value="non_vegetarian">Non Vegetarian</option>
+                                    <option value="vegan">Vegan</option>
+                                    <option value="jain">Jain</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Hobbies & Interests</label>
+                            <textarea name="hobbies" class="form-control" rows="3" 
+                                      placeholder="List your hobbies and interests..."></textarea>
+                        </div>
+                        
+                        <h5 class="text-secondary mb-3 mt-4">Horoscope Details</h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Religion</label>
+                                <input type="text" name="religion" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Caste</label>
+                                <input type="text" name="caste" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Subcaste</label>
+                                <input type="text" name="subcaste" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Gothra</label>
+                                <input type="text" name="gothra" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Dosham</label>
+                                <select name="dosham" class="form-select">
+                                    <option value="">Select Dosham</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                    <option value="dont_know">Don't Know</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Star</label>
+                                <input type="text" name="star" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Raasi</label>
+                                <input type="text" name="raasi" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Horoscope</label>
+                                <select name="horoscope" class="form-select">
+                                    <option value="">Select Horoscope</option>
+                                    <option value="available">Available</option>
+                                    <option value="not_available">Not Available</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Membership Type *</label>
+                            <select name="membership_type" class="form-select form-control-lg" required>
+                                <option value="basic">Basic (Free)</option>
+                                <option value="silver">Silver ($9.99/month)</option>
+                                <option value="gold">Gold ($19.99/month)</option>
+                                <option value="platinum">Platinum ($29.99/month)</option>
+                            </select>
+                        </div>
+                        {% elif step == 4 %}
+                        <!-- Step 4: Location & Contact Details -->
+                        <div class="section-header mb-4">
+                            <h4 class="text-primary mb-3">
+                                <i class="fas fa-map-marker-alt me-2"></i>Location & Contact Details
+                            </h4>
+                            <p class="text-muted">Share your location and contact information</p>
+                        </div>
+                        
+                        <h5 class="text-secondary mb-3">Location Details</h5>
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea name="address" class="form-control" rows="3" placeholder="Full Address"></textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">City</label>
+                                <input type="text" name="city" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">District</label>
+                                <input type="text" name="district" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Pincode</label>
+                                <input type="text" name="pincode" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">State</label>
+                                <input type="text" name="state" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Country</label>
+                                <input type="text" name="country" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Nationality</label>
+                                <input type="text" name="nationality" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Future Lives In</label>
+                            <input type="text" name="future_lives_in" class="form-control" placeholder="Where you plan to live in future">
+                        </div>
+                        
+                        <h5 class="text-secondary mb-3 mt-4">Contact Information</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email *</label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Mobile *</label>
+                                <input type="tel" name="mobile" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" name="phone" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">WhatsApp</label>
+                                <input type="tel" name="whatsapp" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <h5 class="text-secondary mb-3 mt-4">Social Media</h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Facebook</label>
+                                <input type="url" name="facebook" class="form-control" placeholder="Facebook profile URL">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Instagram</label>
+                                <input type="url" name="instagram" class="form-control" placeholder="Instagram profile URL">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">LinkedIn</label>
+                                <input type="url" name="linkedin" class="form-control" placeholder="LinkedIn profile URL">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Telegram</label>
+                                <input type="text" name="telegram" class="form-control" placeholder="Telegram username">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Website</label>
+                                <input type="url" name="website" class="form-control" placeholder="Personal website URL">
+                            </div>
+                        </div>
+                        
+                        {% elif step == 5 %}
+                        <!-- Step 5: Partner Preferences -->
+                        <div class="section-header mb-4">
+                            <h4 class="text-primary mb-3">
+                                <i class="fas fa-search me-2"></i>Partner Preferences
+                            </h4>
+                            <p class="text-muted">Tell us about your ideal partner (Optional)</p>
+                        </div>
+                        
+                        <h5 class="text-secondary mb-3">Basic Preferences</h5>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Partner Age (Min)</label>
+                                <input type="number" name="partner_age_min" class="form-control" min="18" max="80">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Partner Age (Max)</label>
+                                <input type="number" name="partner_age_max" class="form-control" min="18" max="80">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Partner Height (Min)</label>
+                                <input type="text" name="partner_height_min" class="form-control" placeholder="5'0\"">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Partner Height (Max)</label>
+                                <input type="text" name="partner_height_max" class="form-control" placeholder="6'0\"">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Partner Marital Status</label>
+                                <select name="partner_marital_status" class="form-select">
+                                    <option value="">Any Marital Status</option>
+                                    <option value="never_married">Never Married</option>
+                                    <option value="divorced">Divorced</option>
+                                    <option value="widowed">Widowed</option>
+                                    <option value="separated">Separated</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Partner Mother Tongue</label>
+                                <input type="text" name="partner_mother_tongue" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <h5 class="text-secondary mb-3 mt-4">Professional Preferences</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Partner Education</label>
+                                <input type="text" name="partner_education" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Partner Occupation</label>
+                                <input type="text" name="partner_occupation" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Partner Annual Income</label>
+                                <select name="partner_annual_income" class="form-select">
+                                    <option value="">Any Income</option>
+                                    <option value="below_2_lakh">Below 2 Lakh</option>
+                                    <option value="2_to_5_lakh">2 - 5 Lakh</option>
+                                    <option value="5_to_10_lakh">5 - 10 Lakh</option>
+                                    <option value="10_to_20_lakh">10 - 20 Lakh</option>
+                                    <option value="20_to_50_lakh">20 - 50 Lakh</option>
+                                    <option value="above_50_lakh">Above 50 Lakh</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Partner Country</label>
+                                <input type="text" name="partner_country" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <h5 class="text-secondary mb-3 mt-4">Religious Preferences</h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Partner Religion</label>
+                                <input type="text" name="partner_religion" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Partner Caste</label>
+                                <input type="text" name="partner_caste" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Partner Subcaste</label>
+                                <input type="text" name="partner_subcaste" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Partner Dosham</label>
+                                <select name="partner_dosham" class="form-select">
+                                    <option value="">Any Dosham</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                    <option value="dont_know">Don't Know</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Partner Membership Type</label>
+                                <select name="partner_membership_type" class="form-select">
+                                    <option value="">Any Membership</option>
+                                    <option value="basic">Basic</option>
+                                    <option value="silver">Silver</option>
+                                    <option value="gold">Gold</option>
+                                    <option value="platinum">Platinum</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        {% elif step == 6 %}
+                        <!-- Step 6: Documents & Verification -->
+                        <div class="section-header mb-4">
+                            <h4 class="text-primary mb-3">
+                                <i class="fas fa-camera me-2"></i>Documents & Verification
+                            </h4>
+                            <p class="text-muted">Upload documents for profile verification</p>
+                        </div>
+                        
+                        <div class="alert alert-info mb-4">
+                            <h6><i class="fas fa-info-circle me-2"></i>Document Guidelines:</h6>
+                            <ul class="mb-0">
+                                <li>Upload clear, high-quality documents</li>
+                                <li>All documents will be verified by our team</li>
+                                <li>Verified profiles get higher visibility</li>
+                                <li>Maximum file size: 5MB per document</li>
+                            </ul>
+                        </div>
+                        
+                        <h5 class="text-secondary mb-3">Identity Documents</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">ID Proof</label>
+                                <input type="file" name="id_proof" class="form-control" accept="image/*,.pdf">
+                                <small class="text-muted">Aadhar, Passport, Driving License</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Address Proof</label>
+                                <input type="file" name="address_proof" class="form-control" accept="image/*,.pdf">
+                                <small class="text-muted">Utility Bill, Bank Statement</small>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Passport Copy</label>
+                                <input type="file" name="passport_proof" class="form-control" accept="image/*,.pdf">
+                                <small class="text-muted">If available</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Family Photo</label>
+                                <input type="file" name="family_photo_proof" class="form-control" accept="image/*">
+                                <small class="text-muted">Recent family photograph</small>
+                            </div>
+                        </div>
+                        
+                        <h5 class="text-secondary mb-3 mt-4">Educational & Professional</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Education Certificate</label>
+                                <input type="file" name="education_proof" class="form-control" accept="image/*,.pdf">
+                                <small class="text-muted">Degree/Diploma Certificate</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Employment Proof</label>
+                                <input type="file" name="occupation_proof" class="form-control" accept="image/*,.pdf">
+                                <small class="text-muted">Offer Letter, ID Card</small>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Income Proof</label>
+                                <input type="file" name="income_proof" class="form-control" accept="image/*,.pdf">
+                                <small class="text-muted">Salary Slip, IT Returns</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Horoscope</label>
+                                <input type="file" name="horoscope_proof" class="form-control" accept="image/*,.pdf">
+                                <small class="text-muted">If available</small>
+                            </div>
+                        </div>
+                        
+                        <h5 class="text-secondary mb-3 mt-4">Other Documents</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Marriage Certificate</label>
+                                <input type="file" name="marriage_proof" class="form-control" accept="image/*,.pdf">
+                                <small class="text-muted">If previously married</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Divorce Certificate</label>
+                                <input type="file" name="divorce_proof" class="form-control" accept="image/*,.pdf">
+                                <small class="text-muted">If divorced</small>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Medical Certificate</label>
+                                <input type="file" name="medical_proof" class="form-control" accept="image/*,.pdf">
+                                <small class="text-muted">Health Check-up Report</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Caste Certificate</label>
+                                <input type="file" name="caste_certificate_proof" class="form-control" accept="image/*,.pdf">
+                                <small class="text-muted">If applicable</small>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Police NOC</label>
+                                <input type="file" name="police_noc_proof" class="form-control" accept="image/*,.pdf">
+                                <small class="text-muted">Police clearance certificate</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Property Documents</label>
+                                <input type="file" name="property_proof" class="form-control" accept="image/*,.pdf">
+                                <small class="text-muted">If property owner</small>
+                            </div>
+                        </div>
+                        
+                        {% endif %}
+                        
+                        <!-- Navigation Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            {% if step > 1 %}
+                                <button type="submit" name="action" value="previous" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-arrow-left me-2"></i>Previous
+                                </button>
+                            {% else %}
+                                <div></div>
+                            {% endif %}
+                            
+                            {% if step < 6 %}
+                                <button type="submit" name="action" value="next" class="btn btn-primary btn-lg">
+                                    Next <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            {% else %}
+                                <button type="submit" name="action" value="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-check me-2"></i>Create Profile
+                                </button>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+             
+<script>
+// Photo upload preview
+document.getElementById('photoUpload').addEventListener('change', function(e) {
+    const files = e.target.files;
+    const preview = document.getElementById('photoPreview');
+    preview.innerHTML = '';
+    
+    for (let i = 0; i < Math.min(files.length, 5); i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            const div = document.createElement('div');
+            div.className = 'col-md-4 mb-3';
+            div.innerHTML = `
+                <div class="card">
+                    <img src="${e.target.result}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    <div class="card-body p-2 text-center">
+                        <small class="text-muted">Photo ${i + 1}</small>
+                    </div>
+                </div>
+            `;
+            preview.appendChild(div);
+        };
+        
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+{% endblock %}

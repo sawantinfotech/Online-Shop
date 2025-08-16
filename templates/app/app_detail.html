@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Details - Professional Services Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+        }
+        .feature-card {
+            transition: transform 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .service-badge {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        /* Point 5 - Favorite heart icon styling */
+        .favorite-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .favorite-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.1);
+        }
+        .favorite-btn.active {
+            color: #dc3545;
+        }
+        .favorite-btn.inactive {
+            color: #6c757d;
+        }
+        /* Action buttons styling - Point 4 */
+        .action-btn {
+            min-width: 150px;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        /* Share dropdown styling */
+        .share-dropdown {
+            min-width: 200px;
+        }
+        .share-option {
+            padding: 8px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .share-option:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('index') }}">
+            <i class="fas fa-mobile-alt me-2"></i>Professional Services Hub
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <!-- Home with icon only -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('app_home') }}">
+                        <i class="fas fa-home"></i>Home
+                    </a>
+                </li>
+                <!-- Apps Dropdown -->
+    <!-- Navigation App tab -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle active" href="#" id="appsDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-mobile-alt me-1"></i>Apps
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-scrollable" style="max-height: 400px; overflow-y: auto;">
+                                <!-- Core App Services -->
+                                <li><h6 class="dropdown-header"><i class="fas fa-mobile-alt me-1"></i>All Apps</h6></li>
+                                <li><a class="dropdown-item active" href="/app/app_registration">
+                                    <i class="fas fa-plus me-2"></i>Add App 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/all_apps">
+                                    <i class="fas fa-th me-2"></i>App Marketplace 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/app_detail">
+                                    <i class="fas fa-info-circle me-2"></i>App Detail 
+                                </a></li>
+                                <li><h6 class="dropdown-header"><i class="fas fa-mobile-alt me-1"></i>App Types</h6></li>
+                                <li><a class="dropdown-item" href="{{ url_for('gaming_apps') }}">
+                                    <i class="fas fa-gamepad me-2"></i>Gaming Apps
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('business_apps') }}">
+                                    <i class="fas fa-briefcase me-2"></i>Business Apps 
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('productivity_apps') }}">
+                                    <i class="fas fa-tasks me-2"></i>Productivity Apps 
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('education_apps') }}">
+                                    <i class="fas fa-graduation-cap me-2"></i>Education Apps 
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('social_apps') }}">
+                                    <i class="fas fa-users me-2"></i>Social Apps 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/fitness_apps">
+                                    <i class="fas fa-dumbbell me-2"></i>Fitness Apps 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/desktop_apps">
+                                    <i class="fas fa-desktop me-2"></i>Desktop Apps 
+                                </a></li>
+                                <li><h6 class="dropdown-header"><i class="fas fa-cogs me-1"></i>Add Ons</h6></li>
+                                <li><a class="dropdown-item" href="/app/app_list">
+                                    <i class="fas fa-list me-2"></i>App List 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/app_categories">
+                                    <i class="fas fa-folder me-2"></i>App Categories 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/app_developer">
+                                    <i class="fas fa-code me-2"></i>App Developer 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/app_Income">
+                                    <i class="fas fa-dollar-sign me-2"></i>App Income 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/app_team">
+                                    <i class="fas fa-team me-2"></i>App Team 
+                                </a></li>
+                            </ul>
+                        </li>
+                 <!-- Navigation App tab -->
+                 
+                <!-- Services Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-cog me-1"></i>Services
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-scrollable" style="max-height: 400px; overflow-y: auto;">
+                        <!-- Core Business Services -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-building me-1"></i>Business Services</h6></li>
+                        <li><a class="dropdown-item" href="/business/business_home">
+                            <i class="fas fa-building me-2"></i>Business Registration
+                        </a></li>
+                        <li><a class="dropdown-item" href="/app/app_home">
+                            <i class="fas fa-mobile-alt me-2"></i>App Marketplace
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('delivery_home') }}">
+                            <i class="fas fa-truck me-2"></i>Delivery Partner
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Healthcare & Medical -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-heartbeat me-1"></i>Healthcare & Medical</h6></li>
+                        <li><a class="dropdown-item" href="/hospital/hospital_home">
+                            <i class="fas fa-hospital me-2"></i>Hospital Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/medical/medical_home">
+                            <i class="fas fa-stethoscope me-2"></i>Medical Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/matrimony/matrimony_home">
+                            <i class="fas fa-heart me-2"></i>Matrimony Services
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Financial Services -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-chart-line me-1"></i>Financial Services</h6></li>
+                        <li><a class="dropdown-item" href="/bank/bank_home">
+                            <i class="fas fa-university me-2"></i>Banking Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/finance/finance_home">
+                            <i class="fas fa-coins me-2"></i>Finance Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/investor/investor_home">
+                            <i class="fas fa-chart-line me-2"></i>Investor Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/share_market/sharemarket_home">
+                            <i class="fas fa-chart-trending-up me-2"></i>Share Market
+                        </a></li>
+                        <li><a class="dropdown-item" href="/stock_exchange/stockexchange_home">
+                            <i class="fas fa-exchange-alt me-2"></i>Stock Exchange
+                        </a></li>
+                        <li><a class="dropdown-item" href="/currancy/currancy_home">
+                            <i class="fas fa-dollar-sign me-2"></i>Currency Exchange
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Education & Career -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-graduation-cap me-1"></i>Education & Career</h6></li>
+                        <li><a class="dropdown-item" href="/education/education_home">
+                            <i class="fas fa-graduation-cap me-2"></i>Education Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/career/career_home">
+                            <i class="fas fa-briefcase me-2"></i>Career Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/job/job_home">
+                            <i class="fas fa-users me-2"></i>Job Portal
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Technology & Innovation -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-robot me-1"></i>Technology & Innovation</h6></li>
+                        <li><a class="dropdown-item" href="/artificial_intelligence/ai_home">
+                            <i class="fas fa-robot me-2"></i>AI Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/brainlo/brainlo_home">
+                            <i class="fas fa-brain me-2"></i>Brainlo Platform
+                        </a></li>
+                        <li><a class="dropdown-item" href="/console/console_home">
+                            <i class="fas fa-terminal me-2"></i>Console Access
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Communication & Social -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-comments me-1"></i>Communication & Social</h6></li>
+                        <li><a class="dropdown-item" href="/chat/chat_home">
+                            <i class="fas fa-comments me-2"></i>Chat Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/social/social_home">
+                            <i class="fas fa-share-alt me-2"></i>Social Platform
+                        </a></li>
+                        <li><a class="dropdown-item" href="/email/email_home">
+                            <i class="fas fa-envelope me-2"></i>Email Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/sms/sms_home">
+                            <i class="fas fa-sms me-2"></i>SMS Services
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- News & Content -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-newspaper me-1"></i>News & Content</h6></li>
+                        <li><a class="dropdown-item" href="/news/news_home">
+                            <i class="fas fa-newspaper me-2"></i>News Portal
+                        </a></li>
+                        <li><a class="dropdown-item" href="/blog/blog_home">
+                            <i class="fas fa-blog me-2"></i>Blog Platform
+                        </a></li>
+                        <li><a class="dropdown-item" href="/post/post_home">
+                            <i class="fas fa-edit me-2"></i>Post Management
+                        </a></li>
+                        <li><a class="dropdown-item" href="/story/story_home">
+                            <i class="fas fa-book me-2"></i>Story Platform
+                        </a></li>
+                        <li><a class="dropdown-item" href="/reel/reel_home">
+                            <i class="fas fa-video me-2"></i>Reel Services
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Legal & Government -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-gavel me-1"></i>Legal & Government</h6></li>
+                        <li><a class="dropdown-item" href="/legal/legal_home">
+                            <i class="fas fa-gavel me-2"></i>Legal Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/chartered_accountant/ca_home">
+                            <i class="fas fa-calculator me-2"></i>CA Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/government/govt_home">
+                            <i class="fas fa-landmark me-2"></i>Government Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/police/police_home">
+                            <i class="fas fa-shield-alt me-2"></i>Police Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/politics/politics_home">
+                            <i class="fas fa-flag me-2"></i>Politics Hub
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Marketing & Business Growth -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-bullhorn me-1"></i>Marketing & Growth</h6></li>
+                        <li><a class="dropdown-item" href="/marketing/marketing_home">
+                            <i class="fas fa-bullhorn me-2"></i>Marketing Hub
+                        </a></li>
+                        <li><a class="dropdown-item" href="/advertise/advertise_home">
+                            <i class="fas fa-ad me-2"></i>Advertise Services
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Property & Real Estate -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-home me-1"></i>Property & Real Estate</h6></li>
+                        <li><a class="dropdown-item" href="/property/property_home">
+                            <i class="fas fa-home me-2"></i>Property Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/public_market/publicmarket_home">
+                            <i class="fas fa-store me-2"></i>Public Market
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Specialized Services -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-tools me-1"></i>Specialized Services</h6></li>
+                        <li><a class="dropdown-item" href="/agriculture/agriculture_home">
+                            <i class="fas fa-leaf me-2"></i>Agriculture Hub
+                        </a></li>
+                        <li><a class="dropdown-item" href="/sport/sport_home">
+                            <i class="fas fa-trophy me-2"></i>Sports Platform
+                        </a></li>
+                        <li><a class="dropdown-item" href="/event/event_home">
+                            <i class="fas fa-calendar-alt me-2"></i>Event Management
+                        </a></li>
+                        <li><a class="dropdown-item" href="/language/language_home">
+                            <i class="fas fa-language me-2"></i>Language Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/live/live_home">
+                            <i class="fas fa-broadcast-tower me-2"></i>Live Services
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Support & Management -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-cogs me-1"></i>Support & Management</h6></li>
+                        <li><a class="dropdown-item" href="/help_support/help_support_home">
+                            <i class="fas fa-question-circle me-2"></i>Help & Support
+                        </a></li>
+                        <li><a class="dropdown-item" href="/settings/settings_home">
+                            <i class="fas fa-cog me-2"></i>Settings
+                        </a></li>
+                        <li><a class="dropdown-item" href="/notification/notification_home">
+                            <i class="fas fa-bell me-2"></i>Notifications
+                        </a></li>
+                        <li><a class="dropdown-item" href="/creditpoints/creditpoints_home">
+                            <i class="fas fa-coins me-2"></i>Credit Points
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- View All Services -->
+                        <li><a class="dropdown-item bg-primary text-white" href="/service/service_home">
+                            <i class="fas fa-th-large me-2"></i><strong>View All Services</strong>
+                        </a></li>
+                          </ul>
+                    <!-- Account Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i>Account
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-scrollable" style="max-height: 300px; overflow-y: auto;">
+                            <li><a class="dropdown-item" href="{{ url_for('user_register') }}"><i class="fas fa-user-plus me-2"></i>Sign Up / Login</a></li>
+                            <li><a class="dropdown-item" href="/admin/admin_login"><i class="fas fa-user-shield me-2"></i>Admin Panel</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Add Listing Forms</h6></li>
+                            <li><a class="dropdown-item" href="{{('/post/add_post')}}"><i class="fas fa-box me-2"></i>Add Post</a></li>
+                            <li><a class="dropdown-item" href="{{('/products/product_form')}}"><i class="fas fa-box me-2"></i>Add Product</a></li>
+
+                            <li><a class="dropdown-item" href="/business/business_register"><i class="fas fa-building me-2"></i>Add Business</a></li>
+                            <li><a class="dropdown-item" href="{{('/apps/app_registration')}}"><i class="fas fa-mobile-alt me-2"></i>Add App</a></li>
+                            <li><a class="dropdown-item" href="{{('/delivery/delivery_application')}}"><i class="fas fa-shipping-fast me-2"></i>Add Delivery Partner</a></li>
+                            <li><a class="dropdown-item" href="{{('/matrimony/matrimony_register_step')}}"><i class="fas fa-heart me-2"></i>Add Matrimony Profile</a></li>
+                            <li><a class="dropdown-item" href="{{('/offer/add_offer')}}"><i class="fas fa-tags me-2"></i>Add Offers</a></li>
+                            <li><a class="dropdown-item" href="{{('/advertise/add_advertise')}}"><i class="fas fa-bullhorn me-2"></i>Add Advertise</a></li>
+                            <li><a class="dropdown-item" href="{{('/event/add_event')}}"><i class="fas fa-calendar me-2"></i>Add Event</a></li>
+                            <li><a class="dropdown-item" href="{{('/news/add_news')}}"><i class="fas fa-newspaper me-2"></i>Add News</a></li>
+                        </ul>
+                    </li>
+                </li>
+
+            </ul>
+            <ul class="navbar-nav">
+                {% if session.user_id %}
+                    <!-- Logged-in User Profile Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown">
+                            <div class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px; font-size: 14px;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span class="d-none d-md-inline">{{ session.username }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><h6 class="dropdown-header">
+                                <i class="fas fa-user-circle me-2"></i>{{ session.username }}
+                                <br><small class="text-muted">Active Subscriber</small>
+                            </h6></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('user_subscriber_dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-2"></i>My Dashboard
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('subscriber_profile') }}">
+                                <i class="fas fa-user-edit me-2"></i>Profile Settings
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('subscriber_services') }}">
+                                <i class="fas fa-cogs me-2"></i>My Services
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('user_logout') }}">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user_login') }}">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user_register') }}">
+                            <i class="fas fa-user-plus me-1"></i>Register
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+
+
+
+    </div>
+</nav>
+<!-- Navigation from app_home -->
+
+
+<div class="container-fluid">
+    <!-- Section 1: Logo with App Name -->
+    <div class="row bg-gradient-primary text-white py-5 position-relative">
+        <!-- Point 5 - Favorite Heart Icon -->
+        <button class="favorite-btn inactive position-absolute" id="favoriteBtn" onclick="toggleFavorite({{ app.id if app else 1 }})" style="top: 20px; right: 30px; z-index: 1000;">
+            <i class="fas fa-heart"></i>
+        </button>
+        
+        <div class="col-12 text-center">
+            <div class="app-logo-large mb-3">
+                {{ app.logo_url|safe }}
+            </div>
+            <h1 class="display-4 mb-2">{{ app.name }}</h1>
+            <p class="lead mb-3">{{ app.short_description }}</p>
+            <div class="app-stats d-flex justify-content-center gap-4 flex-wrap">
+                <div class="stat-item">
+                    <i class="fas fa-star text-warning"></i>
+                    <span class="ms-1">{{ app.rating }} ({{ app.reviews_count }} reviews)</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-download text-light"></i>
+                    <span class="ms-1">{{ app.downloads }} downloads</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-tag text-light"></i>
+                    <span class="ms-1">{{ app.category }}</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-code-branch text-light"></i>
+                    <span class="ms-1">v{{ app.version }}</span>
+                </div>
+            </div>
+            
+            <!-- Point 4 - Enhanced Action Buttons -->
+            <div class="mt-4">
+                <button class="btn btn-light btn-lg action-btn me-2" onclick="downloadApp({{ app.id if app else 1 }})">
+                    <i class="fas fa-download me-2"></i>Download
+                </button>
+                <button class="btn btn-outline-light btn-lg action-btn me-2" onclick="viewApp({{ app.id if app else 1 }})">
+                    <i class="fas fa-eye me-2"></i>View Details
+                </button>
+                <button class="btn btn-outline-light btn-lg action-btn me-2" id="followBtn" onclick="toggleFollow('{{ app.author_email if app else 'demo@example.com' }}')">
+                    <i class="fas fa-user-plus me-2"></i>Follow Developer
+                </button>
+                
+                <!-- Share dropdown -->
+                <div class="btn-group">
+                    <button class="btn btn-outline-light btn-lg action-btn dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="fas fa-share me-2"></i>Share
+                    </button>
+                    <ul class="dropdown-menu share-dropdown">
+                        <li><a class="dropdown-item share-option" href="#" onclick="shareApp({{ app.id if app else 1 }}, 'facebook')">
+                            <i class="fab fa-facebook me-2"></i>Facebook
+                        </a></li>
+                        <li><a class="dropdown-item share-option" href="#" onclick="shareApp({{ app.id if app else 1 }}, 'twitter')">
+                            <i class="fab fa-twitter me-2"></i>Twitter
+                        </a></li>
+                        <li><a class="dropdown-item share-option" href="#" onclick="shareApp({{ app.id if app else 1 }}, 'whatsapp')">
+                            <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                        </a></li>
+                        <li><a class="dropdown-item share-option" href="#" onclick="shareApp({{ app.id if app else 1 }}, 'email')">
+                            <i class="fas fa-envelope me-2"></i>Email
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Tab Menu + Introduction -->
+    <div class="row py-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" id="appTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+                                <i class="fas fa-info-circle me-2"></i>Overview
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="features-tab" data-bs-toggle="tab" data-bs-target="#features" type="button" role="tab">
+                                <i class="fas fa-star me-2"></i>Features
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="screenshots-tab" data-bs-toggle="tab" data-bs-target="#screenshots" type="button" role="tab">
+                                <i class="fas fa-images me-2"></i>Screenshots
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="support-tab" data-bs-toggle="tab" data-bs-target="#support" type="button" role="tab">
+                                <i class="fas fa-headset me-2"></i>Support
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="appTabsContent">
+                        <!-- Overview Tab -->
+                        <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h4>About {{ app.name }}</h4>
+                                    <p class="text-muted mb-4">{{ app.long_description }}</p>
+                                    
+                                    <h5>Key Highlights</h5>
+                                    <ul class="list-unstyled">
+                                        {% for feature in app.get_features()[:3] %}
+                                        <li class="mb-2">
+                                            <i class="fas fa-check-circle text-success me-2"></i>{{ feature }}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <h6 class="card-title">App Information</h6>
+                                            <div class="mb-2">
+                                                <strong>Category:</strong> {{ app.category }}
+                                            </div>
+                                            <div class="mb-2">
+                                                <strong>Version:</strong> {{ app.version }}
+                                            </div>
+                                            <div class="mb-2">
+                                                <strong>Downloads:</strong> {{ app.downloads }}
+                                            </div>
+                                            <div class="mb-2">
+                                                <strong>Rating:</strong> {{ app.rating }}/5.0
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Features Tab -->
+                        <div class="tab-pane fade" id="features" role="tabpanel">
+                            <h4>Features & Capabilities</h4>
+                            <div class="row">
+                                {% for feature in app.get_features() %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-start">
+                                        <i class="fas fa-cog text-primary me-3 mt-1"></i>
+                                        <div>
+                                            <h6 class="mb-1">{{ feature }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Screenshots Tab -->
+                        <div class="tab-pane fade" id="screenshots" role="tabpanel">
+                            <h4>App Screenshots</h4>
+                            <div class="row">
+                                {% for screenshot in app.get_screenshots() %}
+                                <div class="col-md-6 mb-4">
+                                    <div class="card">
+                                        <img src="{{ screenshot }}" class="card-img-top" alt="App Screenshot" style="height: 200px; object-fit: cover;">
+                                        <div class="card-body">
+                                            <p class="card-text">Screenshot {{ loop.index }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Support Tab -->
+                        <div class="tab-pane fade" id="support" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4>Support & Contact</h4>
+                                    <div class="contact-info">
+                                        <div class="mb-3">
+                                            <i class="fas fa-envelope text-primary me-2"></i>
+                                            <strong>Email:</strong> 
+                                            <a href="mailto:{{ app.support_email }}">{{ app.support_email }}</a>
+                                        </div>
+                                        <div class="mb-3">
+                                            <i class="fas fa-phone text-primary me-2"></i>
+                                            <strong>Phone:</strong> 
+                                            <a href="tel:{{ app.support_phone }}">{{ app.support_phone }}</a>
+                                        </div>
+                                        <div class="mb-3">
+                                            <i class="fas fa-globe text-primary me-2"></i>
+                                            <strong>Website:</strong> 
+                                            <a href="{{ app.support_website }}" target="_blank">{{ app.support_website }}</a>
+                                        </div>
+                                        <div class="mb-3">
+                                            <i class="fas fa-book text-primary me-2"></i>
+                                            <strong>Documentation:</strong> 
+                                            <a href="{{ app.documentation_url }}" target="_blank">View Documentation</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4>Quick Contact</h4>
+                                    <form class="contact-form">
+                                        <div class="mb-3">
+                                            <label for="contactName" class="form-label">Your Name</label>
+                                            <input type="text" class="form-control" id="contactName" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="contactEmail" class="form-label">Your Email</label>
+                                            <input type="email" class="form-control" id="contactEmail" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="contactMessage" class="form-label">Message</label>
+                                            <textarea class="form-control" id="contactMessage" rows="4" required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-paper-plane me-2"></i>Send Message
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4: Author Profile -->
+    <div class="row py-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-circle me-2"></i>About the Developer
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2 text-center">
+                            <div class="author-avatar mb-3">
+                                {{ app.author_avatar|safe }}
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <h5>{{ app.author_name }}</h5>
+                            <p class="text-muted mb-2">{{ app.author_bio }}</p>
+                            <div class="author-links">
+                                <a href="mailto:{{ app.author_email }}" class="btn btn-outline-primary btn-sm me-2">
+                                    <i class="fas fa-envelope me-1"></i>Email
+                                </a>
+                                <a href="{{ app.author_website }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-globe me-1"></i>Website
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 6: Social Links -->
+    <div class="row py-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-share-alt me-2"></i>Connect & Follow
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p class="text-muted mb-4">Stay connected with {{ app.name }} and get the latest updates</p>
+                            <div class="social-links d-flex flex-wrap gap-3">
+                                {% for platform, url in app.get_social_links().items() %}
+                                <a href="{{ url }}" target="_blank" class="btn btn-outline-primary social-btn">
+                                    {% if platform == 'website' %}
+                                    <i class="fas fa-globe me-2"></i>Website
+                                    {% elif platform == 'twitter' %}
+                                    <i class="fab fa-twitter me-2"></i>Twitter
+                                    {% elif platform == 'facebook' %}
+                                    <i class="fab fa-facebook me-2"></i>Facebook
+                                    {% elif platform == 'linkedin' %}
+                                    <i class="fab fa-linkedin me-2"></i>LinkedIn
+                                    {% elif platform == 'instagram' %}
+                                    <i class="fab fa-instagram me-2"></i>Instagram
+                                    {% elif platform == 'youtube' %}
+                                    <i class="fab fa-youtube me-2"></i>YouTube
+                                    {% elif platform == 'telegram' %}
+                                    <i class="fab fa-telegram me-2"></i>Telegram
+                                    {% elif platform == 'reddit' %}
+                                    <i class="fab fa-reddit me-2"></i>Reddit
+                                    {% else %}
+                                    <i class="fas fa-link me-2"></i>{{ platform|title }}
+                                    {% endif %}
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title">Share This App</h6>
+                                    <div class="share-buttons d-flex gap-2">
+                                        <button class="btn btn-outline-primary btn-sm" onclick="shareApp('facebook')">
+                                            <i class="fab fa-facebook"></i>
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm" onclick="shareApp('twitter')">
+                                            <i class="fab fa-twitter"></i>
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm" onclick="shareApp('linkedin')">
+                                            <i class="fab fa-linkedin"></i>
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm" onclick="copyLink()">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Apps Button -->
+    <div class="row py-4">
+        <div class="col-12 text-center">
+            <a href="{{ url_for('all_apps') }}" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-arrow-left me-2"></i>Back to Apps
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.app-logo-large svg {
+    width: 120px;
+    height: 120px;
+    border-radius: 20px;
+}
+
+.app-stats .stat-item {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    margin: 0.25rem;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.author-avatar svg {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.social-btn {
+    min-width: 120px;
+}
+
+.contact-form {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.screenshot-gallery img {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.screenshot-gallery img:hover {
+    transform: scale(1.05);
+}
+
+.share-buttons button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Point 5 - Favorite button styling */
+.favorite-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.favorite-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.favorite-btn.inactive i {
+    color: #6c757d;
+    font-size: 1.2rem;
+}
+
+.favorite-btn.active i {
+    color: #dc3545;
+    font-size: 1.2rem;
+    animation: heartBeat 0.6s ease-in-out;
+}
+
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.2); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Point 4 - Action buttons styling */
+.action-btn {
+    transition: all 0.3s ease;
+    border-width: 2px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.share-dropdown {
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: none;
+}
+
+.share-option {
+    padding: 12px 20px;
+    transition: all 0.2s ease;
+}
+
+.share-option:hover {
+    background-color: #f8f9fa;
+    padding-left: 25px;
+}
+
+/* Toast styling */
+.toast {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.toast-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-bottom: none;
+}
+
+.toast-body {
+    font-weight: 500;
+}
+</style>
+
+<script>
+function shareApp(platform) {
+    const url = window.location.href;
+    const title = "{{ app.name }} - {{ app.short_description }}";
+    
+    let shareUrl = '';
+    switch(platform) {
+        case 'facebook':
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+            break;
+        case 'twitter':
+            shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+            break;
+        case 'linkedin':
+            shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+            break;
+    }
+    
+    if (shareUrl) {
+        window.open(shareUrl, '_blank', 'width=600,height=400');
+    }
+}
+
+function copyLink() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('Link copied to clipboard!');
+    });
+}
+
+// Contact form submission
+document.querySelector('.contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('contactName').value;
+    const email = document.getElementById('contactEmail').value;
+    const message = document.getElementById('contactMessage').value;
+    
+    // Create mailto link
+    const subject = encodeURIComponent(`{{ app.name }} - Contact from ${name}`);
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+    const mailtoLink = `mailto:{{ app.support_email }}?subject=${subject}&body=${body}`;
+    
+    window.location.href = mailtoLink;
+});
+
+// Point 5 - Favorite functionality
+function toggleFavorite(appId) {
+    const btn = document.getElementById('favoriteBtn');
+    const icon = btn.querySelector('i');
+    
+    // Send AJAX request to toggle favorite
+    fetch(`/api/app/favorite/${appId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (data.is_favorite) {
+                btn.classList.remove('inactive');
+                btn.classList.add('active');
+                icon.style.color = '#dc3545';
+            } else {
+                btn.classList.remove('active');
+                btn.classList.add('inactive');
+                icon.style.color = '#6c757d';
+            }
+            
+            // Show toast message
+            showToast(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Please log in to add favorites');
+    });
+}
+
+// Point 4 - Follow developer functionality
+function toggleFollow(developerEmail) {
+    const btn = document.getElementById('followBtn');
+    const icon = btn.querySelector('i');
+    
+    const formData = new FormData();
+    formData.append('developer_email', developerEmail);
+    
+    fetch('/api/developer/follow', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (data.is_following) {
+                btn.innerHTML = '<i class="fas fa-user-check me-2"></i>Following';
+                btn.classList.remove('btn-outline-light');
+                btn.classList.add('btn-success');
+            } else {
+                btn.innerHTML = '<i class="fas fa-user-plus me-2"></i>Follow Developer';
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-outline-light');
+            }
+            
+            showToast(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Please log in to follow developers');
+    });
+}
+
+// Point 4 - Enhanced share functionality
+function shareApp(appId, platform) {
+    const url = window.location.href;
+    const title = "{{ app.name }} - {{ app.short_description }}";
+    
+    // Record the share action
+    const formData = new FormData();
+    formData.append('platform', platform);
+    
+    fetch(`/api/app/share/${appId}`, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Share recorded:', data);
+    })
+    .catch(error => {
+        console.error('Error recording share:', error);
+    });
+    
+    // Open share URL
+    let shareUrl = '';
+    switch(platform) {
+        case 'facebook':
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+            break;
+        case 'twitter':
+            shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+            break;
+        case 'whatsapp':
+            shareUrl = `https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}`;
+            break;
+        case 'email':
+            shareUrl = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent('Check out this app: ' + url)}`;
+            break;
+    }
+    
+    if (shareUrl) {
+        window.open(shareUrl, '_blank', 'width=600,height=400');
+    }
+}
+
+// Point 4 - App actions
+function downloadApp(appId) {
+    // Increment download count and redirect
+    fetch(`/api/app/download/${appId}`, {
+        method: 'POST'
+    })
+    .then(() => {
+        showToast('Download started!');
+        // In real app, would trigger actual download
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function viewApp(appId) {
+    // Navigate to app details or preview
+    showToast('Opening app preview...');
+    // In real app, would open preview modal or redirect
+}
+
+// Toast notification system
+function showToast(message) {
+    // Create toast if it doesn't exist
+    let toastContainer = document.getElementById('toastContainer');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toastContainer';
+        toastContainer.className = 'position-fixed top-0 end-0 p-3';
+        toastContainer.style.zIndex = '9999';
+        document.body.appendChild(toastContainer);
+    }
+    
+    const toastElement = document.createElement('div');
+    toastElement.className = 'toast show';
+    toastElement.innerHTML = `
+        <div class="toast-header">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong class="me-auto">Notification</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">
+            ${message}
+        </div>
+    `;
+    
+    toastContainer.appendChild(toastElement);
+    
+    // Auto-remove after 3 seconds
+    setTimeout(() => {
+        toastElement.remove();
+    }, 3000);
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

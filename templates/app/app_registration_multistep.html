@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Marketplace - Professional Services Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+        }
+        .feature-card {
+            transition: transform 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .service-badge {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<!-- Navigation from app_home -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('index') }}">
+            <i class="fas fa-mobile-alt me-2"></i>Professional Services Hub
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <!-- Home with icon only -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('app_home') }}">
+                        <i class="fas fa-home"></i>Home
+                    </a>
+                </li>
+                <!-- Apps Dropdown -->
+    <!-- Navigation App tab -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle active" href="#" id="appsDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-mobile-alt me-1"></i>Apps
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-scrollable" style="max-height: 400px; overflow-y: auto;">
+                                <!-- Core App Services -->
+                                <li><h6 class="dropdown-header"><i class="fas fa-mobile-alt me-1"></i>All Apps</h6></li>
+                                <li><a class="dropdown-item active" href="/app/app_registration">
+                                    <i class="fas fa-plus me-2"></i>Add App 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/all_apps">
+                                    <i class="fas fa-th me-2"></i>App Marketplace 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/app_detail">
+                                    <i class="fas fa-info-circle me-2"></i>App Detail 
+                                </a></li>
+                                <li><h6 class="dropdown-header"><i class="fas fa-mobile-alt me-1"></i>App Types</h6></li>
+                                <li><a class="dropdown-item" href="{{ url_for('gaming_apps') }}">
+                                    <i class="fas fa-gamepad me-2"></i>Gaming Apps
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('business_apps') }}">
+                                    <i class="fas fa-briefcase me-2"></i>Business Apps 
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('productivity_apps') }}">
+                                    <i class="fas fa-tasks me-2"></i>Productivity Apps 
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('education_apps') }}">
+                                    <i class="fas fa-graduation-cap me-2"></i>Education Apps 
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('social_apps') }}">
+                                    <i class="fas fa-users me-2"></i>Social Apps 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/fitness_apps">
+                                    <i class="fas fa-dumbbell me-2"></i>Fitness Apps 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/desktop_apps">
+                                    <i class="fas fa-desktop me-2"></i>Desktop Apps 
+                                </a></li>
+                                <li><h6 class="dropdown-header"><i class="fas fa-cogs me-1"></i>Add Ons</h6></li>
+                                <li><a class="dropdown-item" href="/app/app_list">
+                                    <i class="fas fa-list me-2"></i>App List 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/app_categories">
+                                    <i class="fas fa-folder me-2"></i>App Categories 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/app_developer">
+                                    <i class="fas fa-code me-2"></i>App Developer 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/app_Income">
+                                    <i class="fas fa-dollar-sign me-2"></i>App Income 
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/app_team">
+                                    <i class="fas fa-team me-2"></i>App Team 
+                                </a></li>
+                            </ul>
+                        </li>
+                 <!-- Navigation App tab -->
+                
+                <!-- Services Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-cog me-1"></i>Services
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-scrollable" style="max-height: 400px; overflow-y: auto;">
+                        <!-- Core Business Services -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-building me-1"></i>Business Services</h6></li>
+                        <li><a class="dropdown-item" href="/business/business_home">
+                            <i class="fas fa-building me-2"></i>Business Registration
+                        </a></li>
+                        <li><a class="dropdown-item" href="/app/app_home">
+                            <i class="fas fa-mobile-alt me-2"></i>App Marketplace
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('delivery_home') }}">
+                            <i class="fas fa-truck me-2"></i>Delivery Partner
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Healthcare & Medical -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-heartbeat me-1"></i>Healthcare & Medical</h6></li>
+                        <li><a class="dropdown-item" href="/hospital/hospital_home">
+                            <i class="fas fa-hospital me-2"></i>Hospital Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/medical/medical_home">
+                            <i class="fas fa-stethoscope me-2"></i>Medical Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/matrimony/matrimony_home">
+                            <i class="fas fa-heart me-2"></i>Matrimony Services
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Financial Services -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-chart-line me-1"></i>Financial Services</h6></li>
+                        <li><a class="dropdown-item" href="/bank/bank_home">
+                            <i class="fas fa-university me-2"></i>Banking Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/finance/finance_home">
+                            <i class="fas fa-coins me-2"></i>Finance Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/investor/investor_home">
+                            <i class="fas fa-chart-line me-2"></i>Investor Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/share_market/sharemarket_home">
+                            <i class="fas fa-chart-trending-up me-2"></i>Share Market
+                        </a></li>
+                        <li><a class="dropdown-item" href="/stock_exchange/stockexchange_home">
+                            <i class="fas fa-exchange-alt me-2"></i>Stock Exchange
+                        </a></li>
+                        <li><a class="dropdown-item" href="/currancy/currancy_home">
+                            <i class="fas fa-dollar-sign me-2"></i>Currency Exchange
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Education & Career -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-graduation-cap me-1"></i>Education & Career</h6></li>
+                        <li><a class="dropdown-item" href="/education/education_home">
+                            <i class="fas fa-graduation-cap me-2"></i>Education Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/career/career_home">
+                            <i class="fas fa-briefcase me-2"></i>Career Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/job/job_home">
+                            <i class="fas fa-users me-2"></i>Job Portal
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Technology & Innovation -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-robot me-1"></i>Technology & Innovation</h6></li>
+                        <li><a class="dropdown-item" href="/artificial_intelligence/ai_home">
+                            <i class="fas fa-robot me-2"></i>AI Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/brainlo/brainlo_home">
+                            <i class="fas fa-brain me-2"></i>Brainlo Platform
+                        </a></li>
+                        <li><a class="dropdown-item" href="/console/console_home">
+                            <i class="fas fa-terminal me-2"></i>Console Access
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Communication & Social -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-comments me-1"></i>Communication & Social</h6></li>
+                        <li><a class="dropdown-item" href="/chat/chat_home">
+                            <i class="fas fa-comments me-2"></i>Chat Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/social/social_home">
+                            <i class="fas fa-share-alt me-2"></i>Social Platform
+                        </a></li>
+                        <li><a class="dropdown-item" href="/email/email_home">
+                            <i class="fas fa-envelope me-2"></i>Email Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/sms/sms_home">
+                            <i class="fas fa-sms me-2"></i>SMS Services
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- News & Content -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-newspaper me-1"></i>News & Content</h6></li>
+                        <li><a class="dropdown-item" href="/news/news_home">
+                            <i class="fas fa-newspaper me-2"></i>News Portal
+                        </a></li>
+                        <li><a class="dropdown-item" href="/blog/blog_home">
+                            <i class="fas fa-blog me-2"></i>Blog Platform
+                        </a></li>
+                        <li><a class="dropdown-item" href="/post/post_home">
+                            <i class="fas fa-edit me-2"></i>Post Management
+                        </a></li>
+                        <li><a class="dropdown-item" href="/story/story_home">
+                            <i class="fas fa-book me-2"></i>Story Platform
+                        </a></li>
+                        <li><a class="dropdown-item" href="/reel/reel_home">
+                            <i class="fas fa-video me-2"></i>Reel Services
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Legal & Government -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-gavel me-1"></i>Legal & Government</h6></li>
+                        <li><a class="dropdown-item" href="/legal/legal_home">
+                            <i class="fas fa-gavel me-2"></i>Legal Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/chartered_accountant/ca_home">
+                            <i class="fas fa-calculator me-2"></i>CA Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/government/govt_home">
+                            <i class="fas fa-landmark me-2"></i>Government Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/police/police_home">
+                            <i class="fas fa-shield-alt me-2"></i>Police Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/politics/politics_home">
+                            <i class="fas fa-flag me-2"></i>Politics Hub
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Marketing & Business Growth -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-bullhorn me-1"></i>Marketing & Growth</h6></li>
+                        <li><a class="dropdown-item" href="/marketing/marketing_home">
+                            <i class="fas fa-bullhorn me-2"></i>Marketing Hub
+                        </a></li>
+                        <li><a class="dropdown-item" href="/advertise/advertise_home">
+                            <i class="fas fa-ad me-2"></i>Advertise Services
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Property & Real Estate -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-home me-1"></i>Property & Real Estate</h6></li>
+                        <li><a class="dropdown-item" href="/property/property_home">
+                            <i class="fas fa-home me-2"></i>Property Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/public_market/publicmarket_home">
+                            <i class="fas fa-store me-2"></i>Public Market
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Specialized Services -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-tools me-1"></i>Specialized Services</h6></li>
+                        <li><a class="dropdown-item" href="/agriculture/agriculture_home">
+                            <i class="fas fa-leaf me-2"></i>Agriculture Hub
+                        </a></li>
+                        <li><a class="dropdown-item" href="/sport/sport_home">
+                            <i class="fas fa-trophy me-2"></i>Sports Platform
+                        </a></li>
+                        <li><a class="dropdown-item" href="/event/event_home">
+                            <i class="fas fa-calendar-alt me-2"></i>Event Management
+                        </a></li>
+                        <li><a class="dropdown-item" href="/language/language_home">
+                            <i class="fas fa-language me-2"></i>Language Services
+                        </a></li>
+                        <li><a class="dropdown-item" href="/live/live_home">
+                            <i class="fas fa-broadcast-tower me-2"></i>Live Services
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Support & Management -->
+                        <li><h6 class="dropdown-header"><i class="fas fa-cogs me-1"></i>Support & Management</h6></li>
+                        <li><a class="dropdown-item" href="/help_support/help_support_home">
+                            <i class="fas fa-question-circle me-2"></i>Help & Support
+                        </a></li>
+                        <li><a class="dropdown-item" href="/settings/settings_home">
+                            <i class="fas fa-cog me-2"></i>Settings
+                        </a></li>
+                        <li><a class="dropdown-item" href="/notification/notification_home">
+                            <i class="fas fa-bell me-2"></i>Notifications
+                        </a></li>
+                        <li><a class="dropdown-item" href="/creditpoints/creditpoints_home">
+                            <i class="fas fa-coins me-2"></i>Credit Points
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- View All Services -->
+                        <li><a class="dropdown-item bg-primary text-white" href="/service/service_home">
+                            <i class="fas fa-th-large me-2"></i><strong>View All Services</strong>
+                        </a></li>
+                          </ul>
+                    <!-- Account Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i>Account
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-scrollable" style="max-height: 300px; overflow-y: auto;">
+                            <li><a class="dropdown-item" href="{{ url_for('user_register') }}"><i class="fas fa-user-plus me-2"></i>Sign Up / Login</a></li>
+                            <li><a class="dropdown-item" href="/admin/admin_login"><i class="fas fa-user-shield me-2"></i>Admin Panel</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Add Listing Forms</h6></li>
+                            <li><a class="dropdown-item" href="{{('/post/add_post')}}"><i class="fas fa-box me-2"></i>Add Post</a></li>
+                            <li><a class="dropdown-item" href="{{('/products/product_form')}}"><i class="fas fa-box me-2"></i>Add Product</a></li>
+
+                            <li><a class="dropdown-item" href="/business/business_register"><i class="fas fa-building me-2"></i>Add Business</a></li>
+                            <li><a class="dropdown-item" href="{{('/apps/app_registration')}}"><i class="fas fa-mobile-alt me-2"></i>Add App</a></li>
+                            <li><a class="dropdown-item" href="{{('/delivery/delivery_application')}}"><i class="fas fa-shipping-fast me-2"></i>Add Delivery Partner</a></li>
+                            <li><a class="dropdown-item" href="{{('/matrimony/matrimony_register_step')}}"><i class="fas fa-heart me-2"></i>Add Matrimony Profile</a></li>
+                            <li><a class="dropdown-item" href="{{('/offer/add_offer')}}"><i class="fas fa-tags me-2"></i>Add Offers</a></li>
+                            <li><a class="dropdown-item" href="{{('/advertise/add_advertise')}}"><i class="fas fa-bullhorn me-2"></i>Add Advertise</a></li>
+                            <li><a class="dropdown-item" href="{{('/event/add_event')}}"><i class="fas fa-calendar me-2"></i>Add Event</a></li>
+                            <li><a class="dropdown-item" href="{{('/news/add_news')}}"><i class="fas fa-newspaper me-2"></i>Add News</a></li>
+                        </ul>
+                    </li>
+                </li>
+
+            </ul>
+            <ul class="navbar-nav">
+                {% if session.user_id %}
+                    <!-- Logged-in User Profile Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown">
+                            <div class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px; font-size: 14px;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span class="d-none d-md-inline">{{ session.username }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><h6 class="dropdown-header">
+                                <i class="fas fa-user-circle me-2"></i>{{ session.username }}
+                                <br><small class="text-muted">Active Subscriber</small>
+                            </h6></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('user_subscriber_dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-2"></i>My Dashboard
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('subscriber_profile') }}">
+                                <i class="fas fa-user-edit me-2"></i>Profile Settings
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('subscriber_services') }}">
+                                <i class="fas fa-cogs me-2"></i>My Services
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('user_logout') }}">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user_login') }}">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user_register') }}">
+                            <i class="fas fa-user-plus me-1"></i>Register
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+
+
+
+    </div>
+</nav>
+<!-- Navigation from app_home -->
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">
+                        <i class="fas fa-upload me-2"></i>Submit Your App
+                    </h2>
+                    <p class="mb-0 mt-2">Join our app marketplace and reach thousands of users!</p>
+                </div>
+                
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <!-- Multi-step Progress Indicator -->
+                    <div class="progress-container mb-4">
+                        <div class="row">
+                            <div class="col-3 text-center">
+                                <div class="step-indicator active" id="step-indicator-1">
+                                    <div class="step-number">1</div>
+                                    <div class="step-title">App Info</div>
+                                </div>
+                            </div>
+                            <div class="col-3 text-center">
+                                <div class="step-indicator" id="step-indicator-2">
+                                    <div class="step-number">2</div>
+                                    <div class="step-title">Developer</div>
+                                </div>
+                            </div>
+                            <div class="col-3 text-center">
+                                <div class="step-indicator" id="step-indicator-3">
+                                    <div class="step-number">3</div>
+                                    <div class="step-title">Details</div>
+                                </div>
+                            </div>
+                            <div class="col-3 text-center">
+                                <div class="step-indicator" id="step-indicator-4">
+                                    <div class="step-number">4</div>
+                                    <div class="step-title">Review</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress mt-3">
+                            <div class="progress-bar bg-primary" id="progress-bar" style="width: 25%"></div>
+                        </div>
+                    </div>
+
+                    <form method="POST" enctype="multipart/form-data" id="multiStepForm">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() if csrf_token else '' }}"/>
+                        
+                        <!-- Step 1: Basic App Information -->
+                        <div class="step-content active" id="step-1">
+                            <h4 class="mb-3">
+                                <i class="fas fa-mobile-alt me-2"></i>Basic App Information
+                            </h4>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="app_name" class="form-label">App Name *</label>
+                                    <input type="text" class="form-control" id="app_name" name="app_name" required>
+                                    <div class="invalid-feedback">Please provide an app name.</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="app_category" class="form-label">App Category *</label>
+                                    <select class="form-select" id="app_category" name="app_category" required>
+                                        <option value="">Select a category</option>
+                                        {% for category in categories %}
+                                        <option value="{{ category }}">{{ category }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="invalid-feedback">Please select a category.</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="app_description" class="form-label">App Description *</label>
+                                <textarea class="form-control" id="app_description" name="app_description" rows="4" required></textarea>
+                                <div class="form-text">Describe your app's main features and benefits</div>
+                                <div class="invalid-feedback">Please provide an app description.</div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="app_version" class="form-label">Version</label>
+                                    <input type="text" class="form-control" id="app_version" name="app_version" placeholder="e.g., 1.0.0" value="1.0.0">
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="app_price" class="form-label">Price Type</label>
+                                    <select class="form-select" id="app_price" name="app_price">
+                                        <option value="Free" selected>Free</option>
+                                        <option value="Paid">Paid</option>
+                                        <option value="Freemium">Freemium</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="plan_type" class="form-label">Select Your Plan *</label>
+                                <select class="form-select" id="plan_type" name="plan_type" required>
+                                    <option value="">Choose Your Plan</option>
+                                    <option value="basic">Basic Plan - Free (Limited features)</option>
+                                    <option value="standard">Standard Plan - $9.99/month (Full features)</option>
+                                    <option value="premium">Premium Plan - $19.99/month (Priority support + Advanced analytics)</option>
+                                    <option value="enterprise">Enterprise Plan - $49.99/month (Custom integrations + Dedicated support)</option>
+                                </select>
+                                <div class="form-text">Choose the plan that best fits your app's needs</div>
+                                <div class="invalid-feedback">Please select a plan.</div>
+                            </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Developer Information -->
+                        <div class="step-content" id="step-2">
+                            <h4 class="mb-3">
+                                <i class="fas fa-user-tie me-2"></i>Developer Information
+                            </h4>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="developer_name" class="form-label">Developer Name *</label>
+                                    <input type="text" class="form-control" id="developer_name" name="developer_name" required>
+                                    <div class="invalid-feedback">Please provide your name.</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="developer_email" class="form-label">Developer Email *</label>
+                                    <input type="email" class="form-control" id="developer_email" name="developer_email" required>
+                                    <div class="invalid-feedback">Please provide a valid email.</div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="developer_phone" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="developer_phone" name="developer_phone">
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="developer_company" class="form-label">Company</label>
+                                    <input type="text" class="form-control" id="developer_company" name="developer_company">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="developer_website" class="form-label">Developer Website</label>
+                                <input type="url" class="form-control" id="developer_website" name="developer_website" placeholder="https://your-website.com">
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Additional Details -->
+                        <div class="step-content" id="step-3">
+                            <h4 class="mb-3">
+                                <i class="fas fa-cogs me-2"></i>Additional Details
+                            </h4>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="app_website" class="form-label">App Website</label>
+                                    <input type="url" class="form-control" id="app_website" name="app_website" placeholder="https://your-app-website.com">
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="app_download_url" class="form-label">Download URL</label>
+                                    <input type="url" class="form-control" id="app_download_url" name="app_download_url" placeholder="https://play.google.com/store/apps/...">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="app_size" class="form-label">App Size</label>
+                                    <input type="text" class="form-control" id="app_size" name="app_size" placeholder="e.g., 25 MB">
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="minimum_os_version" class="form-label">Minimum OS Version</label>
+                                    <input type="text" class="form-control" id="minimum_os_version" name="minimum_os_version" placeholder="e.g., Android 8.0+">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="target_audience" class="form-label">Target Audience</label>
+                                    <input type="text" class="form-control" id="target_audience" name="target_audience" placeholder="e.g., Business professionals">
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="app_logo" class="form-label">App Logo/Icon</label>
+                                    <input type="file" class="form-control" id="app_logo" name="app_logo" accept="image/*">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="app_features" class="form-label">App Features</label>
+                                <textarea class="form-control" id="app_features" name="app_features" rows="3" placeholder="List key features (one per line)"></textarea>
+                                <div class="form-text">Enter each feature on a new line</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="permissions_required" class="form-label">Permissions Required</label>
+                                <textarea class="form-control" id="permissions_required" name="permissions_required" rows="3" placeholder="List required permissions (one per line)"></textarea>
+                                <div class="form-text">Enter each permission on a new line</div>
+                            </div>
+                            
+                            <!-- App File Upload & Verification Section -->
+                            <div class="card border-info mb-4">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-shield-alt me-2"></i>App File & Verification
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="verification_method" class="form-label">How would you like to provide your app?</label>
+                                        <select class="form-select" id="verification_method" name="verification_method" onchange="toggleVerificationFields()" required>
+                                            <option value="upload">Upload File Directly (up to 20MB)</option>
+                                            <option value="github">GitHub Repository Link</option>
+                                            <option value="store">App Store Link (Google Play/Apple Store)</option>
+                                            <option value="website">Official Website Download Link</option>
+                                        </select>
+                                        <div class="form-text">Choose the most convenient method for app verification</div>
+                                    </div>
+                                    
+                                    <!-- File Upload Option -->
+                                    <div id="upload-section" class="verification-section">
+                                        <div class="alert alert-warning">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            <strong>File Size Limit:</strong> Maximum 20MB. For larger files, admins will be notified to contact you directly.
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="app_apk_file" class="form-label">App File (APK, IPA, EXE, etc.)</label>
+                                            <input type="file" class="form-control" id="app_apk_file" name="app_apk_file" 
+                                                   accept=".apk,.ipa,.exe,.dmg,.deb,.rpm" 
+                                                   onchange="checkFileSize(this)">
+                                            <div class="form-text">Supported formats: APK, IPA, EXE, DMG, DEB, RPM</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="app_screenshots" class="form-label">App Screenshots (Optional)</label>
+                                            <input type="file" class="form-control" id="app_screenshots" name="app_screenshots" 
+                                                   accept="image/*" multiple>
+                                            <div class="form-text">Upload up to 5 screenshots</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- GitHub Repository Option -->
+                                    <div id="github-section" class="verification-section" style="display: none;">
+                                        <div class="alert alert-info">
+                                            <i class="fab fa-github me-2"></i>
+                                            <strong>GitHub Verification:</strong> Provide your public repository URL for source code verification.
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="github_repo_url" class="form-label">GitHub Repository URL</label>
+                                            <input type="url" class="form-control" id="github_repo_url" name="github_repo_url" 
+                                                   placeholder="https://github.com/username/repository">
+                                            <div class="form-text">Make sure the repository is public and contains your app source code</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- App Store Option -->
+                                    <div id="store-section" class="verification-section" style="display: none;">
+                                        <div class="alert alert-success">
+                                            <i class="fas fa-store me-2"></i>
+                                            <strong>Store Verification:</strong> Provide links to official app stores where your app is published.
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="google_play_url" class="form-label">Google Play Store URL</label>
+                                            <input type="url" class="form-control" id="google_play_url" name="google_play_url" 
+                                                   placeholder="https://play.google.com/store/apps/details?id=com.example.app">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="apple_store_url" class="form-label">Apple App Store URL</label>
+                                            <input type="url" class="form-control" id="apple_store_url" name="apple_store_url" 
+                                                   placeholder="https://apps.apple.com/app/id123456789">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Official Website Option -->
+                                    <div id="website-section" class="verification-section" style="display: none;">
+                                        <div class="alert alert-primary">
+                                            <i class="fas fa-globe me-2"></i>
+                                            <strong>Website Verification:</strong> Provide the official download link from your website.
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="official_website_url" class="form-label">Official Download URL</label>
+                                            <input type="url" class="form-control" id="official_website_url" name="official_website_url" 
+                                                   placeholder="https://your-website.com/download">
+                                            <div class="form-text">Direct link to download your app from your official website</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Review and Submit -->
+                        <div class="step-content" id="step-4">
+                            <h4 class="mb-3">
+                                <i class="fas fa-check-circle me-2"></i>Review Your Submission
+                            </h4>
+                            
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Please review all information before submitting. You can go back to make changes if needed.
+                            </div>
+                            
+                            <div id="review-content">
+                                <!-- Review content will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-outline-secondary" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
+                                <i class="fas fa-arrow-left me-2"></i>Previous
+                            </button>
+                            
+                            <div class="ms-auto">
+                                <button type="button" class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">
+                                    Next<i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                                <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">
+                                    <i class="fas fa-paper-plane me-2"></i>Submit App for Review
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.step-indicator {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.step-indicator .step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px;
+    font-weight: bold;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.step-indicator.active .step-number {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+.step-indicator.completed .step-number {
+    background-color: #198754;
+    color: white;
+    border-color: #198754;
+}
+
+.step-indicator .step-title {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.step-indicator.active .step-title {
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+.step-indicator.completed .step-title {
+    color: #198754;
+    font-weight: 600;
+}
+
+.step-content {
+    display: none;
+}
+
+.step-content.active {
+    display: block;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.progress-bar {
+    transition: width 0.3s ease;
+}
+
+.form-control:invalid,
+.form-select:invalid {
+    border-color: #dc3545;
+}
+
+.form-control:valid,
+.form-select:valid {
+    border-color: #198754;
+}
+</style>
+
+<script>
+let currentStep = 1;
+const totalSteps = 4;
+
+function showStep(step) {
+    // Hide all steps
+    document.querySelectorAll('.step-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Show current step
+    document.getElementById(`step-${step}`).classList.add('active');
+    
+    // Update step indicators
+    for (let i = 1; i <= totalSteps; i++) {
+        const indicator = document.getElementById(`step-indicator-${i}`);
+        indicator.classList.remove('active', 'completed');
+        
+        if (i < step) {
+            indicator.classList.add('completed');
+        } else if (i === step) {
+            indicator.classList.add('active');
+        }
+    }
+    
+    // Update progress bar
+    const progress = (step / totalSteps) * 100;
+    document.getElementById('progress-bar').style.width = progress + '%';
+    
+    // Update navigation buttons
+    document.getElementById('prevBtn').style.display = step === 1 ? 'none' : 'inline-block';
+    document.getElementById('nextBtn').style.display = step === totalSteps ? 'none' : 'inline-block';
+    document.getElementById('submitBtn').style.display = step === totalSteps ? 'inline-block' : 'none';
+    
+    // Update review content on final step
+    if (step === totalSteps) {
+        updateReviewContent();
+    }
+}
+
+function validateStep(step) {
+    const stepElement = document.getElementById(`step-${step}`);
+    const requiredFields = stepElement.querySelectorAll('[required]');
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            field.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            field.classList.remove('is-invalid');
+            field.classList.add('is-valid');
+        }
+    });
+    
+    return isValid;
+}
+
+function changeStep(direction) {
+    if (direction === 1) {
+        // Moving forward - validate current step
+        if (!validateStep(currentStep)) {
+            return;
+        }
+        
+        if (currentStep < totalSteps) {
+            currentStep++;
+        }
+    } else {
+        // Moving backward
+        if (currentStep > 1) {
+            currentStep--;
+        }
+    }
+    
+    showStep(currentStep);
+}
+
+function updateReviewContent() {
+    const form = document.getElementById('multiStepForm');
+    const formData = new FormData(form);
+    
+    let reviewHTML = '';
+    
+    // App Information
+    reviewHTML += '<div class="card mb-3"><div class="card-header"><h5>App Information</h5></div><div class="card-body">';
+    reviewHTML += `<p><strong>Name:</strong> ${formData.get('app_name') || 'Not provided'}</p>`;
+    reviewHTML += `<p><strong>Category:</strong> ${formData.get('app_category') || 'Not provided'}</p>`;
+    reviewHTML += `<p><strong>Description:</strong> ${formData.get('app_description') || 'Not provided'}</p>`;
+    reviewHTML += `<p><strong>Version:</strong> ${formData.get('app_version') || 'Not provided'}</p>`;
+    reviewHTML += `<p><strong>Price Type:</strong> ${formData.get('app_price') || 'Not provided'}</p>`;
+    reviewHTML += '</div></div>';
+    
+    // Developer Information
+    reviewHTML += '<div class="card mb-3"><div class="card-header"><h5>Developer Information</h5></div><div class="card-body">';
+    reviewHTML += `<p><strong>Name:</strong> ${formData.get('developer_name') || 'Not provided'}</p>`;
+    reviewHTML += `<p><strong>Email:</strong> ${formData.get('developer_email') || 'Not provided'}</p>`;
+    reviewHTML += `<p><strong>Phone:</strong> ${formData.get('developer_phone') || 'Not provided'}</p>`;
+    reviewHTML += `<p><strong>Company:</strong> ${formData.get('developer_company') || 'Not provided'}</p>`;
+    reviewHTML += '</div></div>';
+    
+    // Additional Details
+    reviewHTML += '<div class="card mb-3"><div class="card-header"><h5>Additional Details</h5></div><div class="card-body">';
+    reviewHTML += `<p><strong>App Website:</strong> ${formData.get('app_website') || 'Not provided'}</p>`;
+    reviewHTML += `<p><strong>Download URL:</strong> ${formData.get('app_download_url') || 'Not provided'}</p>`;
+    reviewHTML += `<p><strong>App Size:</strong> ${formData.get('app_size') || 'Not provided'}</p>`;
+    reviewHTML += `<p><strong>Target Audience:</strong> ${formData.get('target_audience') || 'Not provided'}</p>`;
+    reviewHTML += '</div></div>';
+    
+    document.getElementById('review-content').innerHTML = reviewHTML;
+}
+
+// Handle verification method toggle
+function toggleVerificationFields() {
+    const method = document.getElementById('verification_method').value;
+    const sections = document.querySelectorAll('.verification-section');
+    
+    // Hide all sections
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    // Show selected section
+    if (method === 'upload') {
+        document.getElementById('upload-section').style.display = 'block';
+    } else if (method === 'github') {
+        document.getElementById('github-section').style.display = 'block';
+    } else if (method === 'store') {
+        document.getElementById('store-section').style.display = 'block';
+    } else if (method === 'website') {
+        document.getElementById('website-section').style.display = 'block';
+    }
+}
+
+// Check file size (20MB limit)
+function checkFileSize(input) {
+    if (input.files && input.files[0]) {
+        const fileSize = input.files[0].size / 1024 / 1024; // Size in MB
+        const maxSize = 20;
+        
+        if (fileSize > maxSize) {
+            alert(`File size (${fileSize.toFixed(2)} MB) exceeds the limit of ${maxSize} MB. Please choose a smaller file or use alternative verification methods.`);
+            input.value = ''; // Clear the file input
+            
+            // Show notification about admin contact
+            const notification = document.createElement('div');
+            notification.className = 'alert alert-info mt-2';
+            notification.innerHTML = `
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Large File Notice:</strong> For files larger than 20MB, our admins will contact you directly to arrange file transfer.
+            `;
+            input.parentNode.appendChild(notification);
+            
+            // Remove notification after 5 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+    }
+}
+
+// Initialize first step
+document.addEventListener('DOMContentLoaded', function() {
+    showStep(1);
+    toggleVerificationFields(); // Initialize verification sections
+});
+
+// Form validation on submit
+document.getElementById('multiStepForm').addEventListener('submit', function(e) {
+    // Validate all steps before submitting
+    let allValid = true;
+    for (let i = 1; i <= totalSteps - 1; i++) {
+        if (!validateStep(i)) {
+            allValid = false;
+            // Go to first invalid step
+            currentStep = i;
+            showStep(currentStep);
+            break;
+        }
+    }
+    
+    if (!allValid) {
+        e.preventDefault();
+    }
+});
+</script>
+
+    <!-- Footer -->
+        <footer class="bg-dark text-white py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>App Marketplace</h5>
+                        <p>Your gateway to the digital world. Service ID: APP-002</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p>&copy; 2025 Professional Services Hub. All rights reserved.</p>
+                        <small>Contact: apps@serviceshub.com | Support: +1-800-APPS</small>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+    </html>

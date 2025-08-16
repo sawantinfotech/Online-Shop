@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Services Directory - Professional Services Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+        }
+        .service-card {
+            transition: transform 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .category-badge {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-concierge-bell me-2"></i>Services Hub
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <!-- Home with icon only -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">
+                            <i class="fas fa-home"></i>Home
+                        </a>
+                    </li>
+                    <!-- Subscription Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="subscriptionDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i>Subscription
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-scrollable" style="max-height: 300px; overflow-y: auto;">
+                            <li><h6 class="dropdown-header"><i class="fas fa-cog me-1"></i>All Services</h6></li>
+
+                            <li><a class="dropdown-item bg-primary text-white" href="/service/service_home">
+                                <i class="fas fa-th-large me-2"></i><strong>View All Services</strong>
+                            </a></li>
+                            
+                            <li><a class="dropdown-item" href="{{ url_for('service_registration') }}"><i class="fas fa-user-plus me-2"></i>Add Service</a></li>
+                            <li><a class="dropdown-item" href="/offer/offer_home"><i class="fas fa-user-shield me-2"></i>Offer</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">All Listing Forms</h6></li>
+                            <li><a class="dropdown-item" href="{{('/post/add_post')}}"><i class="fas fa-box me-2"></i>Add Post</a></li>
+                            <li><a class="dropdown-item" href="{{('/product/product_form')}}"><i class="fas fa-tshirt me-2"></i>Add Product</a></li>
+
+                            <li><a class="dropdown-item" href="/business/business_register"><i class="fas fa-building me-2"></i>Add Business</a></li>
+                            <li><a class="dropdown-item" href="{{('/apps/app_registration')}}"><i class="fas fa-mobile-alt me-2"></i>Add App</a></li>
+                            <li><a class="dropdown-item" href="{{('/delivery/delivery_application')}}"><i class="fas fa-biking me-2"></i>Add Delivery Rider</a></li>
+                            <li><a class="dropdown-item" href="{{('/matrimony/matrimony_register_step')}}"><i class="fas fa-heart me-2"></i>Add Matrimony Profile</a></li>
+                            <li><a class="dropdown-item" href="{{('/offer/add_offer')}}"><i class="fas fa-tags me-2"></i>Add Offer</a></li>
+                            <li><a class="dropdown-item" href="{{('/advertise/add_advertise')}}"><i class="fas fa-bullhorn me-2"></i>Add Advertise</a></li>
+                            <li><a class="dropdown-item" href="{{('/event/add_event')}}"><i class="fas fa-calendar me-2"></i>Add Event</a></li>
+                            <li><a class="dropdown-item" href="{{('/news/add_news')}}"><i class="fas fa-newspaper me-2"></i>Add News</a></li>
+                        </ul>
+                    </li>
+                    <!-- Services Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-cog me-1"></i>Service List
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-scrollable" style="max-height: 400px; overflow-y: auto;">
+                            <!-- Core Business Services -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-cog me-1"></i>All Services</h6></li>
+                                                  <li><a class="dropdown-item" href="/product/product_home"> <i class="fas fa-tshirt me-2"></i>Product                                                  </a></li>
+                          <li><a class="dropdown-item" href="/business/business_home">
+                                <i class="fas fa-building me-2"></i>Business
+                            </a></li>
+                            <li><a class="dropdown-item" href="/app/app_home">
+                                <i class="fas fa-mobile-alt me-2"></i>Apps
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('delivery_home') }}">
+                                <i class="fas fa-biking me-2"></i>Delivery Rider
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Healthcare & Medical -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-heartbeat me-1"></i>Healthcare & Medical</h6></li>
+                            <li><a class="dropdown-item" href="/hospital/hospital_home">
+                                <i class="fas fa-hospital me-2"></i>Hospital
+                            </a></li>
+                            <li><a class="dropdown-item" href="/medical/medical_home">
+                                <i class="fas fa-stethoscope me-2"></i>Medical
+                            </a></li>
+                            <li><a class="dropdown-item" href="/matrimony/matrimony_home">
+                                <i class="fas fa-heart me-2"></i>Matrimony
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Financial Services -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-chart-line me-1"></i>Financial Services</h6></li>
+                            <li><a class="dropdown-item" href="/bank/bank_home">
+                                <i class="fas fa-university me-2"></i>Banking
+                            </a></li>
+                            <li><a class="dropdown-item" href="/finance/finance_home">
+                                <i class="fas fa-coins me-2"></i>Finance
+                            </a></li>
+                            <li><a class="dropdown-item" href="/investor/investor_home">
+                                <i class="fas fa-chart-line me-2"></i>Investor
+                            </a></li>
+                            <li><a class="dropdown-item" href="/share_market/sharemarket_home">
+                                <i class="fas fa-chart-trending-up me-2"></i>Share Market
+                            </a></li>
+                            <li><a class="dropdown-item" href="/stock_exchange/stockexchange_home">
+                                <i class="fas fa-exchange-alt me-2"></i>Stock Exchange
+                            </a></li>
+                            <li><a class="dropdown-item" href="/currancy/currancy_home">
+                                <i class="fas fa-dollar-sign me-2"></i>Currency Exchange
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Education & Career -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-graduation-cap me-1"></i>Education & Career</h6></li>
+                            <li><a class="dropdown-item" href="/education/education_home">
+                                <i class="fas fa-graduation-cap me-2"></i>Education
+                            </a></li>
+                            <li><a class="dropdown-item" href="/career/career_home">
+                                <i class="fas fa-briefcase me-2"></i>Career
+                            </a></li>
+                            <li><a class="dropdown-item" href="/job/job_home">
+                                <i class="fas fa-users me-2"></i>Job Portal
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Technology & Innovation -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-robot me-1"></i>Technology & Innovation</h6></li>
+                            <li><a class="dropdown-item" href="/artificial_intelligence/ai_home">
+                                <i class="fas fa-robot me-2"></i>AI
+                            </a></li>
+                            <li><a class="dropdown-item" href="/brainlo/brainlo_home">
+                                <i class="fas fa-brain me-2"></i>Brainlo Payment
+                            </a></li>
+                            <li><a class="dropdown-item" href="/console/console_home">
+                                <i class="fas fa-terminal me-2"></i>Console Access
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Communication & Social -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-comments me-1"></i>Communication & Social</h6></li>
+                            <li><a class="dropdown-item" href="/chat/chat_home">
+                                <i class="fas fa-comments me-2"></i>Chat
+                            </a></li>
+                            <li><a class="dropdown-item" href="/social/social_home">
+                                <i class="fas fa-share-alt me-2"></i>Social
+                            </a></li>
+                            <li><a class="dropdown-item" href="/email/email_home">
+                                <i class="fas fa-envelope me-2"></i>Email
+                            </a></li>
+                            <li><a class="dropdown-item" href="/sms/sms_home">
+                                <i class="fas fa-sms me-2"></i>SMS
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- News & Content -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-newspaper me-1"></i>News & Content</h6></li>
+                            <li><a class="dropdown-item" href="/news/news_home">
+                                <i class="fas fa-newspaper me-2"></i>News Portal
+                            </a></li>
+                            <li><a class="dropdown-item" href="/blog/blog_home">
+                                <i class="fas fa-blog me-2"></i>Blog
+                            </a></li>
+                            <li><a class="dropdown-item" href="/post/post_home">
+                                <i class="fas fa-edit me-2"></i>Post
+                            </a></li>
+                            <li><a class="dropdown-item" href="/story/story_home">
+                                <i class="fas fa-book me-2"></i>Story
+                            </a></li>
+                            <li><a class="dropdown-item" href="/reel/reel_home">
+                                <i class="fas fa-video me-2"></i>Reel
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Legal & Government -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-gavel me-1"></i>Legal & Government</h6></li>
+                            <li><a class="dropdown-item" href="/legal/legal_home">
+                                <i class="fas fa-gavel me-2"></i>Legal
+                            </a></li>
+                            <li><a class="dropdown-item" href="/chartered_accountant/ca_home">
+                                <i class="fas fa-calculator me-2"></i>CA
+                            </a></li>
+                            <li><a class="dropdown-item" href="/government/govt_home">
+                                <i class="fas fa-landmark me-2"></i>Government
+                            </a></li>
+                            <li><a class="dropdown-item" href="/police/police_home">
+                                <i class="fas fa-shield-alt me-2"></i>Police
+                            </a></li>
+                            <li><a class="dropdown-item" href="/politics/politics_home">
+                                <i class="fas fa-flag me-2"></i>Politics
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Marketing & Business Growth -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-bullhorn me-1"></i>Marketing & Growth</h6></li>
+                            <li><a class="dropdown-item" href="/marketing/marketing_home">
+                                <i class="fas fa-bullhorn me-2"></i>Marketing
+                            </a></li>
+                            <li><a class="dropdown-item" href="/advertise/advertise_home">
+                                <i class="fas fa-ad me-2"></i>Advertise
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Property & Real Estate -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-home me-1"></i>Property & Real Estate</h6></li>
+                            <li><a class="dropdown-item" href="/property/property_home">
+                                <i class="fas fa-home me-2"></i>Property
+                            </a></li>
+                            <li><a class="dropdown-item" href="/public_market/publicmarket_home">
+                                <i class="fas fa-store me-2"></i>Public Market
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Specialized Services -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-tools me-1"></i>Specialized Services</h6></li>
+                            <li><a class="dropdown-item" href="/agriculture/agriculture_home">
+                                <i class="fas fa-leaf me-2"></i>Agriculture
+                            </a></li>
+                            <li><a class="dropdown-item" href="/sport/sport_home">
+                                <i class="fas fa-trophy me-2"></i>Sports
+                            </a></li>
+                            <li><a class="dropdown-item" href="/event/event_home">
+                                <i class="fas fa-calendar-alt me-2"></i>Event
+                            </a></li>
+                            <li><a class="dropdown-item" href="/language/language_home">
+                                <i class="fas fa-language me-2"></i>Language
+                            </a></li>
+                            <li><a class="dropdown-item" href="/live/live_home">
+                                <i class="fas fa-broadcast-tower me-2"></i>Live
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Support & Management -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-cogs me-1"></i>Support & Management</h6></li>
+                            <li><a class="dropdown-item" href="/help_support/help_support_home">
+                                <i class="fas fa-question-circle me-2"></i>Help & Support
+                            </a></li>
+                            <li><a class="dropdown-item" href="/settings/settings_home">
+                                <i class="fas fa-cog me-2"></i>Settings
+                            </a></li>
+                            <li><a class="dropdown-item" href="/notification/notification_home">
+                                <i class="fas fa-bell me-2"></i>Notifications
+                            </a></li>
+                            <li><a class="dropdown-item" href="/creditpoints/creditpoints_home">
+                                <i class="fas fa-coins me-2"></i>Credit Points
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- View All Services -->
+                            <li><a class="dropdown-item bg-primary text-white" href="/service/service_home">
+                                <i class="fas fa-th-large me-2"></i><strong>View All Services</strong>
+                            </a></li>
+                              </ul>
+                        
+                        <!-- Support Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="supportDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1"></i>Support
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-scrollable" style="max-height: 300px; overflow-y: auto;">
+                               
+                               
+                                <li><hr class="dropdown-divider"></li>
+                                
+                                <!-- Support & Management -->
+                                <li><h6 class="dropdown-header"><i class="fas fa-cogs me-1"></i>Support & Management</h6></li>
+                                <li><a class="dropdown-item" href="/help_support/help_support_home">
+                                    <i class="fas fa-question-circle me-2"></i>Help & Support
+                                </a></li>
+                                <li><a class="dropdown-item" href="/settings/settings_home">
+                                    <i class="fas fa-cog me-2"></i>Settings
+                                </a></li>
+                                <li><a class="dropdown-item" href="/notification/notification_home">
+                                    <i class="fas fa-bell me-2"></i>Notifications
+                                </a></li>
+                                <li><a class="dropdown-item" href="/creditpoints/creditpoints_home">
+                                    <i class="fas fa-coins me-2"></i>Credit Points
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                             
+                            </ul>
+                        </li>
+                    
+                   
+                    <!-- Plans Tab -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="{{('#')}}" id="plansDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-crown me-1"></i>Plans
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{('/plan/basic_plan')}}?plan=basic">
+                                <i class="fas fa-user me-2"></i>Basic
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{('/plan/silver_plan')}}?plan=silver">
+                                <i class="fas fa-medal me-2"></i>Silver
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{('/plan/gold_plan')}}?plan=gold">
+                                <i class="fas fa-crown me-2"></i>Gold
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{('/plan/platinum_plan')}}?plan=platinum">
+                                <i class="fas fa-gem me-2"></i>Platinum
+                            </a></li>
+                        </ul>
+                    </li>
+                     <!----Plans---->
+                    </li>
+                    
+                </ul>
+                <!-- user signup/login Tab -->
+                <ul class="navbar-nav">
+
+                                {% if session.user_id %}
+                                    <!-- Logged-in User Profile Dropdown -->
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown">
+                                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px; font-size: 14px;">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <span class="d-none d-md-inline">{{ session.username }}</span>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><h6 class="dropdown-header">
+                                                <i class="fas fa-user-circle me-2"></i>{{ session.username }}
+                                                <br><small class="text-muted">Active Subscriber</small>
+                                            </h6></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('user_subscriber_dashboard') }}">
+                                                <i class="fas fa-tachometer-alt me-2"></i>My Dashboard
+                                            </a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('subscriber_profile') }}">
+                                                <i class="fas fa-user-edit me-2"></i>Profile Settings
+                                            </a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('subscriber_services') }}">
+                                                <i class="fas fa-cogs me-2"></i>My Services
+                                            </a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('user_logout') }}">
+                                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                            </a></li>
+                                        </ul>
+                                    </li>
+                                {% else %}
+                                    <!-- Guest Account Dropdown -->
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown">
+                                            <i class="fas fa-user-circle me-1"></i>Account
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-scrollable" style="max-height: 400px; overflow-y: auto;">
+                                            <li><a class="dropdown-item" href="{{ url_for('user_register') }}"><i class="fas fa-user-plus me-2"></i>Sign Up</a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('user_login') }}"><i class="fas fa-sign-in-alt me-2"></i>Login</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><h6 class="dropdown-header">Admin Access</h6></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('admin_login') }}"><i class="fas fa-user-shield me-2"></i>Admin Login</a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('service_registration') }}"><i class="fas fa-user-shield me-2"></i>Add Service</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><h6 class="dropdown-header">Quick Actions</h6></li>
+                                            <li><a class="dropdown-item" href="/product/product_form"><i class="fas fa-tshirt me-2"></i>Add Product</a></li>
+                                            <li><a class="dropdown-item" href="/business/business_register"><i class="fas fa-building me-2"></i>Add Business</a></li>
+                                            <li><a class="dropdown-item" href="/matrimony/matrimony_register_step"><i class="fas fa-heart me-2"></i>Add Matrimony Profile</a></li>
+                                        </ul>
+                                    </li>
+                                {% endif %}
+                    <!-- Public Market with store icon -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{('/public_market/publicmarket_home')}}">
+                            <i class="fas fa-store me-1"></i><span class="hover-text">PM</span></a>
+                    </li>
+                        <!-- Notifications with bell icon only -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{('/notification/notification_home')}}">
+                                <i class="fas fa-bell"></i>
+                            </a>
+                        </li>
+                        <!-- Plus Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="plusDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="fas fa-edit me-2"></i>Post
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('story_home')}}">
+                                    <i class="fas fa-book-open me-2"></i>Story
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('reel_home')}}">
+                                    <i class="fas fa-video me-2"></i>Reel
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('live_home')}}">
+                                    <i class="fas fa-broadcast-tower me-2"></i>Live
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('chat_home')}}">
+                                    <i class="fas fa-comments me-2"></i>Chat
+                                </a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Search icon -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fas fa-search"></i>
+                            </a>
+                        </li>
+                             </ul>
+                 <!-- user signup/login Tab -->
+            </div>
+
+
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-white text-primary p-3 rounded-circle me-3">
+                            <i class="fas fa-concierge-bell fa-2x"></i>
+                        </div>
+                        <span class="category-badge">50+ Services Available</span>
+                    </div>
+                    <h1 class="display-4 fw-bold mb-3">Professional Services Directory</h1>
+                    <p class="lead mb-4">Your one-stop destination for all professional services. From healthcare to finance, education to entertainment - we've got every service you need.</p>
+                    <div class="d-flex gap-3">
+                        <a href="{{ url_for('user_register') }}" class="btn btn-light btn-lg">
+                            <i class="fas fa-rocket me-2"></i>Explore Services
+                        </a>
+                        <a href="#categories" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-th-large me-2"></i>Browse Categories
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <div class="bg-white bg-opacity-10 p-4 rounded-3">
+                        <i class="fas fa-users fa-4x mb-3"></i>
+                        <h4>100,000+ Users</h4>
+                        <p>Trust our platform daily</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Categories -->
+    <section id="categories" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold">Service Categories</h2>
+                <p class="lead text-muted">Comprehensive professional services across multiple industries</p>
+            </div>
+            
+            <!-- Healthcare Services -->
+            <div class="mb-5">
+                <h3 class="mb-4 text-primary"><i class="fas fa-heartbeat me-2"></i>Healthcare Services</h3>
+                <div class="service-grid">
+                    <div class="card service-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary text-white rounded-circle p-2 me-3" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-hospital fa-sm"></i>
+                                </div>
+                                <div>
+                                    <h6 class="card-title mb-0">Hospital Services</h6>
+                                    <small class="text-muted">Service ID: HOS-005</small>
+                                </div>
+                            </div>
+                            <p class="card-text small">Comprehensive hospital management and patient care services.</p>
+                            <a href="{{ url_for('hospital_home') }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Explore
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card service-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-success text-white rounded-circle p-2 me-3" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-stethoscope fa-sm"></i>
+                                </div>
+                                <div>
+                                    <h6 class="card-title mb-0">Medical Services</h6>
+                                    <small class="text-muted">Service ID: MED-006</small>
+                                </div>
+                            </div>
+                            <p class="card-text small">Professional medical consultation and healthcare solutions.</p>
+                            <a href="{{ url_for('medical_home') }}" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Explore
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Services -->
+            <div class="mb-5">
+                <h3 class="mb-4 text-success"><i class="fas fa-dollar-sign me-2"></i>Financial Services</h3>
+                <div class="service-grid">
+                    <div class="card service-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-success text-white rounded-circle p-2 me-3" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-university fa-sm"></i>
+                                </div>
+                                <div>
+                                    <h6 class="card-title mb-0">Banking Services</h6>
+                                    <small class="text-muted">Service ID: BNK-007</small>
+                                </div>
+                            </div>
+                            <p class="card-text small">Complete banking solutions and financial management services.</p>
+                            <a href="{{ url_for('bank_home') }}" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Explore
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card service-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-info text-white rounded-circle p-2 me-3" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-chart-line fa-sm"></i>
+                                </div>
+                                <div>
+                                    <h6 class="card-title mb-0">Investment Services</h6>
+                                    <small class="text-muted">Service ID: INV-008</small>
+                                </div>
+                            </div>
+                            <p class="card-text small">Professional investment advisory and portfolio management.</p>
+                            <a href="{{ url_for('investor_home') }}" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Explore
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education Services -->
+            <div class="mb-5">
+                <h3 class="mb-4 text-info"><i class="fas fa-graduation-cap me-2"></i>Education Services</h3>
+                <div class="service-grid">
+                    <div class="card service-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-info text-white rounded-circle p-2 me-3" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-book fa-sm"></i>
+                                </div>
+                                <div>
+                                    <h6 class="card-title mb-0">Education Services</h6>
+                                    <small class="text-muted">Service ID: EDU-009</small>
+                                </div>
+                            </div>
+                            <p class="card-text small">Comprehensive educational programs and learning solutions.</p>
+                            <a href="{{ url_for('education_home') }}" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Explore
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card service-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-warning text-white rounded-circle p-2 me-3" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-briefcase fa-sm"></i>
+                                </div>
+                                <div>
+                                    <h6 class="card-title mb-0">Career Services</h6>
+                                    <small class="text-muted">Service ID: CAR-010</small>
+                                </div>
+                            </div>
+                            <p class="card-text small">Professional career counseling and job placement services.</p>
+                            <a href="{{ url_for('career_home') }}" class="btn btn-outline-warning btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Explore
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technology Services -->
+            <div class="mb-5">
+                <h3 class="mb-4 text-warning"><i class="fas fa-laptop-code me-2"></i>Technology Services</h3>
+                <div class="service-grid">
+                    <div class="card service-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary text-white rounded-circle p-2 me-3" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-mobile-alt fa-sm"></i>
+                                </div>
+                                <div>
+                                    <h6 class="card-title mb-0">App Development</h6>
+                                    <small class="text-muted">Service ID: APP-002</small>
+                                </div>
+                            </div>
+                            <p class="card-text small">Mobile and web application development services.</p>
+                            <a href="{{ url_for('app_home') }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Explore
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card service-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-danger text-white rounded-circle p-2 me-3" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-robot fa-sm"></i>
+                                </div>
+                                <div>
+                                    <h6 class="card-title mb-0">AI Services</h6>
+                                    <small class="text-muted">Service ID: AI-011</small>
+                                </div>
+                            </div>
+                            <p class="card-text small">Artificial intelligence and machine learning solutions.</p>
+                            <a href="{{ url_for('ai_home') }}" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Explore
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Legal Services -->
+            <div class="mb-5">
+                <h3 class="mb-4 text-danger"><i class="fas fa-gavel me-2"></i>Legal Services</h3>
+                <div class="service-grid">
+                    <div class="card service-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-danger text-white rounded-circle p-2 me-3" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-balance-scale fa-sm"></i>
+                                </div>
+                                <div>
+                                    <h6 class="card-title mb-0">Legal Services</h6>
+                                    <small class="text-muted">Service ID: LEG-012</small>
+                                </div>
+                            </div>
+                            <p class="card-text small">Professional legal consultation and advisory services.</p>
+                            <a href="{{ url_for('legal_home') }}" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Explore
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card service-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-secondary text-white rounded-circle p-2 me-3" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-calculator fa-sm"></i>
+                                </div>
+                                <div>
+                                    <h6 class="card-title mb-0">CA Services</h6>
+                                    <small class="text-muted">Service ID: CA-013</small>
+                                </div>
+                            </div>
+                            <p class="card-text small">Chartered accountant services and tax consultation.</p>
+                            <a href="{{ url_for('ca_home') }}" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Explore
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Stats -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="card border-0 bg-transparent">
+                        <div class="card-body">
+                            <i class="fas fa-concierge-bell fa-3x text-primary mb-3"></i>
+                            <h3 class="fw-bold">50+</h3>
+                            <p class="text-muted">Services Available</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 bg-transparent">
+                        <div class="card-body">
+                            <i class="fas fa-users fa-3x text-success mb-3"></i>
+                            <h3 class="fw-bold">100K+</h3>
+                            <p class="text-muted">Active Users</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 bg-transparent">
+                        <div class="card-body">
+                            <i class="fas fa-star fa-3x text-warning mb-3"></i>
+                            <h3 class="fw-bold">4.9/5</h3>
+                            <p class="text-muted">User Rating</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 bg-transparent">
+                        <div class="card-body">
+                            <i class="fas fa-clock fa-3x text-info mb-3"></i>
+                            <h3 class="fw-bold">24/7</h3>
+                            <p class="text-muted">Support Available</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-5 bg-primary text-white">
+        <div class="container text-center">
+            <h2 class="fw-bold mb-3">Ready to Access Professional Services?</h2>
+            <p class="lead mb-4">Join our platform and get access to all professional services in one place.</p>
+            <a href="{{ url_for('user_register') }}" class="btn btn-light btn-lg">
+                <i class="fas fa-rocket me-2"></i>Get Started Now
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Professional Services Hub</h5>
+                    <p>Your comprehensive service directory platform.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p>&copy; 2025 Professional Services Hub. All rights reserved.</p>
+                    <small>Contact: services@serviceshub.com | +1-800-SERVICES</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!-- Consistent Product View Button Component -->
+<!-- Usage: Include this template and pass product object -->
+
+<div class="product-view-section">
+    <a href="{{ url_for('product.view_product', product_id=product.id) }}" 
+       class="btn btn-primary product-view-btn" 
+       title="View {{ product.name }}">
+        <i class="fas fa-eye me-2"></i>View Product
+    </a>
+</div>
+
+<style>
+.product-view-btn {
+    min-width: 120px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.product-view-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+.product-view-section {
+    margin: 10px 0;
+}
+</style>

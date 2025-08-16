@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product - Community Trading Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 80px 0;
+        }
+        .market-card {
+            transition: transform 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .market-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .service-badge {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .public-stats {
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 100%);
+            border-radius: 15px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="{{ url_for('index') }}">
+                    <i class="fas fa-shopping-cart me-2"></i>Product Hub
+                </a>
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                >
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <!-- Home with icon only -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('product.product_home') }}">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </li>
+
+                        <!-- Product Service Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="productDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-box me-1"></i>Product
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ url_for('product.product_home') }}">
+                                    <i class="fas fa-store me-2"></i>Product Market
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('product.add_product') }}">
+                                    <i class="fas fa-plus me-2"></i>Add Product
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('product.all_products') }}">
+                                    <i class="fas fa-list me-2"></i>All Products
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('product.all_products') }}">
+                                    <i class="fas fa-info-circle me-2"></i>Product Details
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('product.product_plan') }}">
+                                    <i class="fas fa-chart-line me-2"></i>Product Plan
+                                </a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Partners Dropdown -->
+
+                        <!-- Services Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-cog me-1"></i>Services
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-scrollable" style="max-height: 400px; overflow-y: auto;">
+                                <!-- Core Business Services -->
+                                <li><h6 class="dropdown-header"><i class="fas fa-cog me-1"></i>All Services</h6></li>
+
+
+                                <li><a class="dropdown-item bg-primary text-white" href="/service/service_home">
+                                    <i class="fas fa-th-large me-2"></i><strong>View All Services</strong>
+                                </a></li>
+
+
+                                <li><h6 class="dropdown-header"><i class="fas fa-building me-1"></i>Business Services</h6></li>
+                                <!-- Business service DISCONNECTED -->
+                                <li><a class="dropdown-item" href="{{ url_for('product.product_home') }}">
+                                    <i class="fas fa-store me-2"></i>Product Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/app_home">
+                                    <i class="fas fa-mobile-alt me-2"></i>Apps Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('delivery_home') }}">
+                                    <i class="fas fa-biking me-2"></i>Delivery Rider Hub
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+
+                                <!-- Healthcare & Medical -->
+                                <li><h6 class="dropdown-header"><i class="fas fa-heartbeat me-1"></i>Healthcare & Medical</h6></li>
+                                <li><a class="dropdown-item" href="/hospital/hospital_home">
+                                    <i class="fas fa-hospital me-2"></i>Hospital Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/medical/medical_home">
+                                    <i class="fas fa-stethoscope me-2"></i>Medical Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/matrimony/matrimony_home">
+                                    <i class="fas fa-heart me-2"></i>Matrimony Hub
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+
+                                <!-- Financial Services -->
+                                <li><h6 class="dropdown-header"><i class="fas fa-chart-line me-1"></i>Financial Services</h6></li>
+                                <li><a class="dropdown-item" href="/bank/bank_home">
+                                    <i class="fas fa-university me-2"></i>Banking Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/finance/finance_home">
+                                    <i class="fas fa-coins me-2"></i>Finance Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/investor/investor_home">
+                                    <i class="fas fa-chart-line me-2"></i>Investor Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/share_market/sharemarket_home">
+                                    <i class="fas fa-chart-trending-up me-2"></i>Share Market Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/stock_exchange/stockexchange_home">
+                                    <i class="fas fa-exchange-alt me-2"></i>Stock Exchange Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/currancy/finance_home">
+                                    <i class="fas fa-dollar-sign me-2"></i>Currency Exchange Hub
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+
+                                <!-- Education & Career -->
+                                <li><h6 class="dropdown-header"><i class="fas fa-graduation-cap me-1"></i>Education & Career</h6></li>
+                                <li><a class="dropdown-item" href="/education/education_home">
+                                    <i class="fas fa-graduation-cap me-2"></i>Education Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/career/career_home">
+                                    <i class="fas fa-briefcase me-2"></i>Career Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/job/job_home">
+                                    <i class="fas fa-users me-2"></i>Job Portal Hub
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+
+                                <!-- Technology & Innovation -->
+                                <li><h6 class="dropdown-header"><i class="fas fa-robot me-1"></i>Technology & Innovation</h6></li>
+                                <li><a class="dropdown-item" href="/console/console_home">
+                                    <i class="fas fa-terminal me-2"></i>Console Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/artificial_intelligence/ai_home">
+                                    <i class="fas fa-robot me-2"></i>AI Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/brainlo/brainlo_home">
+                                    <i class="fas fa-brain me-2"></i>Brainlo Payment Hub
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+
+                                <!-- Communication & Social -->
+                                <li><h6 class="dropdown-header"><i class="fas fa-comments me-1"></i>Communication & Social</h6></li>
+                                <li><a class="dropdown-item" href="/chat/chat_home">
+                                    <i class="fas fa-comments me-2"></i>Chat Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/social/social_home">
+                                    <i class="fas fa-share-alt me-2"></i>Social Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/email/email_home">
+                                    <i class="fas fa-envelope me-2"></i>Email Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/sms/sms_home">
+                                    <i class="fas fa-sms me-2"></i>SMS Hub
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+
+                                <!-- News & Content -->
+                                <li><h6 class="dropdown-header"><i class="fas fa-newspaper me-1"></i>News & Content</h6></li>
+                                <li><a class="dropdown-item" href="/news/news_home">
+                                    <i class="fas fa-newspaper me-2"></i>News Portal Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/blog/blog_home">
+                                    <i class="fas fa-blog me-2"></i>Blog Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/post/post_home">
+                                    <i class="fas fa-edit me-2"></i>Post Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/story/story_home">
+                                    <i class="fas fa-book me-2"></i>Story Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/reel/reel_home">
+                                    <i class="fas fa-video me-2"></i>Reel Hub
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+
+                                <!-- Legal & Government -->
+                                <li><h6 class="dropdown-header"><i class="fas fa-gavel me-1"></i>Legal & Government</h6></li>
+                                <li><a class="dropdown-item" href="/legal/legal_home">
+                                    <i class="fas fa-gavel me-2"></i>Legal Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/chartered_accountant/ca_home">
+                                    <i class="fas fa-calculator me-2"></i>CA Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/government/govt_home">
+                                    <i class="fas fa-landmark me-2"></i>Government Services
+                                </a></li>
+                                <li><a class="dropdown-item" href="/police/police_home">
+                                    <i class="fas fa-shield-alt me-2"></i>Police Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/politics/politics_home">
+                                    <i class="fas fa-flag me-2"></i>Politics Hub
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+
+                                <!-- Marketing & Business Growth -->
+                                <li><h6 class="dropdown-header"><i class="fas fa-bullhorn me-1"></i>Marketing & Growth</h6></li>
+                                <li><a class="dropdown-item" href="/marketing/marketing_home">
+                                    <i class="fas fa-bullhorn me-2"></i>Marketing Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/advertise/advertise_home">
+                                    <i class="fas fa-ad me-2"></i>Advertise Hub
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+
+                                <!-- Property & Real Estate -->
+                                <li><h6 class="dropdown-header"><i class="fas fa-home me-1"></i>Property & Real Estate</h6></li>
+                                <li><a class="dropdown-item" href="/property/property_home">
+                                    <i class="fas fa-home me-2"></i>Property Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/public_market/publicmarket_home">
+                                    <i class="fas fa-store me-2"></i>Public Market Hub
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+
+                                <!-- Specialized Services -->
+                                <li><h6 class="dropdown-header"><i class="fas fa-tools me-1"></i>Specialized Services</h6></li>
+                                <li><a class="dropdown-item" href="/agriculture/agriculture_home">
+                                    <i class="fas fa-leaf me-2"></i>Agriculture Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/sport/sport_home">
+                                    <i class="fas fa-trophy me-2"></i>Sports Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/event/event_home">
+                                    <i class="fas fa-calendar-alt me-2"></i>Event Management Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/language/language_home">
+                                    <i class="fas fa-language me-2"></i>Language Hub
+                                </a></li>
+                                <li><a class="dropdown-item" href="/live/live_home">
+                                    <i class="fas fa-broadcast-tower me-2"></i>Live Hub
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+
+                                <!-- Support & Management -->
+                                <li><h6 class="dropdown-header"><i class="fas fa-cogs me-1"></i>Support & Management</h6></li>
+                                <li><a class="dropdown-item" href="/help_support/help_support_home">
+                                    <i class="fas fa-question-circle me-2"></i>Help & Support
+                                </a></li>
+                                <li><a class="dropdown-item" href="/settings/settings_home">
+                                    <i class="fas fa-cog me-2"></i>Settings
+                                </a></li>
+                                <li><a class="dropdown-item" href="/notification/notification_home">
+                                    <i class="fas fa-bell me-2"></i>Notifications
+                                </a></li>
+                                <li><a class="dropdown-item" href="/creditpoints/finance_home">
+                                    <i class="fas fa-coins me-2"></i>Credit Points
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+
+                                <!-- View All Services -->
+                                <li><a class="dropdown-item bg-primary text-white" href="/service/service_home">
+                                    <i class="fas fa-th-large me-2"></i><strong>View All Services</strong>
+                                </a></li>
+                            </ul>
+                        </li>
+
+
+
+                        <!-- Plans Tab -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="{{('#')}}" id="plansDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-crown me-1"></i>Plans
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{('/plan/basic_plan')}}?plan=basic">
+                                    <i class="fas fa-user me-2"></i>Basic
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{('/plan/silver_plan')}}?plan=silver">
+                                    <i class="fas fa-medal me-2"></i>Silver
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{('/plan/gold_plan')}}?plan=gold">
+                                    <i class="fas fa-crown me-2"></i>Gold
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{('/plan/platinum_plan')}}?plan=platinum">
+                                    <i class="fas fa-gem me-2"></i>Platinum
+                                </a></li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                    <!-- Plans Tab -->
+        <!-- user signup/login Tab -->
+    <!-- Right side navigation -->
+                <ul class="navbar-nav">
+                        {% if session.user_id %}
+                            <!-- Logged-in User Profile Dropdown -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown">
+                                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px; font-size: 14px;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <span class="d-none d-md-inline">{{ session.username }}</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><h6 class="dropdown-header">
+                                        <i class="fas fa-user-circle me-2"></i>{{ session.username }}
+                                        <br><small class="text-muted">Active Subscriber</small>
+                                    </h6></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('user_subscriber_dashboard') }}">
+                                        <i class="fas fa-tachometer-alt me-2"></i>My Dashboard
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('subscriber_profile') }}">
+                                        <i class="fas fa-user-edit me-2"></i>Profile Settings
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('subscriber_services') }}">
+                                        <i class="fas fa-cogs me-2"></i>My Services
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('user_logout') }}">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <!-- Guest Account Dropdown -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle me-1"></i>Account
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-scrollable" style="max-height: 400px; overflow-y: auto;">
+                                    <li><a class="dropdown-item" href="{{ url_for('user_register') }}"><i class="fas fa-user-plus me-2"></i>Sign Up</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('user_login') }}"><i class="fas fa-sign-in-alt me-2"></i>Login</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><h6 class="dropdown-header">Admin Access</h6></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('admin_login') }}"><i class="fas fa-user-shield me-2"></i>Admin Login</a></li>
+                                    <li><a class="dropdown-item" href="/service/service_registertion"><i class="fas fa-cog me-2"></i>Add Service</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><h6 class="dropdown-header">Quick Actions</h6></li>
+                                    <li><a class="dropdown-item" href="/product/product_register"><i class="fas fa-tshirt me-2"></i>Add Product</a></li>
+                                    <li><a class="dropdown-item" href="/business/business_register"><i class="fas fa-building me-2"></i>Add Business</a></li>
+                                    <li><a class="dropdown-item" href="/matrimony/matrimony_register_step"><i class="fas fa-heart me-2"></i>Add Matrimony Profile</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+            <!-- user signup/login Tab -->
+
+                    <!-- Public Market with store icon -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{('/public_market/publicmarket_home')}}">
+                            <i class="fas fa-store me-1"></i><span class="hover-text">PM</span></a>
+                    </li>
+               <!----Cart---->
+                    {% if current_user %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('product.view_cart') }}">
+                                <i class="fas fa-shopping-cart"></i> Cart
+                            </a>
+                        </li>
+                    {% endif %}
+                    <!---Cart---->
+
+                        <!-- Notifications with bell icon only -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{('/notification/notification_home')}}">
+                                <i class="fas fa-bell"></i>
+                            </a>
+                        </li>
+                        <!-- Plus Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="plusDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="fas fa-edit me-2"></i>Post
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('story_home')}}">
+                                    <i class="fas fa-book-open me-2"></i>Story
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('reel_home')}}">
+                                    <i class="fas fa-video me-2"></i>Reel
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('live_home')}}">
+                                    <i class="fas fa-broadcast-tower me-2"></i>Live
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('chat_home')}}">
+                                    <i class="fas fa-comments me-2"></i>Chat
+                                </a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Search icon -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fas fa-search"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+     <!-- Navigation --> <!-- Navigation -->
+    <!-- Hero Section -->
+   
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-box me-2"></i>{{ title }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                {{ form.name.label(class="form-label") }}
+                                {{ form.name(class="form-control") }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.name.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                {{ form.category.label(class="form-label") }}
+                                {{ form.category(class="form-select") }}
+                                {% if form.category.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.category.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label") }}
+                        {{ form.description(class="form-control", rows="4") }}
+                        {% if form.description.errors %}
+                            <div class="text-danger">
+                                {% for error in form.description.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                {{ form.price.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">₹</span>
+                                    {{ form.price(class="form-control") }}
+                                </div>
+                                {% if form.price.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.price.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                {{ form.quantity.label(class="form-label") }}
+                                {{ form.quantity(class="form-control") }}
+                                {% if form.quantity.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.quantity.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                {{ form.weight.label(class="form-label") }}
+                                <div class="input-group">
+                                    {{ form.weight(class="form-control") }}
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                                {% if form.weight.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.weight.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.dimensions.label(class="form-label") }}
+                                {{ form.dimensions(class="form-control", placeholder="L x W x H (cm)") }}
+                                {% if form.dimensions.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.dimensions.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.main_image.label(class="form-label") }}
+                                {{ form.main_image(class="form-control") }}
+                                <small class="form-text text-muted">Upload product image (optional)</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            {{ form.featured(class="form-check-input") }}
+                            {{ form.featured.label(class="form-check-label") }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Save Product
+                        </button>
+                        <a href="{{ url_for('product.all_products') }}" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-store me-2"></i>Public Market</h5>
+                    <p>Community marketplace for local trading and commerce</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-light">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

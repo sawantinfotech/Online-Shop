@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Management - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .admin-sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .admin-nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            display: block;
+            text-decoration: none;
+        }
+        
+        .admin-nav-link:hover,
+        .admin-nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .admin-profile {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .admin-avatar {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Admin Sidebar (same as other admin pages) -->
+            <div class="col-md-3 col-lg-2 admin-sidebar p-0">
+                <div class="p-3">
+                    <!-- Admin Profile -->
+                    <div class="admin-profile text-center">
+                        <div class="admin-avatar mx-auto mb-3">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h5 class="mb-1">{{ session.admin_username or 'Admin' }}</h5>
+                        <small class="text-light">System Administrator</small>
+                    </div>
+                    
+                    <hr class="my-3 text-light">
+                    <!-- Navigation -->
+                    <nav class="nav flex-column">
+                        <ul class="nav column-scrollable" style="max-height: 500px; overflow-y: auto;">
+                        <a href="{{ url_for('admin_home') }}" class="admin-nav-link active">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+
+                        <a href="{{ url_for('admin_profile') }}" class="admin-nav-link">
+                            <i class="fas fa-user-cog me-2"></i>Profile
+                        </a>
+                        <a href="{{ url_for('all_service') }}" class="admin-nav-link">
+                            <i class="fas fa-cogs me-2"></i>All Services
+                        </a>
+                        <a href="{{ url_for('service_registration') }}" class="admin-nav-link">
+                            <i class="fas fa-plus me-2"></i>Add Service
+                        </a>
+                        <a href="{{ url_for('service_home_page') }}" class="admin-nav-link">
+                            <i class="fas fa-eye me-2"></i>View Public
+                        </a>
+
+                             <hr class="my-3 text-light">
+                        <a href="{{ url_for('admin_accounts') }}" class="admin-nav-link">
+                            <i class="fas fa-user-circle me-2"></i>Accounts
+                        </a>
+                        <a href="{{ url_for('all_users') }}" class="admin-nav-link">
+                            <i class="fas fa-users me-2"></i>Users
+                        </a>
+                        <a href="{{ url_for('admin_customers') }}" class="admin-nav-link">
+                            <i class="fas fa-user-friends me-2"></i>Customers
+                        </a>
+                        <a href="{{ url_for('order_home') }}" class="admin-nav-link">
+                            <i class="fas fa-shopping-cart me-2"></i>Orders
+                        </a>
+                        <a href="{{ url_for('admin_plans') }}" class="admin-nav-link">
+                            <i class="fas fa-crown me-2"></i>Plans
+                        </a>
+                            <a href="{{ url_for('admin_payment') }}" class="admin-nav-link">
+                                <i class="fas fa-crown me-2"></i>Payments
+                            </a>
+
+                        <a href="{{ url_for('admin_offers') }}" class="admin-nav-link">
+                            <i class="fas fa-tags me-2"></i>Offers
+                        </a>
+                            <a href="{{ url_for('admin_notifications') }}" class="admin-nav-link">
+                                <i class="fas fa-bell me-2"></i>Notifications
+                            </a>
+                        <a href="{{ url_for('admin_sms') }}" class="admin-nav-link">
+                            <i class="fas fa-sms me-2"></i>SMS
+                        </a>
+                        <a href="{{ url_for('admin_email') }}" class="admin-nav-link">
+                            <i class="fas fa-envelope me-2"></i>Email
+                        </a>
+
+                        <a href="{{ url_for('admin_office') }}" class="admin-nav-link">
+                            <i class="fas fa-briefcase me-2"></i>Office
+                        </a>
+                        <a href="{{ url_for('admin_contact') }}" class="admin-nav-link">
+                            <i class="fas fa-address-book me-2"></i>Contact
+                        </a>
+                            <a href="{{ url_for('admin_seo') }}" class="admin-nav-link">
+                                <i class="fas fa-address-book me-2"></i>Site Map SEO
+                            </a>
+                        </ul>
+
+                        <hr class="my-3 text-light">
+
+                        <a href="{{ url_for('admin_logout') }}" class="admin-nav-link">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                    </nav>
+                    
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10">
+                <div class="p-4">
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="mb-1">
+                                <i class="fas fa-sms text-primary me-2"></i>SMS Management
+                            </h2>
+                            <p class="text-muted mb-0">Manage SMS services and send bulk messages</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-1"></i>Send SMS
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- SMS Statistics -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h3 class="text-primary">1,247</h3>
+                                    <p class="mb-0">SMS Sent Today</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h3 class="text-success">98.5%</h3>
+                                    <p class="mb-0">Delivery Rate</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h3 class="text-info">₹2,450</h3>
+                                    <p class="mb-0">Credits Remaining</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h3 class="text-warning">45</h3>
+                                    <p class="mb-0">Failed Messages</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Send SMS Form -->
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-paper-plane me-2"></i>Send SMS
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="recipients" class="form-label">Recipients</label>
+                                            <select class="form-select" id="recipients">
+                                                <option value="all">All Users</option>
+                                                <option value="subscribers">Active Subscribers</option>
+                                                <option value="customers">Customers Only</option>
+                                                <option value="custom">Custom List</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="smsMessage" class="form-label">Message</label>
+                                            <textarea class="form-control" id="smsMessage" rows="4" placeholder="Enter your SMS message here..." maxlength="160"></textarea>
+                                            <div class="form-text">
+                                                <span id="charCount">0</span>/160 characters
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="scheduleTime" class="form-label">Schedule (Optional)</label>
+                                                <input type="datetime-local" class="form-control" id="scheduleTime">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="sender" class="form-label">Sender ID</label>
+                                                <select class="form-select" id="sender">
+                                                    <option value="MOBILE">MOBILE</option>
+                                                    <option value="SYSTEM">SYSTEM</option>
+                                                    <option value="ALERT">ALERT</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <button type="button" class="btn btn-outline-secondary me-2">Preview</button>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-paper-plane me-1"></i>Send Now
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- SMS Templates -->
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-file-alt me-2"></i>SMS Templates
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-outline-primary btn-sm text-start">
+                                            <strong>Welcome Message</strong><br>
+                                            <small class="text-muted">Welcome to our platform!</small>
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm text-start">
+                                            <strong>Order Confirmation</strong><br>
+                                            <small class="text-muted">Your order has been confirmed</small>
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm text-start">
+                                            <strong>Payment Reminder</strong><br>
+                                            <small class="text-muted">Payment due reminder</small>
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm text-start">
+                                            <strong>Service Update</strong><br>
+                                            <small class="text-muted">Service status update</small>
+                                        </button>
+                                    </div>
+                                    
+                                    <hr class="my-3">
+                                    
+                                    <button class="btn btn-success btn-sm w-100">
+                                        <i class="fas fa-plus me-1"></i>Create Template
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Character counter for SMS
+        document.getElementById('smsMessage').addEventListener('input', function() {
+            const charCount = this.value.length;
+            document.getElementById('charCount').textContent = charCount;
+            
+            if (charCount > 160) {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+            }
+        });
+    </script>
+</body>
+</html>

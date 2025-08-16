@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Platform - Share Your Stories</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-blog me-2"></i>Blog Hub
+            </a>
+          
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <!-- Home with icon only -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">
+                            <i class="fas fa-home"></i>Home
+                        </a>
+                    </li>
+
+                    <!-- Services Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-cog me-1"></i>Services
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-scrollable" style="max-height: 400px; overflow-y: auto;">
+                            <!-- Core Business Services -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-building me-1"></i>Business Services</h6></li>
+                            <li><a class="dropdown-item" href="/business/business_home">
+                                <i class="fas fa-building me-2"></i>Business Registration
+                            </a></li>
+                            <li><a class="dropdown-item" href="/app/app_home">
+                                <i class="fas fa-mobile-alt me-2"></i>App Marketplace
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('delivery_home') }}">
+                                <i class="fas fa-truck me-2"></i>Delivery Partner
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Healthcare & Medical -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-heartbeat me-1"></i>Healthcare & Medical</h6></li>
+                            <li><a class="dropdown-item" href="/hospital/hospital_home">
+                                <i class="fas fa-hospital me-2"></i>Hospital Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/medical/medical_home">
+                                <i class="fas fa-stethoscope me-2"></i>Medical Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/matrimony/matrimony_home">
+                                <i class="fas fa-heart me-2"></i>Matrimony Services
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Financial Services -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-chart-line me-1"></i>Financial Services</h6></li>
+                            <li><a class="dropdown-item" href="/bank/bank_home">
+                                <i class="fas fa-university me-2"></i>Banking Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/finance/finance_home">
+                                <i class="fas fa-coins me-2"></i>Finance Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/investor/investor_home">
+                                <i class="fas fa-chart-line me-2"></i>Investor Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/share_market/sharemarket_home">
+                                <i class="fas fa-chart-trending-up me-2"></i>Share Market
+                            </a></li>
+                            <li><a class="dropdown-item" href="/stock_exchange/stockexchange_home">
+                                <i class="fas fa-exchange-alt me-2"></i>Stock Exchange
+                            </a></li>
+                            <li><a class="dropdown-item" href="/currancy/currancy_home">
+                                <i class="fas fa-dollar-sign me-2"></i>Currency Exchange
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Education & Career -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-graduation-cap me-1"></i>Education & Career</h6></li>
+                            <li><a class="dropdown-item" href="/education/education_home">
+                                <i class="fas fa-graduation-cap me-2"></i>Education Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/career/career_home">
+                                <i class="fas fa-briefcase me-2"></i>Career Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/job/job_home">
+                                <i class="fas fa-users me-2"></i>Job Portal
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Technology & Innovation -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-robot me-1"></i>Technology & Innovation</h6></li>
+                            <li><a class="dropdown-item" href="/artificial_intelligence/ai_home">
+                                <i class="fas fa-robot me-2"></i>AI Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/brainlo/brainlo_home">
+                                <i class="fas fa-brain me-2"></i>Brainlo Platform
+                            </a></li>
+                            <li><a class="dropdown-item" href="/console/console_home">
+                                <i class="fas fa-terminal me-2"></i>Console Access
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Communication & Social -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-comments me-1"></i>Communication & Social</h6></li>
+                            <li><a class="dropdown-item" href="/chat/chat_home">
+                                <i class="fas fa-comments me-2"></i>Chat Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/social/social_home">
+                                <i class="fas fa-share-alt me-2"></i>Social Platform
+                            </a></li>
+                            <li><a class="dropdown-item" href="/email/email_home">
+                                <i class="fas fa-envelope me-2"></i>Email Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/sms/sms_home">
+                                <i class="fas fa-sms me-2"></i>SMS Services
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- News & Content -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-newspaper me-1"></i>News & Content</h6></li>
+                            <li><a class="dropdown-item" href="/news/news_home">
+                                <i class="fas fa-newspaper me-2"></i>News Portal
+                            </a></li>
+                            <li><a class="dropdown-item" href="/blog/blog_home">
+                                <i class="fas fa-blog me-2"></i>Blog Platform
+                            </a></li>
+                            <li><a class="dropdown-item" href="/post/post_home">
+                                <i class="fas fa-edit me-2"></i>Post Management
+                            </a></li>
+                            <li><a class="dropdown-item" href="/story/story_home">
+                                <i class="fas fa-book me-2"></i>Story Platform
+                            </a></li>
+                            <li><a class="dropdown-item" href="/reel/reel_home">
+                                <i class="fas fa-video me-2"></i>Reel Services
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Legal & Government -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-gavel me-1"></i>Legal & Government</h6></li>
+                            <li><a class="dropdown-item" href="/legal/legal_home">
+                                <i class="fas fa-gavel me-2"></i>Legal Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/chartered_accountant/ca_home">
+                                <i class="fas fa-calculator me-2"></i>CA Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/government/govt_home">
+                                <i class="fas fa-landmark me-2"></i>Government Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/police/police_home">
+                                <i class="fas fa-shield-alt me-2"></i>Police Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/politics/politics_home">
+                                <i class="fas fa-flag me-2"></i>Politics Hub
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Marketing & Business Growth -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-bullhorn me-1"></i>Marketing & Growth</h6></li>
+                            <li><a class="dropdown-item" href="/marketing/marketing_home">
+                                <i class="fas fa-bullhorn me-2"></i>Marketing Hub
+                            </a></li>
+                            <li><a class="dropdown-item" href="/advertise/advertise_home">
+                                <i class="fas fa-ad me-2"></i>Advertise Services
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Property & Real Estate -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-home me-1"></i>Property & Real Estate</h6></li>
+                            <li><a class="dropdown-item" href="/property/property_home">
+                                <i class="fas fa-home me-2"></i>Property Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/public_market/publicmarket_home">
+                                <i class="fas fa-store me-2"></i>Public Market
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Specialized Services -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-tools me-1"></i>Specialized Services</h6></li>
+                            <li><a class="dropdown-item" href="/agriculture/agriculture_home">
+                                <i class="fas fa-leaf me-2"></i>Agriculture Hub
+                            </a></li>
+                            <li><a class="dropdown-item" href="/sport/sport_home">
+                                <i class="fas fa-trophy me-2"></i>Sports Platform
+                            </a></li>
+                            <li><a class="dropdown-item" href="/event/event_home">
+                                <i class="fas fa-calendar-alt me-2"></i>Event Management
+                            </a></li>
+                            <li><a class="dropdown-item" href="/language/language_home">
+                                <i class="fas fa-language me-2"></i>Language Services
+                            </a></li>
+                            <li><a class="dropdown-item" href="/live/live_home">
+                                <i class="fas fa-broadcast-tower me-2"></i>Live Services
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Support & Management -->
+                            <li><h6 class="dropdown-header"><i class="fas fa-cogs me-1"></i>Support & Management</h6></li>
+                            <li><a class="dropdown-item" href="/help_support/help_support_home">
+                                <i class="fas fa-question-circle me-2"></i>Help & Support
+                            </a></li>
+                            <li><a class="dropdown-item" href="/settings/settings_home">
+                                <i class="fas fa-cog me-2"></i>Settings
+                            </a></li>
+                            <li><a class="dropdown-item" href="/notification/notification_home">
+                                <i class="fas fa-bell me-2"></i>Notifications
+                            </a></li>
+                            <li><a class="dropdown-item" href="/creditpoints/creditpoints_home">
+                                <i class="fas fa-coins me-2"></i>Credit Points
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- View All Services -->
+                            <li><a class="dropdown-item bg-primary text-white" href="/service/service_home">
+                                <i class="fas fa-th-large me-2"></i><strong>View All Services</strong>
+                            </a></li>
+                                </ul>
+                        <!-- Account Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1"></i>Account
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-scrollable" style="max-height: 300px; overflow-y: auto;">
+                                <li><a class="dropdown-item" href="{{ url_for('user_register') }}"><i class="fas fa-user-plus me-2"></i>Sign Up / Login</a></li>
+                                <li><a class="dropdown-item" href="/admin/admin_login"><i class="fas fa-user-shield me-2"></i>Admin Panel</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header">Add Listing Forms</h6></li>
+                                <li><a class="dropdown-item" href="{{('/post/add_post')}}"><i class="fas fa-box me-2"></i>Add Post</a></li>
+                                <li><a class="dropdown-item" href="{{('/products/product_form')}}"><i class="fas fa-box me-2"></i>Add Product</a></li>
+
+                                <li><a class="dropdown-item" href="/business/business_register"><i class="fas fa-building me-2"></i>Add Business</a></li>
+                                <li><a class="dropdown-item" href="{{('/apps/app_registration')}}"><i class="fas fa-mobile-alt me-2"></i>Add App</a></li>
+                                <li><a class="dropdown-item" href="{{('/delivery/delivery_application')}}"><i class="fas fa-shipping-fast me-2"></i>Add Delivery Partner</a></li>
+                                <li><a class="dropdown-item" href="{{('/matrimony/matrimony_register_step')}}"><i class="fas fa-heart me-2"></i>Add Matrimony Profile</a></li>
+                                <li><a class="dropdown-item" href="{{('/offer/add_offer')}}"><i class="fas fa-tags me-2"></i>Add Offers</a></li>
+                                <li><a class="dropdown-item" href="{{('/advertise/add_advertise')}}"><i class="fas fa-bullhorn me-2"></i>Add Advertise</a></li>
+                                <li><a class="dropdown-item" href="{{('/event/add_event')}}"><i class="fas fa-calendar me-2"></i>Add Event</a></li>
+                                <li><a class="dropdown-item" href="{{('/news/add_news')}}"><i class="fas fa-newspaper me-2"></i>Add News</a></li>
+                            </ul>
+                        </li>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user_login') }}">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user_register') }}">
+                            <i class="fas fa-user-plus me-1"></i>Register
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+
+            
+        </div>
+    </nav>
+
+    
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="hero-section bg-secondary text-white p-5 text-center">
+                    <i class="fas fa-blog fa-4x mb-3"></i>
+                    <h1 class="display-4">Blog Platform</h1>
+                    <p class="lead">Write, share, and discover amazing stories</p>
+                    <div class="mt-4">
+                        <a href="/user_login" class="btn btn-light btn-lg me-3">Start Writing</a>
+                        <a href="/user_login" class="btn btn-outline-light btn-lg">Read Blogs</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row py-5">
+            <div class="col-md-4 text-center">
+                <i class="fas fa-pen-fancy fa-3x text-secondary mb-3"></i>
+                <h4>Rich Editor</h4>
+                <p>Advanced writing tools with formatting options</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-users fa-3x text-secondary mb-3"></i>
+                <h4>Community</h4>
+                <p>Connect with writers and readers worldwide</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-chart-line fa-3x text-secondary mb-3"></i>
+                <h4>Analytics</h4>
+                <p>Track your blog performance and engagement</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

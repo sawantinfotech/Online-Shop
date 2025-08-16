@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>All Users - Mobile Shop</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .user-card {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    .status-online {
+      color: green;
+      font-weight: bold;
+    }
+    .status-offline {
+      color: gray;
+      font-weight: bold;
+    }
+    .follow-btn {
+      margin-top: 10px;
+    }
+    .sidebar {
+      border-right: 1px solid #ccc;
+    }
+    footer {
+      background-color: #f8f9fa;
+      padding: 40px 0;
+      margin-top: 40px;
+    }
+    
+    /* Services Panel Styles */
+    .services-panel {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    
+    .services-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .services-header:hover {
+      background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    }
+    
+    .service-main-icon {
+      font-size: 20px;
+      transition: all 0.3s ease;
+    }
+    
+    .service-title {
+      font-weight: 600;
+      font-size: 16px;
+    }
+    
+    .toggle-icon {
+      transition: all 0.3s ease;
+      font-size: 16px;
+    }
+    
+    .services-list {
+      max-height: 400px;
+      overflow-y: auto;
+      transition: all 0.3s ease;
+    }
+    
+    .service-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .service-item:hover {
+      background-color: #f8f9fa;
+      padding-left: 20px;
+    }
+    
+    .service-item:last-child {
+      border-bottom: none;
+    }
+    
+    .service-icon {
+      width: 20px;
+      margin-right: 12px;
+      color: #6c757d;
+      transition: color 0.2s ease;
+    }
+    
+    .service-item:hover .service-icon {
+      color: #007bff;
+    }
+    
+    .service-name {
+      flex-grow: 1;
+      font-weight: 500;
+    }
+    
+    .service-count {
+      font-size: 12px;
+      min-width: 25px;
+      text-align: center;
+    }
+    
+    .services-icons-only {
+      padding: 20px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      background-color: #f8f9fa !important;
+    }
+    
+    .icon-grid {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: 15px !important;
+      padding: 0 !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      max-width: 80px !important;
+      margin: 0 auto !important;
+    }
+    
+    /* Dynamic column widths */
+    .services-collapsed {
+      flex: 0 0 auto !important;
+      width: 80px !important;
+      max-width: 80px !important;
+    }
+    
+    .services-expanded {
+      flex: 0 0 auto !important;
+      width: 25% !important;
+      max-width: 25% !important;
+    }
+    
+    .users-collapsed {
+      flex: 0 0 auto !important;
+      width: calc(100% - 80px) !important;
+      max-width: calc(100% - 80px) !important;
+    }
+    
+    .users-expanded {
+      flex: 0 0 auto !important;
+      width: 75% !important;
+      max-width: 75% !important;
+    }
+    
+    .service-icon-small {
+      font-size: 22px !important;
+      color: #6c757d !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      padding: 15px !important;
+      border-radius: 10px !important;
+      width: 50px !important;
+      height: 50px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      background-color: #ffffff !important;
+      border: 2px solid #e9ecef !important;
+      box-sizing: border-box !important;
+      margin: 0 !important;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    }
+    
+    .service-icon-small:hover {
+      color: #007bff;
+      background-color: #e3f2fd;
+      transform: scale(1.1);
+      border-color: #007bff;
+      box-shadow: 0 2px 8px rgba(0,123,255,0.2);
+    }
+    
+    /* Animation for expand/collapse */
+    .services-list.collapsed {
+      max-height: 0;
+      overflow: hidden;
+    }
+    
+    .services-icons-only.show {
+      display: block !important;
+    }
+    
+    /* Active service styles */
+    .service-item.active {
+      background-color: #007bff;
+      color: white;
+    }
+    
+    .service-item.active .service-icon {
+      color: white;
+    }
+    
+    .service-item.active .service-name {
+      color: white;
+    }
+    
+    .service-icon-small.active {
+      color: #fff;
+      background-color: #007bff;
+      transform: scale(1.15);
+      border-color: #0056b3;
+      box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<!-- 🌐 Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">Mobile Shop</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <!-- Services Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
+            Services
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="blog/blog_home.html">Blogs</a></li>
+            <li><a class="dropdown-item" href="products/products_home.html">Public Market</a></li>
+            <li><a class="dropdown-item" href="business/business_home.html">Business</a></li>
+            <li><a class="dropdown-item" href="apps/apps_home.html">Apps</a></li>
+            <li><a class="dropdown-item" href="property/property_home.html">Property</a></li>
+            <li><a class="dropdown-item" href="matrimony/matrimony_home.html">Matrimony</a></li>
+            <li><a class="dropdown-item" href="delivery/delivery_home.html">Delivery</a></li>
+            <li><a class="dropdown-item" href="bank/bank_home.html">Banks</a></li>
+            <li><a class="dropdown-item" href="finance/finance_home.html">Finance</a></li>
+            <li><a class="dropdown-item" href="sharemarket/sharemarket_home.html">Share Market</a></li>
+            <li><a class="dropdown-item" href="education/education_home.html">Education</a></li>
+            <li><a class="dropdown-item" href="politics/politics_home.html">Politics</a></li>
+              <li><a class="dropdown-item" href="career/career_home.html">Career</a></li>
+          </ul>
+        </li>
+
+        <!-- Account Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown">
+            Account
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="users/user_register.html">Sign Up</a></li>
+            <li><a class="dropdown-item" href="users/user_register.html">Login</a></li>
+            <li><a class="dropdown-item" href="admin/admin_login.html">Admin</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- 📰 Heading -->
+<div class="container mt-4">
+  <h1 class="text-center">All Registered Users</h1>
+  <p class="text-center text-muted">Explore all active members of the Mobile Shop community</p>
+</div>
+
+<!-- 📂 Advanced Filters and CSV Functions -->
+<div class="container my-4">
+  <!-- Filter Row -->
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="Search Users..." id="searchUsers">
+    </div>
+    <div class="col-md-2">
+      <select class="form-select" id="planFilter">
+        <option value="">All Plans</option>
+        <option value="subscriber" {{ 'selected' if current_filters.plan == 'subscriber' }}>Subscriber</option>
+        <option value="premium" {{ 'selected' if current_filters.plan == 'premium' }}>Premium</option>
+        <option value="business" {{ 'selected' if current_filters.plan == 'business' }}>Business</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select" id="genderFilter">
+        <option value="">All Genders</option>
+        <option value="male" {{ 'selected' if current_filters.gender == 'male' }}>Male</option>
+        <option value="female" {{ 'selected' if current_filters.gender == 'female' }}>Female</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select" id="statusFilter">
+        <option value="">All Status</option>
+        <option value="online" {{ 'selected' if current_filters.status == 'online' }}>Online</option>
+        <option value="verified" {{ 'selected' if current_filters.status == 'verified' }}>Verified</option>
+      </select>
+    </div>
+    <div class="col-md-1">
+      <select class="form-select" id="perPageFilter">
+        <option value="12" {{ 'selected' if current_filters.per_page == 12 }}>12</option>
+        <option value="24" {{ 'selected' if current_filters.per_page == 24 }}>24</option>
+        <option value="48" {{ 'selected' if current_filters.per_page == 48 }}>48</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-outline-secondary" onclick="resetFilters()">
+        <i class="fas fa-refresh"></i> Reset
+      </button>
+    </div>
+  </div>
+  
+  <!-- View Options and CSV Controls -->
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <div class="btn-group" role="group">
+        <input type="radio" class="btn-check" name="viewMode" id="gridView" autocomplete="off" {{ 'checked' if current_filters.view == 'grid' or not current_filters.view }}>
+        <label class="btn btn-outline-primary" for="gridView">
+          <i class="fas fa-th"></i> Grid
+        </label>
+        
+        <input type="radio" class="btn-check" name="viewMode" id="listView" autocomplete="off" {{ 'checked' if current_filters.view == 'list' }}>
+        <label class="btn btn-outline-primary" for="listView">
+          <i class="fas fa-list"></i> List
+        </label>
+      </div>
+    </div>
+    <div class="col-md-6 text-end">
+      <!-- Demo CSV Download -->
+      <a href="/uploads/demo_csv/users.csv" class="btn btn-info btn-sm" download>
+        <i class="fas fa-file-csv"></i> Demo CSV
+      </a>
+      
+      <!-- CSV Import Form -->
+      <form action="#" method="post" enctype="multipart/form-data" style="display: inline;">
+        <input type="file" name="csv_file" accept=".csv" id="csvFileInput" style="display: none;" onchange="this.form.submit()">
+        <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('csvFileInput').click()">
+          <i class="fas fa-upload"></i> Import CSV
+        </button>
+      </form>
+      
+      <!-- CSV Export Button -->
+      <a href="#" class="btn btn-success btn-sm">
+        <i class="fas fa-download"></i> Export CSV
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- User Statistics -->
+<div class="container mb-4">
+  <div class="row">
+    <div class="col-md-2">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">{{ total_users }}</h5>
+          <p class="card-text">Total</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">{{ active_users }}</h5>
+          <p class="card-text">Online</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">{{ verified_users }}</h5>
+          <p class="card-text">Verified</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">{{ male_users }}</h5>
+          <p class="card-text">Male</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">{{ female_users }}</h5>
+          <p class="card-text">Female</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">{{ users|length }}</h5>
+          <p class="card-text">Showing</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 🧭 Main Section with Sidebar + User Grid -->
+<div class="container">
+  <div class="row">
+    <!-- 📚 Expandable Services Sidebar -->
+    <div class="col-md-1 sidebar" id="servicesColumn">
+      <!-- All Services Expandable Tab -->
+      <div class="services-panel">
+        <div class="services-header" onclick="toggleServices()">
+          <div class="d-flex align-items-center justify-content-center">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-cubes service-main-icon me-2" id="serviceMainIcon"></i>
+              <span class="service-title" id="serviceTitle">All Services</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Expandable Services List -->
+        <div class="services-list" id="servicesList">
+          <div class="service-item" data-service="blogs" onclick="filterByService('blogs')">
+            <i class="fas fa-blog service-icon"></i>
+            <span class="service-name">Blogs</span>
+            <span class="service-count badge bg-primary">25</span>
+          </div>
+          <div class="service-item" data-service="products" onclick="filterByService('products')">
+            <i class="fas fa-box service-icon"></i>
+            <span class="service-name">Public Market</span>
+            <span class="service-count badge bg-info">32</span>
+          </div>
+          <div class="service-item" data-service="business" onclick="filterByService('business')">
+            <i class="fas fa-building service-icon"></i>
+            <span class="service-name">Business</span>
+            <span class="service-count badge bg-success">18</span>
+          </div>
+          <div class="service-item" data-service="apps" onclick="filterByService('apps')">
+            <i class="fas fa-mobile-alt service-icon"></i>
+            <span class="service-name">Apps</span>
+            <span class="service-count badge bg-warning">28</span>
+          </div>
+          <div class="service-item" data-service="property" onclick="filterByService('property')">
+            <i class="fas fa-mobile-alt service-icon"></i>
+            <span class="service-name">Property</span>
+            <span class="service-count badge bg-warning">28</span>
+          </div>
+          <div class="service-item" data-service="matrimony" onclick="filterByService('matrimony')">
+            <i class="fas fa-heart service-icon"></i>
+            <span class="service-name">Matrimony</span>
+            <span class="service-count badge bg-danger">17</span>
+          </div>
+          <div class="service-item" data-service="delivery" onclick="filterByService('delivery')">
+            <i class="fas fa-shipping-fast service-icon"></i>
+            <span class="service-name">Delivery</span>
+            <span class="service-count badge bg-secondary">20</span>
+          </div>
+          <div class="service-item" data-service="banks" onclick="filterByService('banks')">
+            <i class="fas fa-university service-icon"></i>
+            <span class="service-name">Banks</span>
+            <span class="service-count badge bg-dark">12</span>
+          </div>
+          <div class="service-item" data-service="finance" onclick="filterByService('finance')">
+            <i class="fas fa-dollar-sign service-icon"></i>
+            <span class="service-name">Finance</span>
+            <span class="service-count badge bg-primary">15</span>
+          </div>
+          <div class="service-item" data-service="sharemarket" onclick="filterByService('sharemarket')">
+            <i class="fas fa-chart-line service-icon"></i>
+            <span class="service-name">Share Market</span>
+            <span class="service-count badge bg-success">22</span>
+          </div>
+          <div class="service-item" data-service="education" onclick="filterByService('education')">
+            <i class="fas fa-graduation-cap service-icon"></i>
+            <span class="service-name">Education</span>
+            <span class="service-count badge bg-info">14</span>
+          </div>
+          <div class="service-item" data-service="politics" onclick="filterByService('politics')">
+            <i class="fas fa-flag service-icon"></i>
+            <span class="service-name">Politics</span>
+            <span class="service-count badge bg-warning">8</span>
+          </div>
+          <div class="service-item" data-service="career" onclick="filterByService('career')">
+            <i class="fas fa-briefcase service-icon"></i>
+            <span class="service-name">Career</span>
+            <span class="service-count badge bg-danger">11</span>
+          </div>
+        </div>
+        
+        <!-- Collapsed Icons Only View -->
+        <div class="services-icons-only" id="servicesIconsOnly" style="display: none;">
+          <div class="icon-grid">
+            <i class="fas fa-blog service-icon-small" title="Blogs" data-service="blogs" onclick="filterByService('blogs')"></i>
+            <i class="fas fa-box service-icon-small" title="Public- Market" data-service="public-market" onclick="filterByService('public-market')"></i>
+            <i class="fas fa-building service-icon-small" title="Business" data-service="business" onclick="filterByService('business')"></i>
+            <i class="fas fa-mobile-alt service-icon-small" title="Apps" data-service="apps" onclick="filterByService('apps')"></i>
+            <i class="fas fa-heart service-icon-small" title="Matrimony" data-service="matrimony" onclick="filterByService('matrimony')"></i>
+            <i class="fas fa-shipping-fast service-icon-small" title="Delivery" data-service="delivery" onclick="filterByService('delivery')"></i>
+            <i class="fas fa-university service-icon-small" title="Banks" data-service="banks" onclick="filterByService('banks')"></i>
+            <i class="fas fa-dollar-sign service-icon-small" title="Finance" data-service="finance" onclick="filterByService('finance')"></i>
+            <i class="fas fa-chart-line service-icon-small" title="Share Market" data-service="sharemarket" onclick="filterByService('sharemarket')"></i>
+            <i class="fas fa-graduation-cap service-icon-small" title="Education" data-service="education" onclick="filterByService('education')"></i>
+            <i class="fas fa-flag service-icon-small" title="Politics" data-service="politics" onclick="filterByService('politics')"></i>
+            <i class="fas fa-briefcase service-icon-small" title="Career" data-service="career" onclick="filterByService('career')"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 👤 User Cards -->
+    <div class="col-md-11" id="usersColumn">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="userGrid">
+        {% if users %}
+          {% for user in users %}
+          <div class="col user-item" data-name="{{ user.full_name|lower }}" data-email="{{ user.email|lower }}">
+            <a href="{{ url_for('public_subscriber_profile', user_id=user.id) }}" class="text-decoration-none text-dark">
+              <div class="user-card">
+                {% if user.profile_photo %}
+                  <img src="{{ user.profile_photo }}" class="rounded-circle mb-2" alt="User Image" style="width: 100px; height: 100px; object-fit: cover;">
+                {% else %}
+                  <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mb-2 mx-auto" style="width: 100px; height: 100px;">
+                    <i class="fas fa-user text-white fa-3x"></i>
+                  </div>
+                {% endif %}
+                
+                <h5>{{ user.full_name or 'Unknown User' }}</h5>
+                <p class="text-muted small">{{ user.email }}</p>
+                
+                {% if user.is_online %}
+                  <p class="status-online">
+                    <i class="fas fa-circle"></i> Online
+                  </p>
+                {% else %}
+                  <p class="status-offline">
+                    <i class="fas fa-circle"></i> Offline
+                    {% if user.last_seen %}
+                      <br><small>Last seen: {{ user.last_seen.strftime('%d %b %Y') }}</small>
+                    {% endif %}
+                  </p>
+                {% endif %}
+                
+                <p><strong>Type:</strong> {{ user.user_type|title }}</p>
+                {% if user.mobile %}
+                  <p><strong>Mobile:</strong> {{ user.mobile }}</p>
+                {% endif %}
+                {% if user.address %}
+                  <p><strong>Location:</strong> {{ user.address[:30] }}{% if user.address|length > 30 %}...{% endif %}</p>
+                {% endif %}
+                
+                <div class="mt-3">
+                  <span class="badge bg-{{ 'success' if user.verification_status == 'verified' else 'warning' }}">
+                    {{ user.verification_status|title }}
+                  </span>
+                  {% if user.created_at %}
+                    <br><small class="text-muted">Joined: {{ user.created_at.strftime('%b %Y') }}</small>
+                  {% endif %}
+                </div>
+              </div>
+            </a>
+            <button class="btn btn-outline-primary follow-btn mt-2" onclick="followUser({{ user.id }}); event.preventDefault();">
+              <i class="fas fa-user-plus"></i> Follow
+            </button>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-12">
+            <div class="alert alert-info text-center">
+              <h4>No Users Found</h4>
+              <p>There are currently no active subscribers in the system.</p>
+              <a href="{{ url_for('users/user_register') }}" class="btn btn-primary">Join Our Community</a>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+      
+      <!-- Pagination -->
+      {% if pagination.pages > 1 %}
+      <nav aria-label="User pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+          {% if pagination.has_prev %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('users/all_user', page=pagination.prev_num, **current_filters) }}">
+                <i class="fas fa-chevron-left"></i> Previous
+              </a>
+            </li>
+          {% endif %}
+          
+          {% for page_num in pagination.iter_pages() %}
+            {% if page_num %}
+              {% if page_num != pagination.page %}
+                <li class="page-item">
+                  <a class="page-link" href="{{ url_for('users/all_user', page=page_num, **current_filters) }}">{{ page_num }}</a>
+                </li>
+              {% else %}
+                <li class="page-item active">
+                  <span class="page-link">{{ page_num }}</span>
+                </li>
+              {% endif %}
+            {% else %}
+              <li class="page-item disabled">
+                <span class="page-link">…</span>
+              </li>
+            {% endif %}
+          {% endfor %}
+          
+          {% if pagination.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('users/all_user', page=pagination.next_num, **current_filters) }}">
+                Next <i class="fas fa-chevron-right"></i>
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- 🧾 Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <h5>Mobile Shop</h5>
+        <p>Connecting people with purpose.</p>
+      </div>
+      <div class="col-md-3">
+        <h6>Links</h6>
+        <ul class="list-unstyled">
+          <li><a href="main/public_home.html">Home</a></li>
+          <li><a href="blog/blog_home.html">Blog</a></li>
+          <li><a href="users/user_dashboard.html">Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h6>Services</h6>
+        <ul class="list-unstyled">
+          <li><a href="delivery/delivery_home.html">Delivery</a></li>
+          <li><a href="education/education_home.html">Education</a></li>
+          <li><a href="finance/finance_home.html">Finance</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h6>Social</h6>
+        <ul class="list-unstyled">
+          <li><a href="https://buddhistan.org/">Buddhistan</a></li>
+          <li><a href="https://www.facebook.com/mobileshop">Facebook</a></li>
+          <li><a href="https://www.instagram.com/mobileshop">Instagram</a></li>
+          <li><a href="https://www.youtube.com/mobileshop">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr>
+    <p class="text-center text-muted">&copy; 2025 Mobile Shop. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Search functionality
+document.getElementById('searchUsers').addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const userItems = document.querySelectorAll('.user-item');
+    
+    userItems.forEach(function(item) {
+        const name = item.getAttribute('data-name') || '';
+        const email = item.getAttribute('data-email') || '';
+        
+        if (name.includes(searchTerm) || email.includes(searchTerm)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+});
+
+// Filter functionality
+document.getElementById('planFilter').addEventListener('change', applyFilters);
+document.getElementById('genderFilter').addEventListener('change', applyFilters);
+document.getElementById('statusFilter').addEventListener('change', applyFilters);
+document.getElementById('perPageFilter').addEventListener('change', applyFilters);
+
+function applyFilters() {
+    const plan = document.getElementById('planFilter').value;
+    const gender = document.getElementById('genderFilter').value;
+    const status = document.getElementById('statusFilter').value;
+    const perPage = document.getElementById('perPageFilter').value;
+    const view = document.querySelector('input[name="viewMode"]:checked').id === 'listView' ? 'list' : 'grid';
+    
+    const params = new URLSearchParams();
+    if (plan) params.append('plan', plan);
+    if (gender) params.append('gender', gender);
+    if (status) params.append('status', status);
+    if (perPage) params.append('per_page', perPage);
+    if (view) params.append('view', view);
+    
+    window.location.href = '{{ url_for("users/all_user") }}?' + params.toString();
+}
+
+function resetFilters() {
+    window.location.href = '{{ url_for("users/all_user") }}';
+}
+
+// View mode toggle
+document.querySelectorAll('input[name="viewMode"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        const userGrid = document.getElementById('userGrid');
+        if (this.id === 'listView') {
+            userGrid.className = 'row row-cols-1 g-2';
+            document.querySelectorAll('.user-card').forEach(function(card) {
+                card.style.display = 'flex';
+                card.style.alignItems = 'center';
+                card.style.textAlign = 'left';
+                card.style.padding = '15px';
+            });
+        } else {
+            userGrid.className = 'row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4';
+            document.querySelectorAll('.user-card').forEach(function(card) {
+                card.style.display = 'block';
+                card.style.textAlign = 'center';
+                card.style.padding = '16px';
+            });
+        }
+        applyFilters();
+    });
+});
+
+// Follow user functionality
+function followUser(userId) {
+    // Show loading state
+    const button = event.target;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Following...';
+    button.disabled = true;
+    
+    // Simulate follow action (you can implement actual follow functionality)
+    setTimeout(function() {
+        button.innerHTML = '<i class="fas fa-check"></i> Following';
+        button.classList.remove('btn-outline-primary');
+        button.classList.add('btn-success');
+        
+        // Show success message
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-success alert-dismissible fade show';
+        alert.innerHTML = `
+            User followed successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.querySelector('.container').insertBefore(alert, document.querySelector('.container').firstChild);
+        
+        // Auto-hide alert after 3 seconds
+        setTimeout(function() {
+            if (alert.parentNode) {
+                alert.remove();
+            }
+        }, 3000);
+    }, 1000);
+}
+
+// Auto-hide flash messages after 5 seconds
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+        setTimeout(function() {
+            if (alert.parentNode) {
+                alert.remove();
+            }
+        }, 5000);
+    });
+});
+
+// Services Panel Toggle Functionality
+let servicesExpanded = true;
+
+function toggleServices() {
+    const servicesList = document.getElementById('servicesList');
+    const servicesIconsOnly = document.getElementById('servicesIconsOnly');
+    const toggleIcon = document.getElementById('toggleIcon');
+    const serviceMainIcon = document.getElementById('serviceMainIcon');
+    const serviceTitle = document.getElementById('serviceTitle');
+    
+    if (servicesExpanded) {
+        // Collapse to icons only
+        servicesList.style.display = 'none';
+        servicesIconsOnly.style.display = 'block';
+        
+        // Change header to show collapsed state
+        serviceMainIcon.className = 'fas fa-th service-main-icon me-2';
+        serviceTitle.textContent = '';
+        
+        // Dynamic width adjustment
+        const servicesColumn = document.getElementById('servicesColumn');
+        const usersColumn = document.getElementById('usersColumn');
+        servicesColumn.className = 'col-md-1 sidebar services-collapsed';
+        usersColumn.className = 'col-md-11 users-collapsed';
+        
+        servicesExpanded = false;
+        console.log('Services collapsed - showing icons grid');
+    } else {
+        // Expand to full list
+        servicesList.style.display = 'block';
+        servicesIconsOnly.style.display = 'none';
+        
+        // Change header to show expanded state
+        serviceMainIcon.className = 'fas fa-cubes service-main-icon me-2';
+        serviceTitle.textContent = 'All Services';
+        
+        // Dynamic width adjustment
+        const servicesColumn = document.getElementById('servicesColumn');
+        const usersColumn = document.getElementById('usersColumn');
+        servicesColumn.className = 'col-md-3 sidebar services-expanded';
+        usersColumn.className = 'col-md-9 users-expanded';
+        
+        servicesExpanded = true;
+        console.log('Services expanded - showing full list');
+    }
+}
+
+// Filter users by service
+function filterByService(service) {
+    console.log('Filtering by service:', service);
+    
+    // Visual feedback - highlight selected service
+    document.querySelectorAll('.service-item, .service-icon-small').forEach(function(item) {
+        item.classList.remove('active');
+    });
+    
+    // Add active class to clicked service
+    const serviceItems = document.querySelectorAll(`[data-service="${service}"]`);
+    serviceItems.forEach(function(item) {
+        item.classList.add('active');
+    });
+    
+    // Show notification
+    const alert = document.createElement('div');
+    alert.className = 'alert alert-info alert-dismissible fade show';
+    alert.innerHTML = `
+        <i class="fas fa-filter me-2"></i>Filtering users by ${service} service
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const container = document.querySelector('.container');
+    container.insertBefore(alert, container.firstChild);
+    
+    // Auto-hide after 3 seconds
+    setTimeout(function() {
+        if (alert.parentNode) {
+            alert.remove();
+        }
+    }, 3000);
+    
+    // TODO: Implement actual filtering logic here
+    // For now, just showing visual feedback
+}
+</script>
+
+</body>
+</html>

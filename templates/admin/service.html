@@ -1,0 +1,107 @@
+{% extends "main/base.html" %}
+
+{% block title %}Service Management - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Service Management</h2>
+                <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <form method="GET" class="d-flex">
+                <select name="status" class="form-select me-2">
+                    <option value="all" {{ 'selected' if status_filter == 'all' else '' }}>All Services</option>
+                    <option value="pending" {{ 'selected' if status_filter == 'pending' else '' }}>Pending Verification</option>
+                    <option value="verified" {{ 'selected' if status_filter == 'verified' else '' }}>Verified</option>
+                    <option value="rejected" {{ 'selected' if status_filter == 'rejected' else '' }}>Rejected</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- services Grid -->
+    <div class="row">
+        {% for service in services.items %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">{{ service.service_name }}</h6>
+                    <span class="badge bg-{{ 'success' if service.verification_status == 'verified' else 'warning' if service.verification_status == 'pending' else 'danger' }}">
+                        {{ service.verification_status.title() }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Email:</strong> {{ service.email }}<br>
+                        <strong>Contact:</strong> {{ service.contact_number }}<br>
+                        <strong>Type:</strong> {{ service.service_type.title() if service.service_type else 'Not specified' }}<br>
+                        <strong>Registered:</strong> {{ service.created_at.strftime('%Y-%m-%d') }}
+                    </p>
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('admin.service_details', service_id=service.id) }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-eye me-1"></i>View
+                        </a>
+                        {% if service.verification_status == 'pending' %}
+                        <form method="POST" action="{{ url_for('admin.verify_service', service_id=service.id) }}" class="d-inline">
+                            <input type="hidden" name="action" value="verify">
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="fas fa-check me-1"></i>Verify
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if services.pages > 1 %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if services.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('admin.admin_services', page=services.prev_num, status=status_filter) }}">Previous</a>
+            </li>
+            {% endif %}
+            
+            {% for page_num in services.iter_pages() %}
+                {% if page_num %}
+                    {% if page_num != services.page %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('admin.admin_services', page=page_num, status=status_filter) }}">{{ page_num }}</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_num }}</span>
+                    </li>
+                    {% endif %}
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">…</span>
+                </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if services.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('admin.admin_services', page=services.next_num, status=status_filter) }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

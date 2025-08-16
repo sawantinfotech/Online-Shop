@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Office Management - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .admin-sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .admin-nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            display: block;
+            text-decoration: none;
+        }
+        
+        .admin-nav-link:hover,
+        .admin-nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .admin-profile {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .admin-avatar {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Admin Sidebar (same navigation) -->
+            <div class="col-md-3 col-lg-2 admin-sidebar p-0">
+                <div class="p-3">
+                    <!-- Admin Profile -->
+                    <div class="admin-profile text-center">
+                        <div class="admin-avatar mx-auto mb-3">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h5 class="mb-1">{{ session.admin_username or 'Admin' }}</h5>
+                        <small class="text-light">System Administrator</small>
+                    </div>
+                    
+                    <hr class="my-3 text-light">
+                    <!-- Navigation -->
+                    <nav class="nav flex-column">
+                        <ul class="nav column-scrollable" style="max-height: 500px; overflow-y: auto;">
+                        <a href="{{ url_for('admin_home') }}" class="admin-nav-link active">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+
+                        <a href="{{ url_for('admin_profile') }}" class="admin-nav-link">
+                            <i class="fas fa-user-cog me-2"></i>Profile
+                        </a>
+                        <a href="{{ url_for('all_service') }}" class="admin-nav-link">
+                            <i class="fas fa-cogs me-2"></i>All Services
+                        </a>
+                        <a href="{{ url_for('service_registration') }}" class="admin-nav-link">
+                            <i class="fas fa-plus me-2"></i>Add Service
+                        </a>
+                        <a href="{{ url_for('service_home_page') }}" class="admin-nav-link">
+                            <i class="fas fa-eye me-2"></i>View Public
+                        </a>
+
+                             <hr class="my-3 text-light">
+                        <a href="{{ url_for('admin_accounts') }}" class="admin-nav-link">
+                            <i class="fas fa-user-circle me-2"></i>Accounts
+                        </a>
+                        <a href="{{ url_for('all_users') }}" class="admin-nav-link">
+                            <i class="fas fa-users me-2"></i>Users
+                        </a>
+                        <a href="{{ url_for('admin_customers') }}" class="admin-nav-link">
+                            <i class="fas fa-user-friends me-2"></i>Customers
+                        </a>
+                        <a href="{{ url_for('order_home') }}" class="admin-nav-link">
+                            <i class="fas fa-shopping-cart me-2"></i>Orders
+                        </a>
+                        <a href="{{ url_for('admin_plans') }}" class="admin-nav-link">
+                            <i class="fas fa-crown me-2"></i>Plans
+                        </a>
+                            <a href="{{ url_for('admin_payment') }}" class="admin-nav-link">
+                                <i class="fas fa-crown me-2"></i>Payments
+                            </a>
+
+                        <a href="{{ url_for('admin_offers') }}" class="admin-nav-link">
+                            <i class="fas fa-tags me-2"></i>Offers
+                        </a>
+                            <a href="{{ url_for('admin_notifications') }}" class="admin-nav-link">
+                                <i class="fas fa-bell me-2"></i>Notifications
+                            </a>
+                        <a href="{{ url_for('admin_sms') }}" class="admin-nav-link">
+                            <i class="fas fa-sms me-2"></i>SMS
+                        </a>
+                        <a href="{{ url_for('admin_email') }}" class="admin-nav-link">
+                            <i class="fas fa-envelope me-2"></i>Email
+                        </a>
+
+                        <a href="{{ url_for('admin_office') }}" class="admin-nav-link">
+                            <i class="fas fa-briefcase me-2"></i>Office
+                        </a>
+                        <a href="{{ url_for('admin_contact') }}" class="admin-nav-link">
+                            <i class="fas fa-address-book me-2"></i>Contact
+                        </a>
+                            <a href="{{ url_for('admin_seo') }}" class="admin-nav-link">
+                                <i class="fas fa-address-book me-2"></i>Site Map SEO
+                            </a>
+                        </ul>
+
+                        <hr class="my-3 text-light">
+
+                        <a href="{{ url_for('admin_logout') }}" class="admin-nav-link">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10">
+                <div class="p-4">
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="mb-1">
+                                <i class="fas fa-briefcase text-primary me-2"></i>Office Management
+                            </h2>
+                            <p class="text-muted mb-0">Manage office settings and business information</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Office Information -->
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-building me-2"></i>Office Information
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="companyName" class="form-label">Company Name</label>
+                                                <input type="text" class="form-control" id="companyName" value="Mobile Shopping Hub">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="businessType" class="form-label">Business Type</label>
+                                                <select class="form-select" id="businessType">
+                                                    <option value="ecommerce" selected>E-commerce Platform</option>
+                                                    <option value="saas">SaaS Provider</option>
+                                                    <option value="marketplace">Marketplace</option>
+                                                    <option value="services">Service Provider</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="registrationNumber" class="form-label">Registration Number</label>
+                                                <input type="text" class="form-control" id="registrationNumber" value="REG123456789">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="taxId" class="form-label">Tax ID / GST Number</label>
+                                                <input type="text" class="form-control" id="taxId" value="GST29ABCDE1234F1Z5">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="officeAddress" class="form-label">Office Address</label>
+                                            <textarea class="form-control" id="officeAddress" rows="3">123 Business Street, Tech Park, Bangalore, Karnataka 560001, India</textarea>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <label for="officePhone" class="form-label">Office Phone</label>
+                                                <input type="tel" class="form-control" id="officePhone" value="+91 80 1234 5678">
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="officeEmail" class="form-label">Office Email</label>
+                                                <input type="email" class="form-control" id="officeEmail" value="office@mobileshop.com">
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="website" class="form-label">Website</label>
+                                                <input type="url" class="form-control" id="website" value="https://mobileshop.com">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="text-end">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-save me-1"></i>Update Information
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <!-- Business Hours -->
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-clock me-2"></i>Business Hours
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>Working Days</h6>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" id="monday" checked>
+                                                <label class="form-check-label" for="monday">Monday</label>
+                                                <div class="ms-4">
+                                                    <input type="time" class="form-control form-control-sm d-inline" value="09:00" style="width: 100px;">
+                                                    <span class="mx-2">to</span>
+                                                    <input type="time" class="form-control form-control-sm d-inline" value="18:00" style="width: 100px;">
+                                                </div>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" id="tuesday" checked>
+                                                <label class="form-check-label" for="tuesday">Tuesday</label>
+                                                <div class="ms-4">
+                                                    <input type="time" class="form-control form-control-sm d-inline" value="09:00" style="width: 100px;">
+                                                    <span class="mx-2">to</span>
+                                                    <input type="time" class="form-control form-control-sm d-inline" value="18:00" style="width: 100px;">
+                                                </div>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" id="wednesday" checked>
+                                                <label class="form-check-label" for="wednesday">Wednesday</label>
+                                                <div class="ms-4">
+                                                    <input type="time" class="form-control form-control-sm d-inline" value="09:00" style="width: 100px;">
+                                                    <span class="mx-2">to</span>
+                                                    <input type="time" class="form-control form-control-sm d-inline" value="18:00" style="width: 100px;">
+                                                </div>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" id="thursday" checked>
+                                                <label class="form-check-label" for="thursday">Thursday</label>
+                                                <div class="ms-4">
+                                                    <input type="time" class="form-control form-control-sm d-inline" value="09:00" style="width: 100px;">
+                                                    <span class="mx-2">to</span>
+                                                    <input type="time" class="form-control form-control-sm d-inline" value="18:00" style="width: 100px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>&nbsp;</h6>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" id="friday" checked>
+                                                <label class="form-check-label" for="friday">Friday</label>
+                                                <div class="ms-4">
+                                                    <input type="time" class="form-control form-control-sm d-inline" value="09:00" style="width: 100px;">
+                                                    <span class="mx-2">to</span>
+                                                    <input type="time" class="form-control form-control-sm d-inline" value="18:00" style="width: 100px;">
+                                                </div>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" id="saturday">
+                                                <label class="form-check-label" for="saturday">Saturday</label>
+                                                <div class="ms-4">
+                                                    <input type="time" class="form-control form-control-sm d-inline" value="10:00" style="width: 100px;">
+                                                    <span class="mx-2">to</span>
+                                                    <input type="time" class="form-control form-control-sm d-inline" value="16:00" style="width: 100px;">
+                                                </div>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" id="sunday">
+                                                <label class="form-check-label" for="sunday">Sunday</label>
+                                                <div class="ms-4">
+                                                    <span class="text-muted">Closed</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="text-end mt-3">
+                                        <button type="button" class="btn btn-primary">
+                                            <i class="fas fa-save me-1"></i>Update Hours
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Stats & Settings -->
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-chart-pie me-2"></i>Office Statistics
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <h3 class="text-primary">24/7</h3>
+                                        <p class="mb-0">System Uptime</p>
+                                    </div>
+                                    <div class="text-center mb-3">
+                                        <h3 class="text-success">₹2.5L</h3>
+                                        <p class="mb-0">Monthly Revenue</p>
+                                    </div>
+                                    <div class="text-center mb-3">
+                                        <h3 class="text-info">1,247</h3>
+                                        <p class="mb-0">Active Subscribers</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <h3 class="text-warning">98.5%</h3>
+                                        <p class="mb-0">Customer Satisfaction</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-3">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-cogs me-2"></i>Office Settings
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="maintenanceMode">
+                                        <label class="form-check-label" for="maintenanceMode">
+                                            Maintenance Mode
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="newRegistrations" checked>
+                                        <label class="form-check-label" for="newRegistrations">
+                                            Allow New Registrations
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="publicAccess" checked>
+                                        <label class="form-check-label" for="publicAccess">
+                                            Public Access
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="autoBackup" checked>
+                                        <label class="form-check-label" for="autoBackup">
+                                            Auto Backup
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="d-grid">
+                                        <button class="btn btn-outline-primary">
+                                            <i class="fas fa-download me-1"></i>Export Data
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

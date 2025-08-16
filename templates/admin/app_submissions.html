@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}App Submissions - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2 bg-dark">
+            <div class="p-3">
+                <h5 class="text-white">Admin Panel</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{{ url_for('admin.admin_dashboard') }}">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-warning" href="{{ url_for('admin.manage_app_submissions') }}">
+                            <i class="fas fa-mobile-alt me-2"></i>App Submissions
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{{ url_for('admin.manage_services') }}">
+                            <i class="fas fa-cogs me-2"></i>Services
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Main content -->
+        <div class="col-md-10">
+            <div class="p-4">
+                <h2><i class="fas fa-mobile-alt me-2"></i>App Submissions Management</h2>
+                
+                <!-- Statistics Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <div class="flex-grow-1">
+                                        <h5>Total Submissions</h5>
+                                        <h3>{{ stats.total_submissions }}</h3>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <i class="fas fa-list fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-warning text-white">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <div class="flex-grow-1">
+                                        <h5>Pending Review</h5>
+                                        <h3>{{ stats.pending_submissions }}</h3>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <i class="fas fa-clock fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-success text-white">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <div class="flex-grow-1">
+                                        <h5>Approved</h5>
+                                        <h3>{{ stats.approved_submissions }}</h3>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <i class="fas fa-check fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <div class="flex-grow-1">
+                                        <h5>Rejected</h5>
+                                        <h3>{{ stats.rejected_submissions }}</h3>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <i class="fas fa-times fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- App Submissions Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-table me-2"></i>App Submissions</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if submissions %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>App Name</th>
+                                        <th>Developer</th>
+                                        <th>Category</th>
+                                        <th>Submission Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for submission in submissions %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ submission.app_name }}</strong><br>
+                                            <small class="text-muted">{{ submission.app_description[:50] }}{% if submission.app_description|length > 50 %}...{% endif %}</small>
+                                        </td>
+                                        <td>
+                                            {{ submission.developer_name }}<br>
+                                            <small class="text-muted">{{ submission.developer_email }}</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">{{ submission.app_category }}</span>
+                                        </td>
+                                        <td>{{ submission.submission_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                                        <td>
+                                            {% if submission.status == 'pending' %}
+                                                <span class="badge bg-warning">Pending</span>
+                                            {% elif submission.status == 'approved' %}
+                                                <span class="badge bg-success">Approved</span>
+                                            {% elif submission.status == 'rejected' %}
+                                                <span class="badge bg-danger">Rejected</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                {% if submission.status == 'pending' %}
+                                                <form method="POST" action="{{ url_for('admin.approve_app_submission', submission_id=submission.id) }}" style="display: inline;">
+                                                    <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Approve this app submission?')">
+                                                        <i class="fas fa-check"></i> Approve
+                                                    </button>
+                                                </form>
+                                                <form method="POST" action="{{ url_for('admin.reject_app_submission', submission_id=submission.id) }}" style="display: inline;">
+                                                    <input type="hidden" name="rejection_reason" value="App does not meet requirements">
+                                                    <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Reject this app submission?')">
+                                                        <i class="fas fa-times"></i> Reject
+                                                    </button>
+                                                </form>
+                                                {% endif %}
+                                                <form method="POST" action="{{ url_for('admin.delete_app_submission', submission_id=submission.id) }}" style="display: inline;">
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this app submission permanently?')">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-mobile-alt fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No app submissions found</h5>
+                            <p class="text-muted">App submissions will appear here when users submit apps for review.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success/Error Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="position-fixed" style="top: 20px; right: 20px; z-index: 1050;">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+{% endblock %}

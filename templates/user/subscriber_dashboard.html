@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscriber Dashboard - Professional Services Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-mobile-alt me-2"></i>Mobile Shop Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-briefcase me-1"></i>Services
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- Business service DISCONNECTED -->
+                            <li><a class="dropdown-item" href="/app/all_apps">
+                                <i class="fas fa-mobile-alt me-2"></i>Apps
+                            </a></li>
+                            <li><a class="dropdown-item" href="/matrimony/matrimony_home">
+                                <i class="fas fa-heart me-2"></i>Matrimony
+                            </a></li>
+                            <li><a class="dropdown-item" href="/delivery/delivery_home">
+                                <i class="fas fa-truck me-2"></i>Delivery
+                            </a></li>
+                            <li><a class="dropdown-item" href="/Hospital/hospital_home">
+                                <i class="fas fa-hospital me-2"></i>Hospital
+                            </a></li>
+                            <li><a class="dropdown-item" href="/bank/bank_home">
+                                <i class="fas fa-university me-2"></i>Banking
+                            </a></li>
+                            <li><a class="dropdown-item" href="/education/education_home">
+                                <i class="fas fa-graduation-cap me-2"></i>Education
+                            </a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/public_market/publicmarket_home">
+                            <i class="fas fa-store me-1"></i>Marketplace
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if session.user_id %}
+                        <!-- Logged-in User Profile Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown">
+                                <div class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px; font-size: 14px;">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <span class="d-none d-md-inline">{{ session.username or user.username or user.full_name or 'User' }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><h6 class="dropdown-header">
+                                    <i class="fas fa-user-circle me-2"></i>{{ session.username or user.username or user.full_name or 'User' }}
+                                    <br><small class="text-muted">Active Subscriber</small>
+                                </h6></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item active" href="{{ url_for('user_subscriber_dashboard') }}">
+                                    <i class="fas fa-tachometer-alt me-2"></i>My Dashboard
+                                </a></li>
+                                <li><a class="dropdown-item" href="/user/profile">
+                                    <i class="fas fa-user-edit me-2"></i>Profile Settings
+                                </a></li>
+                                <li><a class="dropdown-item" href="/service/all_services">
+                                    <i class="fas fa-cogs me-2"></i>All Services
+                                </a></li>
+                                <li><a class="dropdown-item" href="/app/all_apps">
+                                    <i class="fas fa-mobile-alt me-2"></i>Browse Apps
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('user_logout') }}">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('user_login') }}">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('user_register') }}">
+                                <i class="fas fa-user-plus me-1"></i>Register
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row g-0">
+            <!-- Sidebar -->
+            <div class="bg-dark text-white p-0 min-vh-100" id="sidebar">
+                <div class="p-3 d-flex justify-content-between align-items-center">
+                    <h4><i class="fas fa-user me-2"></i><span class="sidebar-text">Dashboard</span></h4>
+                    <button class="btn btn-sm btn-outline-light" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link text-white active" onclick="showSection('overview')" href="#overview">
+                        <i class="fas fa-tachometer-alt me-2"></i><span class="sidebar-text">Overview</span>
+                        <span class="tooltip-text">Overview</span>
+                    </a>
+                    <a class="nav-link text-white" onclick="showSection('app-submissions')" href="#app-submissions">
+                        <i class="fas fa-mobile-alt me-2"></i><span class="sidebar-text">App Submissions</span>
+                        <span class="tooltip-text">App Submissions</span>
+                    </a>
+                    <a class="nav-link text-white" onclick="showSection('products')" href="#products">
+                        <i class="fas fa-box me-2"></i><span class="sidebar-text">Product Service</span>
+                        <span class="tooltip-text">Product Service</span>
+                    </a>
+                    <a class="nav-link text-white" onclick="showSection('services')" href="#services">
+                        <i class="fas fa-cog me-2"></i><span class="sidebar-text">My Services</span>
+                        <span class="tooltip-text">My Services</span>
+                    </a>
+                    <a class="nav-link text-white" onclick="showSection('profile')" href="#profile">
+                        <i class="fas fa-user-edit me-2"></i><span class="sidebar-text">Profile</span>
+                        <span class="tooltip-text">Profile</span>
+                    </a>
+                </nav>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="p-4" id="mainContent">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Welcome back, {{ user.username if user else 'User' }}!</h2>
+                    <div>
+                        <button class="btn btn-primary" onclick="window.location.href='/app/app_registration'">
+                            <i class="fas fa-plus me-2"></i>Submit New App
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Alert Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Overview Section -->
+                <div id="overview-section" class="dashboard-section">
+                <!-- Overview Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card text-center bg-primary text-white">
+                            <div class="card-body">
+                                <i class="fas fa-mobile-alt fa-3x mb-2"></i>
+                                <h5>{{ submitted_apps|length }}</h5>
+                                <p class="mb-0">Apps Submitted</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center bg-success text-white">
+                            <div class="card-body">
+                                <i class="fas fa-check-circle fa-3x mb-2"></i>
+                                <h5>{{ approved_apps|length }}</h5>
+                                <p class="mb-0">Apps Approved</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center bg-warning text-white">
+                            <div class="card-body">
+                                <i class="fas fa-clock fa-3x mb-2"></i>
+                                <h5>{{ pending_apps|length }}</h5>
+                                <p class="mb-0">Pending Review</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center bg-info text-white">
+                            <div class="card-body">
+                                <i class="fas fa-download fa-3x mb-2"></i>
+                                <h5>{{ total_downloads or 0 }}</h5>
+                                <p class="mb-0">Total Downloads</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- App Submissions Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-mobile-alt me-2"></i>My App Submissions
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if submitted_apps %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>App Name</th>
+                                        <th>Category</th>
+                                        <th>Version</th>
+                                        <th>Status</th>
+                                        <th>Downloads</th>
+                                        <th>Rating</th>
+                                        <th>Submitted</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for app in submitted_apps %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ app.name }}</strong>
+                                            <br><small class="text-muted">{{ (app.short_description or app.long_description or '')[:50] }}{% if (app.short_description or app.long_description or '')|length > 50 %}...{% endif %}</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">{{ app.category }}</span>
+                                        </td>
+                                        <td>{{ app.version or '1.0' }}</td>
+                                        <td>
+                                            {% if app.status == 'approved' %}
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-check me-1"></i>Approved
+                                                </span>
+                                            {% elif app.status == 'pending' %}
+                                                <span class="badge bg-warning">
+                                                    <i class="fas fa-clock me-1"></i>Pending Review
+                                                </span>
+                                            {% elif app.status == 'rejected' %}
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-times me-1"></i>Rejected
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">{{ app.status|title }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info">{{ app.downloads or 0 }}</span>
+                                        </td>
+                                        <td>
+                                            {% if app.rating %}
+                                                <span class="text-warning">
+                                                    {% for i in range(5) %}
+                                                        {% if i < app.rating %}
+                                                            <i class="fas fa-star"></i>
+                                                        {% else %}
+                                                            <i class="far fa-star"></i>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    <span class="ms-1">{{ "%.1f"|format(app.rating) }}</span>
+                                                </span>
+                                            {% else %}
+                                                <span class="text-muted">No rating</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <small>{{ app.created_at.strftime('%Y-%m-%d') if app.created_at else 'N/A' }}</small>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a href="/app/{{ app.slug or app.id }}" class="btn btn-outline-primary" title="View App">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <button class="btn btn-outline-info" onclick="viewAppDetails({{ app.id }})" title="View Details">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-mobile-alt fa-5x text-muted mb-3"></i>
+                            <h5 class="text-muted">No app submissions yet</h5>
+                            <p class="text-muted">Submit your first app to get started!</p>
+                            <a href="/app/app_registration" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Submit Your First App
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                </div>
+
+                <!-- Services Section -->
+                <div id="services-section" class="dashboard-section" style="display: none;">
+                    <h3><i class="fas fa-cog me-2"></i>My Services</h3>
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card text-center bg-info text-white">
+                                <div class="card-body">
+                                    <i class="fas fa-cog fa-3x mb-2"></i>
+                                    <h5>{{ service_requests|length }}</h5>
+                                    <p class="mb-0">Total Services</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center bg-warning text-white">
+                                <div class="card-body">
+                                    <i class="fas fa-clock fa-3x mb-2"></i>
+                                    <h5>{{ pending_requests }}</h5>
+                                    <p class="mb-0">Pending</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center bg-success text-white">
+                                <div class="card-body">
+                                    <i class="fas fa-check fa-3x mb-2"></i>
+                                    <h5>{{ approved_requests }}</h5>
+                                    <p class="mb-0">Active</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Services Table -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-list me-2"></i>All My Services
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if service_requests %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Service Name</th>
+                                            <th>Category</th>
+                                            <th>Status</th>
+                                            <th>Requested Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for service in service_requests %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ service.name or service.service_name or 'Service' }}</strong>
+                                                <br><small class="text-muted">{{ (service.description or '')[:50] }}{% if (service.description or '')|length > 50 %}...{% endif %}</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-secondary">{{ service.category or 'General' }}</span>
+                                            </td>
+                                            <td>
+                                                {% if service.status == 'approved' %}
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check me-1"></i>Active
+                                                    </span>
+                                                {% elif service.status == 'pending' %}
+                                                    <span class="badge bg-warning">
+                                                        <i class="fas fa-clock me-1"></i>Pending
+                                                    </span>
+                                                {% elif service.status == 'rejected' %}
+                                                    <span class="badge bg-danger">
+                                                        <i class="fas fa-times me-1"></i>Rejected
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">{{ service.status|title }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <small>{{ service.created_at.strftime('%Y-%m-%d') if service.created_at else 'N/A' }}</small>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button class="btn btn-outline-primary" onclick="viewServiceDetails({{ service.id }})" title="View Details">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    {% if service.status == 'approved' %}
+                                                    <button class="btn btn-outline-success" onclick="useService({{ service.id }})" title="Use Service">
+                                                        <i class="fas fa-play"></i>
+                                                    </button>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-cog fa-5x text-muted mb-3"></i>
+                                <h5 class="text-muted">No services requested yet</h5>
+                                <p class="text-muted">Request your first service to get started!</p>
+                                <a href="/service/service_registration" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>Request Service
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Service Section -->
+                <div id="products-section" class="dashboard-section" style="display: none;">
+                    <h3><i class="fas fa-box me-2"></i>Product Service</h3>
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card text-center bg-primary text-white">
+                                <div class="card-body">
+                                    <i class="fas fa-box fa-3x mb-2"></i>
+                                    <h5>{{ user_products|length }}</h5>
+                                    <p class="mb-0">Total Products</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center bg-success text-white">
+                                <div class="card-body">
+                                    <i class="fas fa-check-circle fa-3x mb-2"></i>
+                                    <h5>{{ active_products|length }}</h5>
+                                    <p class="mb-0">Active Products</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center bg-warning text-white">
+                                <div class="card-body">
+                                    <i class="fas fa-star fa-3x mb-2"></i>
+                                    <h5>{{ featured_user_products|length }}</h5>
+                                    <p class="mb-0">Featured Products</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center bg-info text-white">
+                                <div class="card-body">
+                                    <i class="fas fa-eye fa-3x mb-2"></i>
+                                    <h5>{{ total_product_views or 0 }}</h5>
+                                    <p class="mb-0">Total Views</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6><i class="fas fa-bolt me-2"></i>Quick Actions</h6>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        <a href="/product/add" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-plus me-1"></i>Add New Product
+                                        </a>
+                                        <a href="/product/all" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-list me-1"></i>View All Products
+                                        </a>
+                                        <a href="/product/" class="btn btn-outline-success btn-sm">
+                                            <i class="fas fa-home me-1"></i>Product Home
+                                        </a>
+                                        <a href="/product/plan" class="btn btn-outline-info btn-sm">
+                                            <i class="fas fa-chart-line me-1"></i>Product Plan
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Products Table -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-box me-2"></i>My Products
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if user_products %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" id="selectAll" class="form-check-input"></th>
+                                            <th>Product Name</th>
+                                            <th>Reg/Exp Date</th>
+                                            <th>Public Views</th>
+                                            <th>Stock</th>
+                                            <th>Approval Status</th>
+                                            <th>Plan</th>
+                                            <th>Price</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for product in user_products %}
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" name="selected_products" value="{{ product.id }}" class="form-check-input product-checkbox">
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    {% if product.main_image %}
+                                                        <img src="/uploads/{{ product.main_image }}" 
+                                                             class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;" 
+                                                             alt="{{ product.name }}">
+                                                    {% elif product.get_images() %}
+                                                        <img src="/uploads/{{ product.get_images()[0] }}" 
+                                                             class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;" 
+                                                             alt="{{ product.name }}">
+                                                    {% else %}
+                                                        <div class="bg-light rounded me-2 d-flex align-items-center justify-content-center" 
+                                                             style="width: 40px; height: 40px;">
+                                                            <i class="fas fa-image text-muted"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                    <div>
+                                                        <strong>{{ product.name }}</strong>
+                                                        {% if product.sku %}
+                                                        <br><small class="text-muted">SKU: {{ product.sku }}</small>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <small class="text-success">
+                                                        <i class="fas fa-calendar-plus me-1"></i>Reg: {{ product.created_at.strftime('%d/%m/%Y') if product.created_at else 'N/A' }}
+                                                    </small>
+                                                    <br>
+                                                    <small class="text-warning">
+                                                        <i class="fas fa-calendar-times me-1"></i>Exp: {{ (product.created_at + timedelta(days=365)).strftime('%d/%m/%Y') if product.created_at else 'N/A' }}
+                                                    </small>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <span class="badge bg-info mb-1">
+                                                        <i class="fas fa-eye me-1"></i>{{ product.view_count or 0 }}
+                                                    </span>
+                                                    {% if product.view_count and product.view_count > 100 %}
+                                                    <small class="text-success">Popular!</small>
+                                                    {% elif product.view_count and product.view_count > 50 %}
+                                                    <small class="text-warning">Rising</small>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="stock-indicator">
+                                                    {% if product.quantity > 10 %}
+                                                        <span class="badge bg-success">{{ product.quantity }}</span>
+                                                        <small class="text-success d-block">In Stock</small>
+                                                    {% elif product.quantity > 0 %}
+                                                        <span class="badge bg-warning">{{ product.quantity }}</span>
+                                                        <small class="text-warning d-block">Low Stock</small>
+                                                    {% else %}
+                                                        <span class="badge bg-danger">{{ product.quantity }}</span>
+                                                        <small class="text-danger d-block">Out of Stock</small>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    {% if product.status == 'active' %}
+                                                        <span class="badge bg-success">
+                                                            <i class="fas fa-check-circle me-1"></i>Approved
+                                                        </span>
+                                                        <small class="text-success d-block">Live & Visible</small>
+                                                    {% elif product.status == 'pending' %}
+                                                        <span class="badge bg-warning">
+                                                            <i class="fas fa-clock me-1"></i>Pending
+                                                        </span>
+                                                        <small class="text-warning d-block">Under Review</small>
+                                                    {% elif product.status == 'draft' %}
+                                                        <span class="badge bg-secondary">
+                                                            <i class="fas fa-edit me-1"></i>Draft
+                                                        </span>
+                                                        <small class="text-secondary d-block">Not Published</small>
+                                                    {% else %}
+                                                        <span class="badge bg-danger">
+                                                            <i class="fas fa-times-circle me-1"></i>Rejected
+                                                        </span>
+                                                        <small class="text-danger d-block">Needs Changes</small>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="plan-info">
+                                                    {% if product.is_featured %}
+                                                        <span class="badge bg-warning">
+                                                            <i class="fas fa-star me-1"></i>Premium
+                                                        </span>
+                                                        <small class="text-warning d-block">Featured Listing</small>
+                                                    {% else %}
+                                                        <span class="badge bg-primary">
+                                                            <i class="fas fa-box me-1"></i>Basic
+                                                        </span>
+                                                        <small class="text-primary d-block">Standard Listing</small>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="price-info">
+                                                    <strong class="text-success">₹{{ "%.2f"|format(product.price) }}</strong>
+                                                    {% if product.original_price and product.original_price > product.price %}
+                                                    <br><small class="text-muted text-decoration-line-through">₹{{ "%.2f"|format(product.original_price) }}</small>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group-vertical btn-group-sm" role="group">
+                                                    <a href="{{ url_for('product.view_product', product_id=product.id) }}" 
+                                                       class="btn btn-outline-primary btn-sm mb-1" title="View Product">
+                                                        <i class="fas fa-eye me-1"></i>View
+                                                    </a>
+                                                    <a href="{{ url_for('product.edit_product_duplicate_fix', product_id=product.id) }}" 
+                                                       class="btn btn-outline-warning btn-sm mb-1" title="Edit Product">
+                                                        <i class="fas fa-edit me-1"></i>Edit
+                                                    </a>
+                                                    <button onclick="deleteProduct({{ product.id }}, '{{ product.name }}')" 
+                                                            class="btn btn-outline-danger btn-sm" title="Delete Product">
+                                                        <i class="fas fa-trash me-1"></i>Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                
+                                <!-- Bulk Actions -->
+                                <div class="mt-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-8">
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                <button class="btn btn-sm btn-outline-danger" onclick="bulkAction('delete')" title="Delete Selected">
+                                                    <i class="fas fa-trash me-1"></i>Delete Selected
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-warning" onclick="bulkAction('deactivate')" title="Deactivate Selected">
+                                                    <i class="fas fa-eye-slash me-1"></i>Deactivate Selected
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-success" onclick="bulkAction('activate')" title="Activate Selected">
+                                                    <i class="fas fa-eye me-1"></i>Activate Selected
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info" onclick="exportSelected()" title="Export Selected">
+                                                    <i class="fas fa-download me-1"></i>Export Selected
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 text-end">
+                                            <small class="text-muted">
+                                                <span id="selectedCount">0</span> selected • {{ user_products|length }} total products
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                                             style="width: 40px; height: 40px;">
+                                                            <i class="fas fa-image text-muted"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                    <div>
+                                                        <strong>{{ product.name }}</strong>
+                                                        <br><small class="text-muted">{{ (product.short_description or product.description or '')[:30] }}{% if (product.short_description or product.description or '')|length > 30 %}...{% endif %}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {% if product.category_id %}
+                                                    <span class="badge bg-secondary">Category {{ product.category_id }}</span>
+                                                {% else %}
+                                                    <span class="badge bg-light text-dark">Uncategorized</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <strong class="text-success">₹{{ "%.2f"|format(product.price) }}</strong>
+                                                {% if product.original_price and product.original_price > product.price %}
+                                                    <br><small class="text-muted text-decoration-line-through">₹{{ "%.2f"|format(product.original_price) }}</small>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <span class="badge {{ 'bg-success' if product.quantity > product.minimum_stock else 'bg-warning' if product.quantity > 0 else 'bg-danger' }}">
+                                                    {{ product.quantity }}
+                                                </span>
+                                                {% if product.quantity <= product.minimum_stock %}
+                                                    <br><small class="text-warning">Low Stock</small>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if product.status == 'active' %}
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check me-1"></i>Active
+                                                    </span>
+                                                    {% if product.featured %}
+                                                        <br><span class="badge bg-warning">Featured</span>
+                                                    {% endif %}
+                                                {% elif product.status == 'draft' %}
+                                                    <span class="badge bg-secondary">
+                                                        <i class="fas fa-edit me-1"></i>Draft
+                                                    </span>
+                                                {% elif product.status == 'inactive' %}
+                                                    <span class="badge bg-danger">
+                                                        <i class="fas fa-pause me-1"></i>Inactive
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">{{ product.status|title }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">{{ product.view_count or 0 }}</span>
+                                            </td>
+                                            <td>
+                                                <small>{{ product.created_at.strftime('%Y-%m-%d') if product.created_at else 'N/A' }}</small>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <a href="/product/view/{{ product.id }}" class="btn btn-outline-primary" title="View Product">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="/product/edit/{{ product.id }}" class="btn btn-outline-warning" title="Edit Product">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <button class="btn btn-outline-danger" onclick="deleteProduct({{ product.id }})" title="Delete Product">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-box fa-5x text-muted mb-3"></i>
+                                <h5 class="text-muted">No products added yet</h5>
+                                <p class="text-muted">Start selling by adding your first product!</p>
+                                <a href="/product/add" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>Add Your First Product
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Section -->
+                <div id="profile-section" class="dashboard-section" style="display: none;">
+                    <h3><i class="fas fa-user-edit me-2"></i>Profile Settings</h3>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Edit Profile</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form method="POST" action="/user/profile">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="full_name" class="form-label">Full Name</label>
+                                                <input type="text" class="form-control" id="full_name" name="full_name" 
+                                                       value="{{ user.full_name or user.first_name + ' ' + user.last_name if user.first_name and user.last_name else '' }}">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="email" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="email" name="email" 
+                                                       value="{{ user.email or '' }}" readonly>
+                                                <small class="text-muted">Email cannot be changed</small>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="mobile" class="form-label">Mobile</label>
+                                                <input type="tel" class="form-control" id="mobile" name="mobile" 
+                                                       value="{{ user.mobile or '' }}">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="user_type" class="form-label">Account Type</label>
+                                                <input type="text" class="form-control" value="{{ user.user_type|title }}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="address" class="form-label">Address</label>
+                                            <textarea class="form-control" id="address" name="address" rows="3">{{ user.address or '' }}</textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-2"></i>Update Profile
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Account Info</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>User ID:</strong> {{ user.id }}</p>
+                                    <p><strong>Username:</strong> {{ user.username or 'Not set' }}</p>
+                                    <p><strong>Account Status:</strong> 
+                                        <span class="badge bg-success">Active</span>
+                                    </p>
+                                    <p><strong>Member Since:</strong> 
+                                        {{ user.created_at.strftime('%B %Y') if user.created_at else 'Unknown' }}
+                                    </p>
+                                    <hr>
+                                    <h6>Quick Stats</h6>
+                                    <p><small>Apps Submitted: {{ submitted_apps|length }}</small></p>
+                                    <p><small>Services Requested: {{ service_requests|length }}</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <style>
+        .container-fluid {
+            display: flex;
+            padding: 0;
+        }
+        #sidebar {
+            transition: all 0.3s ease;
+            width: 250px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1000;
+            margin-top: 0;
+        }
+        #sidebar.collapsed {
+            width: 70px;
+        }
+        #sidebar.collapsed .sidebar-text {
+            display: none;
+        }
+        #sidebar.collapsed .nav-link {
+            text-align: center;
+            padding: 15px 10px;
+        }
+        #sidebar.collapsed h4 {
+            font-size: 0;
+            text-align: center;
+        }
+        #sidebar.collapsed h4 i {
+            font-size: 1.5rem;
+        }
+        #mainContent {
+            transition: all 0.3s ease;
+            flex: 1;
+            overflow-x: hidden;
+        }
+        .dashboard-section {
+            display: none;
+        }
+        .dashboard-section.active {
+            display: block;
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 10px;
+            position: absolute;
+            z-index: 1000;
+            left: 110%;
+            top: 50%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            transition: all 0.3s;
+            font-size: 12px;
+        }
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: 100%;
+            margin-top: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent #333 transparent transparent;
+        }
+        .row.g-0 {
+            margin: 0;
+            width: 100%;
+            display: contents;
+        }
+    </style>
+    
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('overview');
+        });
+
+        // Toggle sidebar function
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        // Show section function
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.dashboard-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            const targetSection = document.getElementById(sectionName + '-section');
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                targetSection.classList.add('active');
+            }
+            
+            // Update navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Add active class to clicked nav item
+            event.target.classList.add('active');
+        }
+
+        // View app details function
+        function viewAppDetails(appId) {
+            // You can implement modal or redirect to app detail page
+            window.open('/app/' + appId, '_blank');
+        }
+
+        // View service details function  
+        function viewServiceDetails(serviceId) {
+            alert('Service details for ID: ' + serviceId);
+        }
+
+        // Use service function
+        function useService(serviceId) {
+            window.location.href = '/service/use/' + serviceId;
+        }
+
+        // Product management functions
+        function deleteProduct(productId, productName) {
+            if (confirm(`Are you sure you want to delete "${productName}"? This action cannot be undone.`)) {
+                fetch(`/product/delete/${productId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to delete product');
+                });
+            }
+        }
+
+        // Bulk actions
+        function bulkAction(action) {
+            const checkedBoxes = document.querySelectorAll('.product-checkbox:checked');
+            if (checkedBoxes.length === 0) {
+                alert('Please select at least one product');
+                return;
+            }
+
+            const productIds = Array.from(checkedBoxes).map(cb => cb.value);
+            let confirmMessage = '';
+            
+            switch(action) {
+                case 'delete':
+                    confirmMessage = `Are you sure you want to delete ${productIds.length} selected product(s)? This cannot be undone.`;
+                    break;
+                case 'deactivate':
+                    confirmMessage = `Are you sure you want to deactivate ${productIds.length} selected product(s)?`;
+                    break;
+                case 'activate':
+                    confirmMessage = `Are you sure you want to activate ${productIds.length} selected product(s)?`;
+                    break;
+            }
+
+            if (confirm(confirmMessage)) {
+                fetch('/product/bulk-action', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: action,
+                        product_ids: productIds
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to perform bulk action');
+                });
+            }
+        }
+
+        function exportSelected() {
+            const checkedBoxes = document.querySelectorAll('.product-checkbox:checked');
+            if (checkedBoxes.length === 0) {
+                alert('Please select at least one product to export');
+                return;
+            }
+
+            const productIds = Array.from(checkedBoxes).map(cb => cb.value);
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/product/export';
+            
+            productIds.forEach(id => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'product_ids';
+                input.value = id;
+                form.appendChild(input);
+            });
+
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+        }
+
+        // Select All functionality - Add event listeners when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAll = document.getElementById('selectAll');
+            const productCheckboxes = document.querySelectorAll('.product-checkbox');
+            const selectedCount = document.getElementById('selectedCount');
+
+            function updateSelectedCount() {
+                const checked = document.querySelectorAll('.product-checkbox:checked').length;
+                if (selectedCount) {
+                    selectedCount.textContent = checked;
+                }
+            }
+
+            if (selectAll) {
+                selectAll.addEventListener('change', function() {
+                    productCheckboxes.forEach(checkbox => {
+                        checkbox.checked = this.checked;
+                    });
+                    updateSelectedCount();
+                });
+            }
+
+            productCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedCount);
+            });
+
+            // Initialize dashboard
+            showSection('overview');
+        });
+    </script>
+</body>
+</html>

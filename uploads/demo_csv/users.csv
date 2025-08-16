@@ -1,0 +1,6 @@
+full_name,email,mobile,phone_number,address,user_type,gender,password
+John Smith,john@example.com,+1-555-0001,+1-555-0001,123 Main St New York,subscriber,male,demo123
+Sarah Johnson,sarah@example.com,+1-555-0002,+1-555-0002,456 Oak Ave Boston,subscriber,female,demo123
+Mike Brown,mike@example.com,+1-555-0003,+1-555-0003,789 Pine St Chicago,premium,male,demo123
+Lisa Davis,lisa@example.com,+1-555-0004,+1-555-0004,321 Elm St Miami,premium,female,demo123
+Tom Wilson,tom@example.com,+1-555-0005,+1-555-0005,654 Maple Dr Seattle,subscriber,male,demo123
